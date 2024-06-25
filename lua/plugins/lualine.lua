@@ -1,6 +1,6 @@
 return {
     "nvim-lualine/lualine.nvim",
-    event = { "BufNewFile", "BufRead", "BufWritePost" },
+    lazy = "false",
     opts = {
         options = {
             -- theme = "gruvbox",
