@@ -15,26 +15,6 @@ vim.g.mapleader = " "
 
 vim.keymap.set("n", "<leader>ps", "<cmd>lua require('lazy').sync()<cr>", { silent = true })
 
---local config = {}
---
---config.plugins = {
---    -- { import = 'plugins' },
---    -- { import = 'plugins.colorschemes' }
---}
---
---config.opts = {
---    spec = LAZY_PLUGIN_SPEC,
---    defaults = {
---        lazy = true,
---        version = false
---    },
---    install = {
---        colorscheme = { "gruvbox", "kanagawa", "default" }
---    },
---    checker = { enabled = true, notify = false },
---    change_detection = { notify = false }
---}
-
 return require("lazy").setup({
     spec = LAZY_PLUGIN_SPEC,
     defaults = {

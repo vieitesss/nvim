@@ -4,15 +4,16 @@ return {
     priority = 1000,
     config = function()
         require('kanagawa').setup({
-            theme = "wave",
+            theme = "dragon",
             transparent = true,
-            colors = {
-                palette = {
-                    -- kanagawa wave fg
-                    fujiWhite = "#e8e8d8",
-                },
-            }
+            -- colors = {
+            --     palette = {
+            --         kanagawa wave fg
+            --         fujiWhite = "#e8e8d8",
+            --     },
+            -- }
         })
-        vim.api.nvim_exec2("colorscheme kanagawa", {})
+
+        vim.cmd("colorscheme kanagawa")
     end,
 }
