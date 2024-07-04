@@ -12,7 +12,7 @@ return {
         { "<Leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<cr>" },
         { "<Leader>dot", "<cmd>lua require('vt.telescope').search_dotfiles()<cr>", { silent = true } },
         { "<Leader>nv", "<cmd>lua require('vt.telescope').search_nvim()<cr>", { silent = true } },
-        { "<Leader>fir", "<cmd>lua require('vt.telescope').search_in_repo()<cr>", { silent = true } },
+        { "<Leader>fir", "<cmd>lua require('telescope.builtin').git_files()<cr>" },
     },
     config = function()
         local actions = require('telescope.actions')

@@ -47,22 +47,22 @@ return {
                 prefix = ">",
                 spacing = 2,
             },
-            signs = {
-                severity = vim.diagnostic.severity.ERROR,
-            }
+            -- signs = {
+            --     severity = vim.diagnostic.severity.ERROR,
+            -- }
         })
 
         local lspconfig = require('lspconfig')
 
         -- Disable diagnostics
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics, {
-                underline = false,
-                virtual_text = false,
-                signs = false,
-                update_in_insert = false,
-            }
-        )
+        -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+        --     vim.lsp.diagnostic.on_publish_diagnostics, {
+        --         underline = false,
+        --         virtual_text = false,
+        --         signs = false,
+        --         update_in_insert = false,
+        --     }
+        -- )
 
         -- Ignore nil messages.
         local function on_language_status(_, result)

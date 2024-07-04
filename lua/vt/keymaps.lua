@@ -31,7 +31,7 @@ keymap("n", "<Leader>tp", ":tabp<CR>", s)
 keymap("n", "<Leader>tn", ":tabn<CR>", s)
 
 --- split windows
-keymap("n", "<Leader>\\", ":vsplit<CR>", s)
+keymap("n", "<Leader>_", ":vsplit<CR>", s)
 keymap("n", "<Leader>-", ":split<CR>", s)
 keymap("n", "<Leader>=", "<C-w>=")
 

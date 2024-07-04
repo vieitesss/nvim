@@ -5,7 +5,6 @@ return {
     config = function()
         -- vim.g.accent_colour="green"
         vim.g.accent_no_bg=1
-        ColorMyPencils("accent")
-        -- vim.cmd.colorscheme "accent"
+        vim.cmd.colorscheme "accent"
     end
 }

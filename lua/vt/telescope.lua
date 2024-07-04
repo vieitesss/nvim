@@ -6,16 +6,8 @@ M.search_dotfiles = function()
     builtin.find_files({
         prompt_title = "Dotfiles",
         -- cwd = "~/.dotfiles/",
-        cwd = "~/.mac_config/",
-    }
-    )
-end
-
-M.search_in_repo = function()
-    local git_home_dir = vim.api.nvim_cmd(vim.api.nvim_parse_cmd(":Git rev-parse --show-toplevel", {}), { output = true })
-    builtin.find_files({
-        prompt_title = "Git repo",
-        cwd = git_home_dir,
+        -- cwd = "~/.mac_config/",
+        cwd = "~/.dot_linux/"
     })
 end
 
