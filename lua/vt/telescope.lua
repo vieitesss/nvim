@@ -11,6 +11,20 @@ M.search_dotfiles = function()
     })
 end
 
+M.search_obsidian = function()
+    builtin.find_files({
+        prompt_title = "Obsidian",
+        cwd = "~/obsidian/"
+    })
+end
+
+M.grep_obsidian = function()
+    builtin.live_grep({
+        prompt_title = "Obsidian | Live grep",
+        cwd = "~/obsidian/"
+    })
+end
+
 M.search_nvim = function()
     builtin.find_files({
         prompt_title = "Nvim Config",

@@ -16,7 +16,7 @@ keymap("n", "<Leader>H", ":wincmd H<CR>", s)
 keymap("n", "<Leader>J", ":wincmd J<CR>", s)
 keymap("n", "<Leader>K", ":wincmd K<CR>", s)
 keymap("n", "<Leader>L", ":wincmd L<CR>", s)
-keymap("n", "<Leader>o", ":wincmd o<CR>", s)
+keymap("n", "<Leader>m", ":wincmd o<CR>", s)
 
 keymap("n", "<C-d>", "<C-d>zz")
 keymap("n", "<C-u>", "<C-u>zz")
