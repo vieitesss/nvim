@@ -1,15 +1,15 @@
 vim.opt.conceallevel = 1
 
--- format title in a new note
-vim.keymap.set("n", "<Leader>ot", ":s/\\(# \\)[^_]*_/\\1/ | s/-/ /g<cr>", { silent = true })
 -- create a new note from current buffer
-vim.keymap.set("n", "<Leader>on", ":ObsidianTemplate note<cr>", { silent = true })
--- change current file name if it has not the date
-vim.keymap.set("n", "<Leader>of", ":!$HOME/obsidian/terminal/scripts/obs_update_filename.sh %:p<cr>", { silent = true })
+vim.keymap.set("n", "<Leader>on", "<cmd>ObsidianTemplate note<cr>", { silent = true })
 -- find files inside obsidian vault
 vim.keymap.set("n", "<Leader>os", "<cmd>lua require('vt.telescope').search_obsidian()<cr>", { silent = true })
+-- find the current file backlinks
+vim.keymap.set("n", "<Leader>ob", "<cmd>ObsidianBacklink <cr>", { silent = true })
 -- live grep inside obsidian vault
 vim.keymap.set("n", "<Leader>og", "<cmd>lua require('vt.telescope').grep_obsidian()<cr>", { silent = true })
+-- live grep inside obsidian vault
+vim.keymap.set("n", "<Leader>oc", "<cmd>ObsidianNew<cr>", { silent = true })
 
 return {
     "epwalsh/obsidian.nvim",
