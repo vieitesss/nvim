@@ -4,19 +4,24 @@ return {
     keys = {
         {
             "<Leader>fo",
-            function ()
-                require'conform'.format({ async = true, lsp_fallback = true })
+            function()
+                require("conform").format({ async = true, lsp_fallback = true })
             end,
             mode = "n",
         }
     },
     opts = {
+        formatters = {
+            my_rustfmt = {
+                command = "cargo +nightly fmt",
+            }
+        },
         formatters_by_ft = {
             python = { "black" },
             json = { "clang-format" },
             java = { "google-java-format" },
             sh = { "beautysh" },
-            rust = { "rustfmt" }
+            rust = { "my_rustfmt" }
         },
     }
 }
