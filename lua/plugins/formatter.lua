@@ -17,6 +17,7 @@ return {
             }
         },
         formatters_by_ft = {
+            go = { "gofmt" },
             python = { "black" },
             json = { "clang-format" },
             java = { "google-java-format" },
