@@ -1,14 +1,19 @@
 return {
     "folke/trouble.nvim",
-    event = "BufEnter",
+    event = "BufReadPre",
     config = function()
         require("trouble").setup({
             modes = {
                 diagnostics = {
-                    auto_close = true,
                     auto_open = true
                 }
             }
         })
-    end
+    end,
+    keys = {
+        {
+            "<leader>xx",
+            "<cmd>Trouble diagnostics toggle<cr>"
+        }
+    }
 }

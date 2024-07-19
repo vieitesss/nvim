@@ -76,6 +76,9 @@ return {
         end
 
         local servers = {
+            gopls = {
+                filetypes = { "go" },
+            },
             yamlls = {
                 filetypes = { "yaml" },
             },
