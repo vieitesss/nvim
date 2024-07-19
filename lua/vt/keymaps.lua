@@ -68,7 +68,6 @@ keymap("n", "[q", "<cmd>cp<CR>", s)
 ------------------
 --- quit
 keymap("i", "jk", "<Esc>")
-keymap("i", "ni", "<Esc>")
 
 -- delete word backwards
 keymap("i", "<M-BS>", "<Esc>ciw")

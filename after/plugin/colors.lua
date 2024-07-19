@@ -9,5 +9,5 @@ function Transparent()
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
-vim.cmd("colorscheme duskfox")
+vim.cmd("colorscheme vague")
 Transparent()
