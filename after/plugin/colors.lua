@@ -10,4 +10,4 @@ function Transparent()
 end
 
 vim.cmd("colorscheme vague")
-Transparent()
+-- Transparent()
