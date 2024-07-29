@@ -1,12 +1,11 @@
 return {
     "nvim-lualine/lualine.nvim",
-    lazy = "false",
+    lazy = false,
     opts = {
         options = {
-            -- theme = "gruvbox",
-            component_separators = { left = '', right = ''},
-            section_separators = { left = '', right = ''},
-            theme = "auto",
+            theme = "modus-vivendi",
+            component_separators = { left = '', right = '' },
+            section_separators = { left = '', right = '' },
         },
         sections = {
             lualine_a = { 'mode' },
