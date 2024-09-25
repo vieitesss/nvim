@@ -3,6 +3,10 @@ return {
     -- lazy = false,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
+        {
+            "nvim-java/nvim-java",
+            config = true
+        },
         "williamboman/mason-lspconfig.nvim",
         name = "mason-lspconfig",
         -- event = "BufReadPre",
@@ -79,16 +83,13 @@ return {
             gopls = {
                 filetypes = { "go" },
             },
-            yamlls = {
-                filetypes = { "yaml" },
-            },
             clangd = {
                 filetypes = { "c", "cpp" },
             },
             bashls = {
                 filetypes = { "sh", "zsh", "bash" },
             },
-            tsserver = {
+            ts_ls = {
                 filetypes = { "javascript", "typescript" },
             },
             marksman = {
@@ -96,6 +97,13 @@ return {
             },
             texlab = {
                 filetypes = { "tex" },
+            },
+            helm_ls = {
+                filetypes = { "yaml" },
+                root_dir = function(fname)
+                    return lspconfig.util.root_pattern(".helmignore", "Chart.yaml")(fname) or
+                        vim.fn.getcwd()
+                end,
             },
             pyright = {
                 filetypes = { "python" },
@@ -155,6 +163,9 @@ return {
                             }
                         }
                     }
+                },
+                init_options = {
+                    bundles = require("spring_boot").java_extensions(),
                 },
                 root_dir = function(fname)
                     return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", "src")(fname) or
