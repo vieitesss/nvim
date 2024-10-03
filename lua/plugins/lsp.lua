@@ -5,6 +5,7 @@ return {
     dependencies = {
         {
             "nvim-java/nvim-java",
+            ft = "java",
             config = true
         },
         "williamboman/mason-lspconfig.nvim",

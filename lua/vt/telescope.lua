@@ -2,12 +2,31 @@ local builtin = require("telescope.builtin")
 
 local M = {}
 
+function os.capture(cmd, raw)
+    local f = assert(io.popen(cmd, 'r'))
+    local s = assert(f:read('*a'))
+    f:close()
+    if raw then return s end
+    s = string.gsub(s, '^%s+', '')
+    s = string.gsub(s, '%s+$', '')
+    s = string.gsub(s, '[\n\r]+', ' ')
+    return s
+end
+
 M.search_dotfiles = function()
+    local out = os.capture("uname -a", false)
+    local pc = string.match(out, "^([%w]+)")
+
+    local dir = ""
+    if pc == "Darwin" then
+        dir = "~/.mac_config/"
+    elseif pc == "Linux" then
+        dir = "~/.dot_linux/"
+    end
+
     builtin.find_files({
         prompt_title = "Dotfiles",
-        -- cwd = "~/.dotfiles/",
-        -- cwd = "~/.mac_config/",
-        cwd = "~/.dot_linux/"
+        cwd = dir
     })
 end
 

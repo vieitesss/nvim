@@ -64,6 +64,11 @@ keymap("n", "<C-q>", "<cmd>copen<CR>", s)
 keymap("n", "]q", "<cmd>cn<CR>", s)
 keymap("n", "[q", "<cmd>cp<CR>", s)
 
+--- comments
+ -- (normal) <Space>lc -> comment line
+ -- (visual) <Space>l -> comment selected
+keymap({"n", "x", "o"}, "<Leader>l", "gc", { remap = true })
+
 ----- Insert -----
 ------------------
 --- quit
