@@ -1,155 +1,122 @@
-local cmp_kinds = {
-    Text = "",
-    Method = "󰆧",
-    Function = "󰊕",
-    Constructor = "",
-    Field = "󰇽",
-    Variable = "󰂡",
-    Class = "󰠱",
-    Interface = "",
-    Module = "",
-    Property = "󰜢",
-    Unit = "",
-    Value = "󰎠",
-    Enum = "",
-    Keyword = "󰌋",
-    Snippet = "",
-    Color = "󰏘",
-    File = "󰈙",
-    Reference = "",
-    Folder = "󰉋",
-    EnumMember = "",
-    Constant = "󰏿",
-    Struct = "",
-    Event = "",
-    Operator = "󰆕",
-    TypeParameter = "󰅲",
-}
-
 return {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    version = false,
-    dependencies = {
-        {
-            "hrsh7th/cmp-nvim-lsp",
-            event = "InsertEnter",
+    {
+        "iguanacucumber/magazine.nvim",
+        name = "nvim-cmp",
+        event = "InsertEnter",
+        version = false,
+        dependencies = {
+            { "iguanacucumber/mag-cmdline",                     name = "cmp-cmdline" },
+            { "iguanacucumber/mag-buffer",                      name = "cmp-buffer" },
+            { "https://codeberg.org/FelipeLema/cmp-async-path", name = "cmp-path" },
         },
-        {
-            "hrsh7th/cmp-nvim-lua",
-            event = "InsertEnter",
-        },
-        {
-            "hrsh7th/cmp-buffer",
-            event = "InsertEnter",
-        },
-        {
-            "hrsh7th/cmp-cmdline",
-            event = "CmdlineEnter",
-        },
-        {
-            "hrsh7th/cmp-path",
-            event = "InsertEnter",
-        },
-        {
-            "saadparwaiz1/cmp_luasnip",
-            event = "InsertEnter",
-        }
-    },
-    -- lazy = false,
-    -- event = "VeryLazy",
-    config = function()
-        local cmp = require('cmp')
+        config = function()
+            local cmp = require('cmp')
+            cmp.setup.cmdline({ "/", "?" }, {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = {
+                    { name = "buffer" },
+                },
+            })
 
-        local status_luasnip, luasnip = pcall(require, "luasnip")
-        if not status_luasnip then
-            return
+            cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = {
+                    { name = "path" },
+                    { name = "cmdline" },
+                },
+            })
         end
+    },
+    {
+        "saghen/blink.cmp",
+        lazy = false,
+        event = "InsertEnter",
+        dependencies = {
+            "rafamadriz/friendly-snippets",
+            { "L3MON4D3/Luasnip", version = "v2.*" },
+            --* the sources *--
+            -- { "iguanacucumber/mag-nvim-lsp",                    opts = {} },
+            -- { "iguanacucumber/mag-nvim-lua", },
+            -- { "iguanacucumber/mag-buffer", },
+            -- { "iguanacucumber/mag-cmdline", },
+            -- { "https://codeberg.org/FelipeLema/cmp-async-path", }
+        },
+        version = "*",
+        build = "cargo build --release",
 
-        cmp.setup({
-            -- enabled = function()
-            --     return true
-            -- end,
-            snippet = {
-                expand = function(args)
-                    luasnip.lsp_expand(args.body)
-                end,
+        ---@module "blink-cmp"
+        ---@type blink.cmp.Config
+        opts = {
+            keymap = {
+                preset = "default",
+                ["<C-space>"] = {},
+                ["<C-p>"] = {},
+                ["<Tab>"] = {},
+                ["<S-Tab>"] = {},
+
+                -- ["<C-e>"] = { "hide" },
+                ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
+
+                ["<C-n>"] = { "select_and_accept" },
+
+                ["<C-k>"] = { "select_prev", "fallback" },
+                ["<C-j>"] = { "select_next", "fallback" },
+
+                ["<C-b>"] = { "scroll_documentation_down", "fallback" },
+                ["<C-f>"] = { "scroll_documentation_up", "fallback" },
+
+                ["<C-l>"] = { "snippet_forward", "fallback" },
+                ["<C-h>"] = { "snippet_backward", "fallback" },
             },
-            -- window = {
-            --     documentation = cmp.config.window.bordered(),
-            --     completion = {
-            --         col_offset = -2,
-            --         side_padding = 1,
-            --         scrolloff = 3,
-            --     },
-            -- },
-            mapping = cmp.mapping.preset.insert({
-                ["<C-j>"] = cmp.mapping.select_next_item(),
-                ["<C-k>"] = cmp.mapping.select_prev_item(),
-                ["<C-e>"] = cmp.mapping.abort(),
-                ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-                ["<C-u>"] = cmp.mapping.scroll_docs(4),
-                ["<C-l>"] = cmp.mapping(function(fallback)
-                    if luasnip.expand_or_jumpable() then
-                        luasnip.expand_or_jump()
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-                ["<C-h>"] = cmp.mapping(function(fallback)
-                    if luasnip.jumpable(-1) then
-                        luasnip.jump(-1)
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-                ["<C-n>"] = cmp.mapping.confirm({
-                    behavior = cmp.ConfirmBehavior.Insert,
-                    select = true,
-                }),
-            }),
-            sources = {
-                { name = "nvim_lua" },
-                { name = "luasnip" },
-                { name = "nvim_lsp" },
-                { name = "buffer" },
-                { name = "path" },
+
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = "normal",
             },
+
             completion = {
-                completeopt = "menu,menuone,noselect"
+                documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 200,
+                }
             },
-            formatting = {
-                fields = { "kind", "abbr", "menu" },
-                format = function(entry, item)
-                    local menu_icon = {
-                        nvim_lua = "[API]",
-                        nvim_lsp = "[LSP]",
-                        buffer = "[BUF]",
-                        luasnip = "[SNIP]",
-                        cmdline = "[CMD]",
-                        path = "[PATH]",
-                    }
-                    item.kind = cmp_kinds[item.kind] or ""
-                    item.menu = menu_icon[entry.source.name]
 
-                    return item
+            snippets = {
+                expand = function(snippet) require("luasnip").lsp_expand(snippet) end,
+                active = function(filter)
+                    if filter and filter.direction then
+                        return require("luasnip").jumpable(filter.direction)
+                    end
+                    return require("luasnip").in_snippet()
                 end,
+                jump = function(direction) require("luasnip").jump(direction) end,
             },
-        })
 
-        cmp.setup.cmdline({ "/", "?" }, {
-            mapping = cmp.mapping.preset.cmdline(),
             sources = {
-                { name = "buffer" },
-            },
-        })
+                compat = { "cmdline" },
+                completion = {
+                    enabled_providers = { "lsp", "path", "luasnip", "buffer" }
+                },
+                default = { "lsp", "path", "luasnip", "buffer" },
+            }
+        },
 
-        cmp.setup.cmdline(":", {
-            mapping = cmp.mapping.preset.cmdline(),
-            sources = {
-                { name = "path" },
-                { name = "cmdline" },
-            },
-        })
-    end
+        -- ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
+        -- config = function(_, opts)
+        --     local enabled = opts.sources.default
+        --     for _, source in ipairs(opts.sources.compat or {}) do
+        --         print(source)
+        --         opts.sources.providers[source] = vim.tbl_deep_extend(
+        --             "force",
+        --             { name = source, module = "blink.compat.source" },
+        --             opts.sources.providers[source] or {}
+        --         )
+        --         if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
+        --             table.insert(enabled, source)
+        --         end
+        --     end
+        --
+        --     require("blink.cmp").setup(opts)
+        -- end
+    }
 }
