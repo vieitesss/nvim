@@ -4,6 +4,9 @@ local s = { silent = true }
 ----- Normal -----
 ------------------
 
+keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+
 --- save and quit
 keymap("n", "<Leader>w", ":w!<CR>", s)
 keymap("n", "<Leader>q", ":q<CR>", s)
@@ -65,14 +68,16 @@ keymap("n", "]q", "<cmd>cn<CR>", s)
 keymap("n", "[q", "<cmd>cp<CR>", s)
 
 --- comments
- -- (normal) <Space>lc -> comment line
- -- (visual) <Space>l -> comment selected
-keymap({"n", "x", "o"}, "<Leader>l", "gc", { remap = true })
+-- (normal) <Space>lc -> comment line
+-- (visual) <Space>l -> comment selected
+keymap({ "n", "x", "o" }, "<Leader>l", "gc", { remap = true })
 
 ----- Insert -----
 ------------------
 --- quit
 keymap("i", "jk", "<Esc>")
+keymap("i", "<C-c>", "<Esc>")
+
 
 -- delete word backwards
 keymap("i", "<M-BS>", "<Esc>ciw")

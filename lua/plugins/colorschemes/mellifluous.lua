@@ -4,7 +4,7 @@ return {
     priority = 1000,
     config = function()
         require("mellifluous").setup({
-            color_set = 'mellifluous',
+            colorset = 'kanagawa_dragon',
             mellifluous = {
                 bg_contrast = 'hard',
             },

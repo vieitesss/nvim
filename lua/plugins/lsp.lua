@@ -36,12 +36,11 @@ return {
             local keymap = vim.keymap
             local on_attach = function(_, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
-                opts = {}
 
-                keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+                keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions<CR>", opts)
                 keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-                keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
-                keymap.set("n", "K", "<cmd>lua vim.lsp.handlers.hover()<CR>", opts)
+                keymap.set("n", "gr", "<cmd>FzfLua lsp_references<CR>", opts)
+                keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
                 keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
                 keymap.set("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
                 -- keymap.set("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)

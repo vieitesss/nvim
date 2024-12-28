@@ -3,7 +3,7 @@ return {
     lazy = false,
     opts = {
         options = {
-            theme = "modus-vivendi",
+            theme = "auto",
             component_separators = { left = '', right = '' },
             section_separators = { left = '', right = '' },
         },

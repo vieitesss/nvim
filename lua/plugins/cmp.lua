@@ -2,7 +2,6 @@ return {
     {
         "iguanacucumber/magazine.nvim",
         name = "nvim-cmp",
-        event = "InsertEnter",
         version = false,
         dependencies = {
             { "iguanacucumber/mag-cmdline",                     name = "cmp-cmdline" },
@@ -32,6 +31,7 @@ return {
         lazy = false,
         event = "InsertEnter",
         dependencies = {
+            "iguanacucumber/magazine.nvim",
             "rafamadriz/friendly-snippets",
             { "L3MON4D3/Luasnip", version = "v2.*" },
             --* the sources *--
@@ -47,6 +47,9 @@ return {
         ---@module "blink-cmp"
         ---@type blink.cmp.Config
         opts = {
+            signature = {
+                enabled = true,
+            },
             keymap = {
                 preset = "default",
                 ["<C-space>"] = {},
@@ -93,11 +96,8 @@ return {
             },
 
             sources = {
-                compat = { "cmdline" },
-                completion = {
-                    enabled_providers = { "lsp", "path", "luasnip", "buffer" }
-                },
                 default = { "lsp", "path", "luasnip", "buffer" },
+                cmdline = {},
             }
         },
 

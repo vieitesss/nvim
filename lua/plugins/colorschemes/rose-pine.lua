@@ -9,6 +9,11 @@ return {
                 bold = false,
                 italic = false,
                 transparency = true
+            },
+            palette = {
+                main = {
+                    gold = "#F8CB8C"
+                }
             }
         })
         vim.cmd("colorscheme rose-pine")

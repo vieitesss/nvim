@@ -4,7 +4,8 @@ local opt = vim.opt
 vim.api.nvim_command("filetype plugin indent on")
 opt.guicursor = "i:block"
 -- opt.showcmdloc = "statusline"
-opt.showmode = false
+-- opt.showmode = false
+opt.signcolumn = "yes:1"
 opt.termguicolors = true
 opt.ignorecase = true
 
