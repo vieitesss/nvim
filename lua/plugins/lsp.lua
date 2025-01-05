@@ -1,33 +1,27 @@
 return {
     {
-        "nvim-java/nvim-java",
-        ft = "java",
-        config = true
+        "williamboman/mason-lspconfig.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            name = "mason",
+            opts = {
+                automatic_installation = true,
+                ui = {
+                    icons = {
+                        package_installed = "",
+                        package_pending = "➜",
+                        package_uninstalled = "",
+                    },
+                }
+            }
+        },
     },
     {
         "neovim/nvim-lspconfig",
-        -- lazy = false,
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "saghen/blink.cmp",
             "williamboman/mason-lspconfig.nvim",
-            name = "mason-lspconfig",
-            -- event = "BufReadPre",
-            dependencies = {
-                "williamboman/mason.nvim",
-                name = "mason",
-                opts = {
-                    automatic_installation = true,
-                    ui = {
-                        icons = {
-                            package_installed = "",
-                            package_pending = "➜",
-                            package_uninstalled = "",
-                        },
-                    }
-                }
-            },
-            -- config = true
         },
         config = function()
             -- local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -37,9 +31,9 @@ return {
             local on_attach = function(_, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
 
-                keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions<CR>", opts)
+                keymap.set("n", "gd", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'definition' })<CR>", opts)
+                keymap.set("n", "gr", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'definition' })<CR>", opts)
                 keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-                keymap.set("n", "gr", "<cmd>FzfLua lsp_references<CR>", opts)
                 keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
                 keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
                 keymap.set("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
@@ -170,13 +164,6 @@ return {
                             }
                         }
                     },
-                    init_options = {
-                        bundles = require("spring_boot").java_extensions(),
-                    },
-                    root_dir = function(fname)
-                        return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", "src")(fname) or
-                            vim.fn.getcwd()
-                    end,
                 },
             }
 

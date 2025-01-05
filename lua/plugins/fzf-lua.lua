@@ -1,17 +1,3 @@
-local function dotfiles_dir()
-    local out = vim.fn.system("uname -a")
-    local pc = string.match(out, "^([%w]+)")
-
-    local dir = ""
-    if pc == "Darwin" then
-        dir = "~/.mac_config/"
-    elseif pc == "Linux" then
-        dir = "~/.dot_linux/"
-    end
-
-    require('fzf-lua').files({ cwd = dir })
-end
-
 return {
     "ibhagwan/fzf-lua",
     -- optional for icon support
@@ -20,9 +6,10 @@ return {
     keys = {
         { "<Leader>ff",  "<cmd>lua require('fzf-lua').files()<CR>" },
         { "<Leader>fg",  "<cmd>lua require('fzf-lua').live_grep()<CR>" },
+        { "<Leader>fh",  "<cmd>lua require('fzf-lua').helptags()<CR>" },
         { "<Leader>fg",  "<cmd>lua require('fzf-lua').grep_visual()<CR>",                    mode = "x" },
         { "<Leader>fb",  "<cmd>lua require('fzf-lua').buffers()<CR>" },
-        { "<Leader>dot", dotfiles_dir, },
+        { "<Leader>dot", require("vt").dotfiles_dir, },
         { "<Leader>obs", "<cmd>lua require('fzf-lua').files({cwd = '~/obsidian/'})<CR>", },
         { "<Leader>nv",  "<cmd>lua require('fzf-lua').files({cwd = '~/.config/nvim/'})<CR>", },
         { "<Leader>fd", "<cmd>lua require('fzf-lua').diagnostics_workspace()<CR>" },
