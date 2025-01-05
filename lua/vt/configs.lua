@@ -16,9 +16,9 @@ opt.tabstop = 2
 opt.softtabstop = 2
 opt.shiftwidth = 2
 opt.shiftround = true
-opt.listchars = "tab: ,multispace:|   "
+opt.listchars = "tab: ,multispace:|   ,eol:󰌑"
 opt.hlsearch = true
-opt.list = true
+		opt.list = true
 -- vim.cmd("set list")
 
 -- Cmd line

@@ -4,11 +4,11 @@ local augroup = vim.api.nvim_create_augroup
 -- Highlight yanked text
 local highlight_group = augroup('YankHighlight', { clear = true })
 autocmd('TextYankPost', {
+    pattern = '*',
     callback = function()
         vim.highlight.on_yank({ timeout = 170 })
     end,
     group = highlight_group,
-    pattern = '*',
 })
 
 -- Open html automatically on save
@@ -50,7 +50,10 @@ local save_folds = augroup("Persistent Folds", { clear = true })
 autocmd("BufWinLeave", {
     pattern = "*",
     callback = function()
-        vim.cmd.mkview()
+        -- Only if the buffer has a name
+        if vim.fn.bufname("%") ~= "" then
+            vim.cmd.mkview()
+        end
     end,
     group = save_folds
 })
@@ -58,7 +61,9 @@ autocmd("BufWinLeave", {
 autocmd("BufWinEnter", {
     pattern = "*",
     callback = function()
-        vim.cmd.loadview({ mods = { emsg_silent = true } })
+        if vim.fn.bufname("%") ~= "" then
+            vim.cmd.loadview({ mods = { emsg_silent = true } })
+        end
     end,
     group = save_folds
 })

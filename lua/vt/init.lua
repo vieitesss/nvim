@@ -18,3 +18,20 @@ OPENPDFVIEWER = function()
     os.execute("mupdf-gl " .. path_no_ext .. ".pdf 2>/dev/null &")
 end
 
+local M = {}
+
+M.dotfiles_dir = function()
+    local out = vim.fn.system("uname -a")
+    local pc = string.match(out, "^([%w]+)")
+
+    local dir = ""
+    if pc == "Darwin" then
+        dir = "~/.mac_config/"
+    elseif pc == "Linux" then
+        dir = "~/.dot_linux/"
+    end
+
+    return dir
+end
+
+return M

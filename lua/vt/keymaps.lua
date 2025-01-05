@@ -4,8 +4,12 @@ local s = { silent = true }
 ----- Normal -----
 ------------------
 
-keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+keymap("n", "j", function()
+    return tonumber(vim.api.nvim_get_vvar("count")) > 0 and "j" or "gj"
+end, { expr = true, silent = true })
+keymap("n", "k", function()
+    return tonumber(vim.api.nvim_get_vvar("count")) > 0 and "k" or "gk"
+end, { expr = true, silent = true })
 
 --- save and quit
 keymap("n", "<Leader>w", ":w!<CR>", s)
@@ -75,12 +79,10 @@ keymap({ "n", "x", "o" }, "<Leader>l", "gc", { remap = true })
 ----- Insert -----
 ------------------
 --- quit
-keymap("i", "jk", "<Esc>")
 keymap("i", "<C-c>", "<Esc>")
 
-
 -- delete word backwards
-keymap("i", "<M-BS>", "<Esc>ciw")
+keymap("i", "<M-BS>", "<C-w>")
 
 ----- Visual -----
 ------------------

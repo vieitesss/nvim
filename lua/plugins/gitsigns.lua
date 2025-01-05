@@ -24,7 +24,7 @@ return {
 
         vim.keymap.set('n', '<leader>hs', gs.stage_hunk)
         vim.keymap.set('n', '<leader>hr', gs.reset_hunk)
-        vim.keymap.set('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
+        vim.keymap.set('v', '<leader>hs', function() gs.stage_hunk { vim.fn.getpos("v")[2], vim.fn.getpos(".")[2] } end)
         vim.keymap.set('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
         vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk)
         vim.keymap.set('n', '<leader>hR', gs.reset_buffer)
