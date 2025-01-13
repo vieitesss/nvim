@@ -20,19 +20,19 @@ return {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
-            "saghen/blink.cmp",
+            -- "saghen/blink.cmp",
             "williamboman/mason-lspconfig.nvim",
         },
         config = function()
-            -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            -- local capabilities = require('blink.cmp').get_lsp_capabilities()
 
             local keymap = vim.keymap
             local on_attach = function(_, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
 
                 keymap.set("n", "gd", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'definition' })<CR>", opts)
-                keymap.set("n", "gr", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'definition' })<CR>", opts)
+                keymap.set("n", "gr", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'references' })<CR>", opts)
                 keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
                 keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
                 keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)

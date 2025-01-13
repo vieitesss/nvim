@@ -3,6 +3,7 @@ return {
         "iguanacucumber/magazine.nvim",
         name = "nvim-cmp",
         version = false,
+        enabled = false,
         dependencies = {
             { "iguanacucumber/mag-cmdline",                     name = "cmp-cmdline" },
             { "iguanacucumber/mag-buffer",                      name = "cmp-buffer" },
@@ -31,9 +32,9 @@ return {
         lazy = false,
         event = "InsertEnter",
         dependencies = {
-            "iguanacucumber/magazine.nvim",
-            "rafamadriz/friendly-snippets",
-            { "L3MON4D3/Luasnip", version = "v2.*" },
+            -- "iguanacucumber/magazine.nvim",
+            -- "rafamadriz/friendly-snippets",
+            -- { "L3MON4D3/Luasnip", version = "v2.*" },
             --* the sources *--
             -- { "iguanacucumber/mag-nvim-lsp",                    opts = {} },
             -- { "iguanacucumber/mag-nvim-lua", },
@@ -84,19 +85,20 @@ return {
                 }
             },
 
-            snippets = {
-                expand = function(snippet) require("luasnip").lsp_expand(snippet) end,
-                active = function(filter)
-                    if filter and filter.direction then
-                        return require("luasnip").jumpable(filter.direction)
-                    end
-                    return require("luasnip").in_snippet()
-                end,
-                jump = function(direction) require("luasnip").jump(direction) end,
-            },
+            -- snippets = {
+            --     expand = function(snippet) require("luasnip").lsp_expand(snippet) end,
+            --     active = function(filter)
+            --         if filter and filter.direction then
+            --             return require("luasnip").jumpable(filter.direction)
+            --         end
+            --         return require("luasnip").in_snippet()
+            --     end,
+            --     jump = function(direction) require("luasnip").jump(direction) end,
+            -- },
 
             sources = {
-                default = { "lsp", "path", "luasnip", "buffer" },
+                -- default = { "lsp", "path", "luasnip", "buffer" },
+                default = { "lsp" },
                 cmdline = {},
             }
         },

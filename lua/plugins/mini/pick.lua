@@ -23,7 +23,7 @@ return {
         dependencies = "echasnovski/mini.extra",
         keys = {
             { "<Leader>ff", "<cmd>lua require('mini.pick').builtin.files()<CR>" },
-            { "<Leader>fg", "<cmd>lua require('mini.pick').builtin.grep_live()<CR>" },
+            { "<Leader>fg", "<cmd>lua require('mini.pick').builtin.grep_live({tool = 'git'})<CR>" },
             { "<Leader>fh", "<cmd>lua require('mini.pick').builtin.help()<CR>" },
             { "<Leader>fg", grep_visual,                                            mode = "x" },
             { "<Leader>fb", "<cmd>lua require('mini.pick').builtin.buffers()<CR>" },

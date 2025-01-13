@@ -1,16 +1,5 @@
 vim.opt.conceallevel = 1
 
--- create a new note from current buffer
-vim.keymap.set("n", "<Leader>on", "<cmd>ObsidianTemplate note<cr>", { silent = true })
--- find files inside obsidian vault
-vim.keymap.set("n", "<Leader>os", "<cmd>lua require('vt.telescope').search_obsidian()<cr>", { silent = true })
--- find the current file backlinks
-vim.keymap.set("n", "<Leader>ob", "<cmd>ObsidianBacklink <cr>", { silent = true })
--- live grep inside obsidian vault
-vim.keymap.set("n", "<Leader>og", "<cmd>lua require('vt.telescope').grep_obsidian()<cr>", { silent = true })
--- live grep inside obsidian vault
-vim.keymap.set("n", "<Leader>oc", "<cmd>ObsidianNew<cr>", { silent = true })
-
 return {
     "epwalsh/obsidian.nvim",
     version = "*",
@@ -22,6 +11,11 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
+    keys = {
+        { "<Leader>on", "<cmd>ObsidianTemplate note<cr>" },
+        { "<Leader>ob", "<cmd>ObsidianBacklink <cr>" },
+        { "<Leader>oc", "<cmd>ObsidianNew<cr>" },
+    },
     opts = {
         disable_frontmatter = true,
         workspaces = {
@@ -30,10 +24,10 @@ return {
                 path = "~/obsidian",
             }
         },
-        completion = {
-            nvim_cmp = true,
-            min_chars = 2
-        },
+        -- completion = {
+        --     nvim_cmp = true,
+        --     min_chars = 2
+        -- },
         notes_subdir = "inbox",
         new_notes_location = "notes_subdir",
         note_id_func = function(title)

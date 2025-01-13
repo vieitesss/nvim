@@ -46,21 +46,8 @@ keymap("n", "<Leader>=", "<C-w>=")
 keymap("n", "<Leader>so", ":so %<CR>", s)
 keymap("n", "<Leader><Leader>e", ":e<CR>", s)
 
---- git
-keymap("n", "<Space>gs", ":Git<CR>", s)
-keymap("n", "<Space>gd", ":Gdiff<CR>", s)
-keymap("n", "<Space>gp", ":Git push<CR>", s)
-keymap("n", "<Space>gl", ":Glog<CR>", s)
-keymap("n", "<Space>gb", ":Git blame --date short<CR>", s)
-keymap("n", "<Space>gP", ":Git pull<CR>", s)
-
 --- formatting
--- keymap("n", "<Leader>fo", ":lua vim.lsp.buf.format()<CR>", s)
--- keymap("n", "<Leader>fo", function ()
---     require'conform'.format({
---         bufnr = vim.api.nvim_get_current_buf(),
---     })
--- end, s)
+keymap("n", "<Leader>fo", ":lua vim.lsp.buf.format()<CR>", s)
 
 --- pdfviewer
 keymap("n", "<Leader>pdf", ":lua OPENPDFVIEWER()<CR>", s)
@@ -70,11 +57,6 @@ keymap("n", "<Leader>b", "<cmd>make<CR>", s)
 keymap("n", "<C-q>", "<cmd>copen<CR>", s)
 keymap("n", "]q", "<cmd>cn<CR>", s)
 keymap("n", "[q", "<cmd>cp<CR>", s)
-
---- comments
--- (normal) <Space>lc -> comment line
--- (visual) <Space>l -> comment selected
-keymap({ "n", "x", "o" }, "<Leader>l", "gc", { remap = true })
 
 ----- Insert -----
 ------------------
