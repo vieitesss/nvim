@@ -20,7 +20,7 @@ return {
         "echasnovski/mini.pick",
         version = false,
         lazy = false,
-        dependencies = "echasnovski/mini.extra",
+        -- dependencies = "echasnovski/mini.extra",
         keys = {
             { "<Leader>ff", "<cmd>lua require('mini.pick').builtin.files()<CR>" },
             { "<Leader>fg", "<cmd>lua require('mini.pick').builtin.grep_live({tool = 'git'})<CR>" },
@@ -35,8 +35,8 @@ return {
             end, },
             { "<Leader>obs", "<cmd>lua require('mini.pick').builtin.files({}, { source = {cwd = '~/obsidian/'}})<CR>", },
             { "<Leader>nv",  "<cmd>lua require('mini.pick').builtin.files({}, { source = {cwd = '~/.config/nvim/'}})<CR>", },
-            { "<Leader>fd",  "<cmd>lua require('mini.extra').pickers.diagnostic()<CR>" },
-            { "<Leader>fk",  "<cmd>lua require('mini.extra').pickers.keymaps()<CR>" },
+            -- { "<Leader>fd",  "<cmd>lua require('mini.extra').pickers.diagnostic()<CR>" },
+            -- { "<Leader>fk",  "<cmd>lua require('mini.extra').pickers.keymaps()<CR>" },
         },
         opts = {
             -- Keys for performing actions. See `:h MiniPick-actions`.

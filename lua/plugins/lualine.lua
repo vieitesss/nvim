@@ -1,6 +1,6 @@
 return {
     "nvim-lualine/lualine.nvim",
-    lazy = false,
+    event = "BufRead",
     opts = {
         options = {
             theme = "auto",

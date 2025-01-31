@@ -18,10 +18,11 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
-        event = { "BufReadPre", "BufNewFile" },
+        event = { "UIEnter", "BufNewFile" },
         dependencies = {
             -- "saghen/blink.cmp",
             "williamboman/mason-lspconfig.nvim",
+            "echasnovski/mini.extra",
         },
         config = function()
             local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -56,14 +57,14 @@ return {
             local lspconfig = require('lspconfig')
 
             -- Disable diagnostics
-            -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            --     vim.lsp.diagnostic.on_publish_diagnostics, {
-            --         underline = false,
-            --         virtual_text = false,
-            --         signs = false,
-            --         update_in_insert = false,
-            --     }
-            -- )
+            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+                vim.lsp.diagnostic.on_publish_diagnostics, {
+                    underline = false,
+                    virtual_text = false,
+                    signs = false,
+                    update_in_insert = false,
+                }
+            )
 
             -- Ignore nil messages.
             local function on_language_status(_, result)
