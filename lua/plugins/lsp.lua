@@ -93,6 +93,9 @@ return {
                 marksman = {
                     filetypes = { "markdown" }
                 },
+                volar = {
+                    filetypes = { "vue" }
+                },
                 texlab = {
                     filetypes = { "tex" },
                 },
