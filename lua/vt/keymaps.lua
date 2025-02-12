@@ -19,10 +19,10 @@ keymap("n", "<Leader>q", "<cmd>q<CR>", s)
 keymap("n", "<Leader>no", "<cmd>noh<CR>", s)
 
 --- window movements
-keymap("n", "<C-H>", "<C-W>h", s)
-keymap("n", "<C-J>", "<C-W>j", s)
-keymap("n", "<C-K>", "<C-W>k", s)
-keymap("n", "<C-L>", "<C-W>l", s)
+-- keymap("n", "<C-H>", "<C-W>h", s)
+-- keymap("n", "<C-J>", "<C-W>j", s)
+-- keymap("n", "<C-K>", "<C-W>k", s)
+-- keymap("n", "<C-L>", "<C-W>l", s)
 --- resize horizontal
 keymap("n", "<S-Up>", "<cmd>res -5<cr>", s)
 keymap("n", "<S-Down>", "<cmd>res +5<cr>", s)
