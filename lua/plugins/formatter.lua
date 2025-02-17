@@ -22,7 +22,8 @@ return {
             json = { "clang-format" },
             java = { "google-java-format" },
             sh = { "beautysh" },
-            rust = { "my_rustfmt" }
+            rust = { "my_rustfmt" },
+            json = { "jq" }
         },
     }
 }

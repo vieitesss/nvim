@@ -50,7 +50,8 @@ keymap("n", "<Leader>so", "<cmd>so %<CR>", s)
 keymap("n", "<Leader><Leader>e", "<cmd>e<CR>", s)
 
 --- formatting
-keymap("n", "<Leader>fo", ":lua vim.lsp.buf.format()<CR>", s)
+-- keymap("n", "<Leader>fo", ":lua vim.lsp.buf.format()<CR>", s)
+keymap("n", "<Leader>fo", "<cmd>lua require('conform').format()<CR>", s)
 
 ----- Insert -----
 ------------------
