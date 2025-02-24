@@ -95,10 +95,12 @@ return {
             --     jump = function(direction) require("luasnip").jump(direction) end,
             -- },
 
+            cmdline = {
+                sources = {}
+            },
             sources = {
                 -- default = { "lsp", "path", "luasnip", "buffer" },
                 default = { "lsp" },
-                cmdline = {},
             }
         },
 
