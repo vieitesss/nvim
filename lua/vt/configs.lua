@@ -25,8 +25,8 @@ opt.list = true
 -- opt.cmdheight = 0
 
 -- Numbers
-opt.number = false
-opt.relativenumber = false
+opt.number = true
+opt.relativenumber = true
 opt.numberwidth = 2
 
 -- Lines

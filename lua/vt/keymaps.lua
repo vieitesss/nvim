@@ -53,6 +53,7 @@ keymap("n", "<Leader><Leader>e", "<cmd>e<CR>", s)
 -- keymap("n", "<Leader>fo", ":lua vim.lsp.buf.format()<CR>", s)
 keymap("n", "<Leader>fo", "<cmd>lua require('conform').format()<CR>", s)
 
+keymap("n", "<Leader>xx", "<cmd>luafile %<CR>", s)
 ----- Insert -----
 ------------------
 --- quit
@@ -76,3 +77,7 @@ keymap("v", "K", ":m '<-2<CR>gv=gv")
 
 --- copy
 keymap("x", "y", [["+y]], s)
+
+----- Terminal -----
+--------------------
+keymap("t", "<Esc>", "<C-\\><C-N>")
