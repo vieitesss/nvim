@@ -8,7 +8,7 @@ end
 -- spec("plugins.carbon")
 spec("plugins.cmp")
 spec("vt.command")
-spec("plugins.comp-mode")
+-- spec("plugins.comp-mode")
 -- spec("plugins.colorschemes.accent")
 spec("plugins.colorschemes.noirbuddy")
 -- spec("plugins.colorschemes.everforest")

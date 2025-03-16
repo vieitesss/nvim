@@ -30,6 +30,7 @@ return {
     {
         "saghen/blink.cmp",
         event = "InsertEnter",
+        -- enabled = false,
         dependencies = {
             -- "iguanacucumber/magazine.nvim",
             -- "rafamadriz/friendly-snippets",
@@ -41,12 +42,13 @@ return {
             -- { "iguanacucumber/mag-cmdline", },
             -- { "https://codeberg.org/FelipeLema/cmp-async-path", }
         },
-        version = "*",
+        version = "v0.*",
         build = "cargo build --release",
 
         ---@module "blink-cmp"
         ---@type blink.cmp.Config
         opts = {
+            fuzzy = { implementation = 'prefer_rust_with_warning' },
             signature = {
                 enabled = true,
             },
