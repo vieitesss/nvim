@@ -28,12 +28,3 @@ mason_lspconfig.setup_handlers {
         lspconfig[server_name].setup(opts)
     end,
 }
-
-lspconfig.rust_analyzer.setup({
-    capabilities = base.capabilities,
-    on_attach = base.on_attach,
-    cmd = { "rustup", "run", "nightly", "rust-analyzer" },
-    root_dir = function(fname)
-        return lspconfig.util.root_pattern("Cargo.toml", ".git")(fname) or vim.fn.getcwd()
-    end,
-})
