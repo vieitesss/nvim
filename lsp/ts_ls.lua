@@ -9,7 +9,5 @@ return {
         'typescriptreact',
         'typescript.tsx',
     },
-    root_dir = function(bufnr)
-        return vim.fs.root(bufnr, { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' })
-    end
+    root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
 }

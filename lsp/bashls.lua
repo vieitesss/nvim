@@ -7,8 +7,5 @@ return {
         },
     },
     filetypes = { 'bash', 'sh' },
-    root_dir = function(bufnr)
-        local current_dir = vim.fs.dirname('.') 
-        return vim.fs.root(bufnr, { '.git', current_dir })
-    end,
+    root_markers = { '.git' },
 }
