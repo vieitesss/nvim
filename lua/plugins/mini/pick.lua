@@ -22,10 +22,10 @@ return {
         lazy = false,
         -- dependencies = "echasnovski/mini.extra",
         keys = {
-            { "<Leader>ff", "<cmd>lua require('mini.pick').builtin.files()<CR>" },
+            { "<Leader>ff", "<cmd>lua require('mini.pick').builtin.cli({ command = { 'fd', '-H', '-E', '.git', '--type', 'f', '--type', 'l' } })<CR>" },
             { "<Leader>fg", "<cmd>lua require('mini.pick').builtin.grep_live({tool = 'git'})<CR>" },
             { "<Leader>fh", "<cmd>lua require('mini.pick').builtin.help()<CR>" },
-            { "<Leader>fg", grep_visual,                                            mode = "x" },
+            { "<Leader>fg", grep_visual,                                                          mode = "x" },
             { "<Leader>fb", "<cmd>lua require('mini.pick').builtin.buffers()<CR>" },
             { "<Leader>dot", function()
                 require("mini.pick").builtin.files(
@@ -38,17 +38,21 @@ return {
             -- { "<Leader>fd",  "<cmd>lua require('mini.extra').pickers.diagnostic()<CR>" },
             -- { "<Leader>fk",  "<cmd>lua require('mini.extra').pickers.keymaps()<CR>" },
         },
-        opts = {
-            -- Keys for performing actions. See `:h MiniPick-actions`.
-            mappings = {
-                choose_marked  = '<C-q>',
-                mark           = '<Tab>',
-                move_down      = '<C-j>',
-                move_up        = '<C-k>',
-                refine_marked  = '<C-n>',
-                stop           = '<Esc>',
-                toggle_preview = '<C-p>',
-            },
-        },
+        config = function()
+            require('mini.pick').setup({
+                source = {
+                    show = require('mini.pick').default_show,
+                },
+                mappings = {
+                    choose_marked  = '<C-q>',
+                    mark           = '<Tab>',
+                    move_down      = '<C-j>',
+                    move_up        = '<C-k>',
+                    refine_marked  = '<C-n>',
+                    stop           = '<Esc>',
+                    toggle_preview = '<C-p>',
+                },
+            })
+        end
     }
 }
