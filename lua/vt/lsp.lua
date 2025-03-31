@@ -14,8 +14,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-
 local servers = {
     "bashls",
     "gopls",
@@ -26,7 +24,6 @@ local servers = {
 }
 
 vim.lsp.config("*", {
-    capabilities = capabilities,
     root_markers = { ".git" },
 })
 
