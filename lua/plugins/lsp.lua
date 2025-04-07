@@ -1,5 +1,6 @@
 return {
     "williamboman/mason.nvim",
+    event = { "BufEnter" },
     opts = {
         automatic_installation = true,
         ui = {

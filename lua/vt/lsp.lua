@@ -20,7 +20,8 @@ local servers = {
     "lua_ls",
     "marksman",
     "texlab",
-    "ts_ls"
+    "ts_ls",
+    "rust-analyzer"
 }
 
 vim.lsp.config("*", {
