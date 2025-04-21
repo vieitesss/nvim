@@ -2,7 +2,7 @@ return {
 	-- dir = "~/personal/command.nvim",
 	-- dev = true,
   "vieitesss/command.nvim",
-	lazy = false,
+	cmd = { "CommandRexecute", "CommandExecute" },
   config = true,
 	keys = {
 			{ "<space>co", ":CommandExecute<cr>" },
