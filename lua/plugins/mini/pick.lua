@@ -22,7 +22,7 @@ return {
         lazy = false,
         -- dependencies = "echasnovski/mini.extra",
         keys = {
-            { "<Leader>ff", "<cmd>lua require('mini.pick').builtin.cli({ command = { 'fd', '-H', '-E', '.git', '--type', 'f', '--type', 'l' } })<CR>" },
+            { "<Leader>ff", "<cmd>lua require('mini.pick').builtin.cli({ command = { 'fd', '-H', '-I', '-E', '.git', '--type', 'f', '--type', 'l' } })<CR>" },
             { "<Leader>fg", "<cmd>lua require('mini.pick').builtin.grep_live({tool = 'git'})<CR>" },
             { "<Leader>fh", "<cmd>lua require('mini.pick').builtin.help()<CR>" },
             { "<Leader>fg", grep_visual,                                                          mode = "x" },
