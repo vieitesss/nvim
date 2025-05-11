@@ -4,6 +4,7 @@ return {
     config = function()
         local gs = require('gitsigns')
         gs.setup({
+            signcolumn = false,
             signs = {
                 add = { text = "+" },
                 change = { text = "" }
