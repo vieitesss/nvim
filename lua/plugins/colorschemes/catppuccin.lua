@@ -5,9 +5,14 @@ return {
     priority = 1000,
     config = function()
         require("catppuccin").setup({
-            flavour = "frappe",
+            flavour = "mocha",
             no_italic = true,
-            transparent_background = true,
+            transparent_background = false,
+            color_overrides = {
+                mocha = {
+                    lavender = "#cdd6f4"
+                },
+            }
         })
         vim.cmd.colorscheme "catppuccin"
     end

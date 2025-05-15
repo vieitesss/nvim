@@ -3,14 +3,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(event)
         local opts = { noremap = true, silent = true, buffer = event.buf }
         local keymap = vim.keymap.set
-        keymap("n", "gd", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'definition' })<CR>", opts)
-        keymap("n", "gr", "<cmd>lua require('mini.extra').pickers.lsp({ scope = 'references' })<CR>", opts)
-        keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-        keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-        keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-        keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-        keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-        keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
+  -- • |grn| in Normal mode maps to                 |vim.lsp.buf.rename()|
+  -- • |grr| in Normal mode maps to                 |vim.lsp.buf.references()|
+  -- • |gri| in Normal mode maps to                 |vim.lsp.buf.implementation()|
+  -- • |gra| is mapped in Normal and Visual mode to |vim.lsp.buf.code_action()|
+  -- •   |K| in Normal mode maps to                 |vim.lsp.buf.hover()|
+
+        keymap("n", "grd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
     end,
 })
 

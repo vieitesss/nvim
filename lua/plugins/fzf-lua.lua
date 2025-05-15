@@ -1,7 +1,6 @@
+local dir = require("vt").dotfiles_dir()
 return {
     "ibhagwan/fzf-lua",
-    -- optional for icon support
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     lazy = false,
     keys = {
         { "<Leader>ff",  "<cmd>lua require('fzf-lua').files()<CR>" },
@@ -9,10 +8,10 @@ return {
         { "<Leader>fh",  "<cmd>lua require('fzf-lua').helptags()<CR>" },
         { "<Leader>fg",  "<cmd>lua require('fzf-lua').grep_visual()<CR>",                    mode = "x" },
         { "<Leader>fb",  "<cmd>lua require('fzf-lua').buffers()<CR>" },
-        { "<Leader>dot", require("vt").dotfiles_dir, },
+        { "<Leader>dot", "<cmd>lua require('fzf-lua').files({cwd = '" .. dir .. "'})<CR>" },
         { "<Leader>obs", "<cmd>lua require('fzf-lua').files({cwd = '~/obsidian/'})<CR>", },
         { "<Leader>nv",  "<cmd>lua require('fzf-lua').files({cwd = '~/.config/nvim/'})<CR>", },
-        { "<Leader>fd", "<cmd>lua require('fzf-lua').diagnostics_workspace()<CR>" },
+        { "<Leader>fd",  "<cmd>lua require('fzf-lua').diagnostics_workspace()<CR>" },
     },
     config = function()
         require('fzf-lua').setup({})
@@ -21,9 +20,12 @@ return {
         local opts = {
             'default-title',
             winopts = {
+                height = 0.5,
+                backdrop = 85,
                 preview = {
-                    vertical = "down:40%",
-                    layout = "vertical",
+                    hidden = true,
+                    -- vertical = "down:40%",
+                    -- layout = "vertical",
                 }
             },
             keymap = {
@@ -31,10 +33,15 @@ return {
                     true,
                     ["<C-d>"] = "preview-page-down",
                     ["<C-u>"] = "preview-page-up",
+                    ["<C-f>"] = "half-page-down",
+                    ["<C-b>"] = "half-page-up",
+                    ["<C-p>"] = "toggle-preview",
                 },
                 fzf = {
                     true,
                     ["ctrl-a"] = "toggle-all",
+                    ["ctrl-G"] = "last",
+                    ["ctrl-g"] = "first",
                 }
             },
             actions = {
