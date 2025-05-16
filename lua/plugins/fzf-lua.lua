@@ -21,6 +21,7 @@ return {
             'default-title',
             winopts = {
                 height = 0.5,
+                width = 0.5,
                 backdrop = 85,
                 preview = {
                     hidden = true,
