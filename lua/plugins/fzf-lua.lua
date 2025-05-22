@@ -20,14 +20,7 @@ return {
         local opts = {
             'default-title',
             winopts = {
-                height = 0.5,
-                width = 0.5,
                 backdrop = 85,
-                preview = {
-                    hidden = true,
-                    -- vertical = "down:40%",
-                    -- layout = "vertical",
-                }
             },
             keymap = {
                 builtin = {
