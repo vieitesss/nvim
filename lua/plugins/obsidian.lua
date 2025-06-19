@@ -5,8 +5,8 @@ return {
     version = "*",
     lazy = true,
     event = {
-        "BufReadPre " .. vim.fn.expand "~" .. "/obsidian/**.md",
-        "BufNewFile " .. vim.fn.expand "~" .. "/obsidian/**.md",
+        "BufReadPre " .. vim.fn.expand "~" .. "personal/obsidian/**.md",
+        "BufNewFile " .. vim.fn.expand "~" .. "personal/obsidian/**.md",
     },
     dependencies = {
         "nvim-lua/plenary.nvim",
