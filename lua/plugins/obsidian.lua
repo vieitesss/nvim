@@ -24,6 +24,14 @@ return {
                 path = "~/personal/obsidian",
             }
         },
+        mappings = {
+            ["<cr>"] = {
+                action = function()
+                    return require("obsidian").util.smart_action()
+                end,
+                opts = { buffer = true, expr = true },
+            }
+        },
         -- completion = {
         --     nvim_cmp = true,
         --     min_chars = 2

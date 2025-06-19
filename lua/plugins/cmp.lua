@@ -46,7 +46,17 @@ return {
         },
 
         cmdline = {
-            sources = {}
+            keymap = {
+                ['<Tab>'] = { 'show', 'accept' },
+                ['<CR>'] = { 'accept_and_enter', 'fallback' },
+            },
+            completion = {
+                menu = {
+                    auto_show = function(ctx)
+                        return vim.fn.getcmdtype() == ':'
+                    end,
+                },
+            },
         },
         sources = {
             default = { "lsp" },
