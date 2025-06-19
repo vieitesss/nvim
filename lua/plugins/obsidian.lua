@@ -5,23 +5,23 @@ return {
     version = "*",
     lazy = true,
     event = {
-        "BufReadPre " .. vim.fn.expand "~" .. "personal/obsidian/**.md",
-        "BufNewFile " .. vim.fn.expand "~" .. "personal/obsidian/**.md",
+        "BufReadPre " .. vim.fn.expand "~" .. "/personal/obsidian/**.md",
+        "BufNewFile " .. vim.fn.expand "~" .. "/personal/obsidian/**.md",
     },
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
     keys = {
-        { "<Leader>on", "<cmd>ObsidianTemplate note<cr>" },
-        { "<Leader>ob", "<cmd>ObsidianBacklink <cr>" },
-        { "<Leader>oc", "<cmd>ObsidianNew<cr>" },
+        { "<Leader>ob", "<cmd>ObsidianBacklinks<cr>" },
+        { "<Leader>on", "<cmd>ObsidianNew<cr>" },
+        { "<Leader>os", "<cmd>ObsidianQuickSwitch<cr>" },
     },
     opts = {
         disable_frontmatter = true,
         workspaces = {
             {
                 name = "personal",
-                path = "~/obsidian",
+                path = "~/personal/obsidian",
             }
         },
         -- completion = {
@@ -30,19 +30,19 @@ return {
         -- },
         notes_subdir = "inbox",
         new_notes_location = "notes_subdir",
-        note_id_func = function(title)
-            local suffix = ""
-            if title ~= nil then
-                -- If title is given, transform it into valid file name.
-                suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
-            else
-                -- If title is nil, just add 4 random uppercase letters to the suffix.
-                for _ = 1, 4 do
-                    suffix = suffix .. string.char(math.random(65, 90))
-                end
-            end
-            return tostring(suffix)
-        end,
+        -- note_id_func = function(title)
+        --     local suffix = ""
+        --     if title ~= nil then
+        --         -- If title is given, transform it into valid file name.
+        --         suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+        --     else
+        --         -- If title is nil, just add 4 random uppercase letters to the suffix.
+        --         for _ = 1, 4 do
+        --             suffix = suffix .. string.char(math.random(65, 90))
+        --         end
+        --     end
+        --     return tostring(suffix)
+        -- end,
         templates = {
             folder = "Templates",
             date_format = "%Y-%m-%d",
@@ -56,7 +56,7 @@ return {
         end,
         open_app_foreground = false,
         picker = {
-            name = "telescope.nvim",
+            name = "fzf-lua",
             mappings = {
                 -- Create a new note from your query.
                 new = "<C-x>",
