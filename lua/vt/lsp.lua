@@ -29,4 +29,5 @@ vim.lsp.config("*", {
 })
 
 vim.lsp.enable(servers)
-vim.diagnostic.enable(false)
+-- vim.diagnostic.enable(false)
+vim.diagnostic.config({ virtual_text = true })

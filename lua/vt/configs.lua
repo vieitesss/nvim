@@ -9,6 +9,7 @@ opt.colorcolumn = "80"
 opt.signcolumn = "yes:1"
 opt.termguicolors = true
 opt.ignorecase = true
+opt.conceallevel = 2
 
 -- Indent
 opt.autoindent = true

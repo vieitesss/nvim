@@ -47,6 +47,7 @@ return {
 
         cmdline = {
             keymap = {
+                preset = 'inherit',
                 ['<Tab>'] = { 'show', 'accept' },
                 ['<CR>'] = { 'accept_and_enter', 'fallback' },
             },

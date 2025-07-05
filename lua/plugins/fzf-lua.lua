@@ -24,7 +24,6 @@ return {
             },
             keymap = {
                 builtin = {
-                    true,
                     ["<C-d>"] = "preview-page-down",
                     ["<C-u>"] = "preview-page-up",
                     ["<C-f>"] = "half-page-down",
@@ -32,16 +31,17 @@ return {
                     ["<C-p>"] = "toggle-preview",
                 },
                 fzf = {
-                    true,
                     ["ctrl-a"] = "toggle-all",
-                    ["ctrl-G"] = "last",
-                    ["ctrl-g"] = "first",
+                    ["ctrl-s"] = "first",
+                    ["ctrl-g"] = "last",
                 }
             },
             actions = {
                 files = {
                     true,
-                    ["ctrl-q"] = actions.file_sel_to_qf
+                    ["ctrl-q"] = actions.file_sel_to_qf,
+                    ["ctrl-n"] = actions.toggle_ignore,
+                    ["ctrl-h"] = actions.toggle_hidden,
                 }
             }
         }

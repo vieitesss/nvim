@@ -1,5 +1,3 @@
-vim.opt.conceallevel = 1
-
 return {
     "epwalsh/obsidian.nvim",
     version = "*",
