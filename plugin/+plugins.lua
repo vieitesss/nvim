@@ -2,7 +2,7 @@ local HOME = vim.fn.expand("~")
 local local_dev = "file://" .. HOME
 vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
-    { src = local_dev .. "/personal/techbase.nvim",           version = "fix/colorcolumn-hl" },
+    { src = "https://github.com/mcauley-penney/techbase.nvim" },
     { src = "https://github.com/vieitesss/miniharp.nvim" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
@@ -14,7 +14,7 @@ vim.pack.add({
     { src = "https://github.com/olimorris/codecompanion.nvim" },
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/ravitemer/mcphub.nvim" },
-})
+}, { load = true })
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 

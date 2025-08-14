@@ -24,6 +24,7 @@ opt.undodir = os.getenv('HOME') .. '/.vim/undodir'
 opt.undofile = true
 opt.completeopt = { "menuone", "popup", "noinsert" }
 opt.winborder = "rounded"
+opt.hlsearch = false
 
 vim.cmd.filetype("plugin indent on")
 vim.cmd.colorscheme("techbase")

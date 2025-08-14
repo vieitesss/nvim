@@ -19,13 +19,8 @@ keymap("n", "<C-u>", "<C-u>zz")
 keymap("n", "<Leader>w", "<cmd>w!<CR>", s)
 keymap("n", "<Leader>q", "<cmd>q<CR>", s)
 
---- no highlight
-keymap("n", "<Leader>no", "<cmd>noh<CR>", s)
-
 -- tabs
 keymap("n", "<Leader>te", "<cmd>tabnew<CR>", s)
-keymap("n", "<Leader>tp", "<cmd>tabp<CR>", s)
-keymap("n", "<Leader>tn", "<cmd>tabn<CR>", s)
 
 --- split windows
 keymap("n", "<Leader>_", "<cmd>vsplit<CR>", s)
