@@ -1,10 +1,14 @@
 local HOME = vim.fn.expand("~")
+local local_dev = "file://" .. HOME
 vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
-    { src = "file://" .. HOME .. "/personal/techbase.nvim",   version = "fix/colorcolumn-hl" },
+    { src = local_dev .. "/personal/techbase.nvim",           version = "fix/colorcolumn-hl" },
+    { src = "https://github.com/vieitesss/miniharp.nvim" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
+    { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("^1") },
-    { src = "file://" .. HOME .. "/personal/command.nvim",    version = "feat/add-tests" },
+    -- { src = local_dev .. "/personal/command.nvim",            version = "feat/add-tests" },
+    { src = "https://github.com/vieitesss/command.nvim" },
     { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/github/copilot.vim" },
     { src = "https://github.com/olimorris/codecompanion.nvim" },
@@ -15,8 +19,10 @@ vim.pack.add({
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 require('command').setup({})
+require('miniharp').setup({})
 require('mason').setup({})
 require('techbase').setup({})
+require('gitsigns').setup({ signcolumn = false })
 require('blink.cmp').setup({
     fuzzy = { implementation = 'prefer_rust_with_warning' },
     signature = { enabled = true },

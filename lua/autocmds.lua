@@ -18,9 +18,11 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set('n', '<Tab>', 'mf', { buffer = true, remap = true, silent = true })
         vim.keymap.set('n', '<S-Tab>', 'mF', { buffer = true, remap = true, silent = true })
         vim.keymap.set('n', '%', function()
+            local dir = vim.b.netrw_curdir or vim.fn.expand('%:p:h')
             vim.ui.input({ prompt = 'Enter filename: ' }, function(input)
                 if input and input ~= '' then
-                    vim.cmd('!touch ' .. input)
+                    local filepath = dir .. '/' .. input
+                    vim.cmd('!touch ' .. vim.fn.shellescape(filepath))
                     vim.api.nvim_feedkeys('<C-l>', 'n', false)
                 end
             end)

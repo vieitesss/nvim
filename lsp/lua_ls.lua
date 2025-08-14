@@ -22,7 +22,7 @@ return {
             },
             diagnostics = {
                 enable = true,
-                globals = { "require", "vim", "use", "love" },
+                globals = { "vim" },
             },
             workspace = {
                 library = { vim.env.VIMRUNTIME },
