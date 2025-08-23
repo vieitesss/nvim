@@ -63,12 +63,24 @@ local function git()
     })
 end
 
+local function diagnostics()
+    local status = vim.diagnostic.status()
+
+    if not status or status == "" then
+        return ""
+    end
+
+    return "[" .. status .. "]"
+end
+
 Statusline = {}
 
 function Statusline.active()
     return table.concat {
         "[", filepath(), "%t] ",
         git(),
+        " ",
+        diagnostics(),
         "%=",
         "%y [%P %l:%c]"
     }

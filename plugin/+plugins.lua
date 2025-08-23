@@ -1,9 +1,14 @@
+vim.g.mapleader = " "
+
 local HOME = vim.fn.expand("~")
 local local_dev = "file://" .. HOME
 vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/mcauley-penney/techbase.nvim" },
+    -- { src = local_dev .. "/personal/techbase.nvim", version = "fix/core-hl-groups" },
     { src = "https://github.com/vieitesss/miniharp.nvim" },
+    -- { src = local_dev .. "/personal/miniharp.nvim", version = "fix/do-not-save-index" },
+    -- { src = "https://github.com/ThePrimeagen/harpoon",        version = "harpoon2" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("^1") },
@@ -14,12 +19,13 @@ vim.pack.add({
     { src = "https://github.com/olimorris/codecompanion.nvim" },
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/ravitemer/mcphub.nvim" },
+    { src = "https://github.com/lervag/vimtex" },
 }, { load = true })
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 require('command').setup({})
-require('miniharp').setup({})
+require('miniharp').setup({ show_on_autoload = true })
 require('mason').setup({})
 require('techbase').setup({})
 require('gitsigns').setup({ signcolumn = false })
@@ -104,3 +110,12 @@ require('codecompanion').setup({
         }
     },
 })
+
+vim.g.vimtex_imaps_enabled = 0
+vim.g.vimtex_view_method = "skim"
+vim.g.latex_view_general_viewer = "skim"
+vim.g.latex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
+vim.g.vimtex_compiler_method = "latexmk"
+vim.g.vimtex_quickfix_open_on_warning = 0
+vim.g.vimtex_quickfix_ignore_filters = { "Underfull", "Overfull", "LaTeX Warning: .\\+ float specifier changed to",
+    "Package hyperref Warning: Token not allowed in a PDF string" }

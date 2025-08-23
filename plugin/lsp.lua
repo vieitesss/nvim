@@ -7,5 +7,5 @@ vim.lsp.enable({
   "rust-analyzer",
   "helm_ls",
 })
-vim.diagnostic.config({ virtual_text = true })
 
+vim.diagnostic.config({ signs = true })
