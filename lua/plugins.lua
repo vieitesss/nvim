@@ -21,7 +21,7 @@ vim.pack.add({
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/ravitemer/mcphub.nvim" },
     { src = "https://github.com/lervag/vimtex" },
-}, { load = true })
+})
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
@@ -80,7 +80,14 @@ require('blink.cmp').setup({
 
 local actions = require('fzf-lua.actions')
 require('fzf-lua').setup({
-    winopts = { backdrop = 85 },
+    winopts = {
+        height = 1,
+        width = 1,
+        backdrop = 85,
+        preview = {
+            horizontal = "right:70%",
+        }
+    },
     keymap = {
         builtin = {
             ["<C-f>"] = "preview-page-down",
