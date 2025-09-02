@@ -27,7 +27,7 @@ opt.hlsearch = false
 
 vim.cmd.filetype("plugin indent on")
 -- vim.cmd.colorscheme("techbase")
-vim.cmd.colorscheme("gruber-darker")
+-- vim.cmd.colorscheme("gruber-darker")
 
 vim.g.copilot_no_tab_map = true
 vim.g.netrw_liststyle = 1

@@ -5,14 +5,14 @@ local local_dev = "file://" .. HOME
 vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
     -- { src = "https://github.com/mcauley-penney/techbase.nvim" },
-    { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
+    -- { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
     -- { src = local_dev .. "/personal/techbase.nvim", version = "fix/core-hl-groups" },
     { src = "https://github.com/vieitesss/miniharp.nvim" },
     -- { src = local_dev .. "/personal/miniharp.nvim", version = "fix/do-not-save-index" },
     -- { src = "https://github.com/ThePrimeagen/harpoon",        version = "harpoon2" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
-    { src = "https://github.com/saghen/blink.cmp",             version = vim.version.range("^1") },
+    { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("^1") },
     -- { src = local_dev .. "/personal/command.nvim",            version = "feat/add-tests" },
     { src = "https://github.com/vieitesss/command.nvim" },
     { src = "https://github.com/tpope/vim-fugitive" },
@@ -29,12 +29,12 @@ require('command').setup({})
 require('miniharp').setup({ show_on_autoload = true })
 require('mason').setup({})
 -- require('techbase').setup({})
-require('gruber-darker').setup({
-    bold = false,
-    italic = {
-        strings = false,
-    },
-})
+-- require('gruber-darker').setup({
+--     bold = false,
+--     italic = {
+--         strings = false,
+--     },
+-- })
 require('gitsigns').setup({ signcolumn = false })
 require('blink.cmp').setup({
     fuzzy = { implementation = 'prefer_rust_with_warning' },
