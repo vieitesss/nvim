@@ -1,5 +1,8 @@
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
+local map = vim.keymap.set
+local bs = { buffer = true, silent = true }
+local brs = { buffer = true, remap = true, silent = true }
 
 -- Highlight yanked text
 local highlight_group = augroup("YankHighlight", { clear = true })
@@ -14,25 +17,10 @@ autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "netrw",
     callback = function()
-        vim.keymap.set(
-            "n",
-            "<C-c>",
-            "<cmd>bd<CR>",
-            { buffer = true, silent = true }
-        )
-        vim.keymap.set(
-            "n",
-            "<Tab>",
-            "mf",
-            { buffer = true, remap = true, silent = true }
-        )
-        vim.keymap.set(
-            "n",
-            "<S-Tab>",
-            "mF",
-            { buffer = true, remap = true, silent = true }
-        )
-        vim.keymap.set("n", "%", function()
+        map("n", "<C-c>", "<cmd>bd<CR>", bs)
+        map("n", "<Tab>", "mf", brs)
+        map("n", "<S-Tab>", "mF", brs)
+        map("n", "%", function()
             local dir = vim.b.netrw_curdir or vim.fn.expand("%:p:h")
             vim.ui.input({ prompt = "Enter filename: " }, function(input)
                 if input and input ~= "" then
@@ -41,23 +29,24 @@ vim.api.nvim_create_autocmd("FileType", {
                     vim.api.nvim_feedkeys("<C-l>", "n", false)
                 end
             end)
-        end, { buffer = true, silent = true })
+        end, bs)
     end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function(ev)
-        local formatting = "lua vim.lsp.buf.format()"
         local ft = vim.bo[ev.buf].filetype
+        local formatting = "lua vim.lsp.buf.format()"
+
         if ft == "lua" then
             formatting = "!stylua %"
         elseif ft == "tex" then
             formatting = "!latexindent -s -l -w %"
         end
-        vim.keymap.set("n", "<leader>fo", "<cmd>" .. formatting .. "<CR>", {
-            buffer = ev.buf,
-            silent = true,
-        })
+
+        local cmd = "<cmd>silent " .. formatting .. "<CR>"
+
+        map("n", "<leader>fo", cmd, { buffer = ev.buf })
     end,
 })
