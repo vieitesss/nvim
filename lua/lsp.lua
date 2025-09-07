@@ -6,6 +6,7 @@ vim.lsp.enable({
   "ts_ls",
   "rust-analyzer",
   "helm_ls",
+  "yamlls",
 })
 
 vim.diagnostic.config({ signs = true })

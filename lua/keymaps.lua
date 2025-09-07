@@ -4,12 +4,8 @@ local s = { silent = true }
 keymap("n", "<space>", "<Nop>")
 
 -- movement
-keymap("n", "j", function()
-    return tonumber(vim.api.nvim_get_vvar("count")) > 0 and "j" or "gj"
-end, { expr = true, silent = true })
-keymap("n", "k", function()
-    return tonumber(vim.api.nvim_get_vvar("count")) > 0 and "k" or "gk"
-end, { expr = true, silent = true })
+keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 keymap("n", "<C-d>", "<C-d>zz")
 keymap("n", "<C-u>", "<C-u>zz")
 
@@ -23,9 +19,6 @@ keymap("n", "<Leader>te", "<cmd>tabnew<CR>", s)
 --- split windows
 keymap("n", "<Leader>_", "<cmd>vsplit<CR>", s)
 keymap("n", "<Leader>-", "<cmd>split<CR>", s)
-
---- formatting
-keymap("n", "<Leader>fo", ":lua vim.lsp.buf.format()<CR>", s)
 
 -- copy and paste
 keymap("v", "<Leader>p", '"_dP')
@@ -56,3 +49,4 @@ keymap("n", "<leader>m", '<cmd>lua require("miniharp").toggle_file()<CR>')
 keymap("n", "<leader>l", '<cmd>lua require("miniharp").show_list()<CR>')
 keymap("n", "<C-n>", require("miniharp").next)
 keymap("n", "<C-p>", require("miniharp").prev)
+keymap({ "n", "x" }, "<leader>gy", function() require("gh-permalink").yank() end)
