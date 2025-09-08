@@ -45,7 +45,10 @@ vim.api.nvim_create_autocmd("FileType", {
             formatting = "!latexindent -s -l -w %"
         end
 
-        local cmd = "<cmd>silent " .. formatting .. "<CR>"
+        local cmd = function()
+            vim.cmd("write")
+            vim.cmd("silent " .. formatting)
+        end
 
         map("n", "<leader>fo", cmd, { buffer = ev.buf })
     end,
