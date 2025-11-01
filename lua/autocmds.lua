@@ -43,6 +43,8 @@ vim.api.nvim_create_autocmd("FileType", {
             formatting = "!stylua %"
         elseif ft == "tex" then
             formatting = "!latexindent -s -l -w %"
+        elseif ft == "python" then
+            formatting = "!black %"
         end
 
         local cmd = function()
