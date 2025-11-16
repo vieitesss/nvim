@@ -15,6 +15,8 @@ keymap("n", "<Leader>q", "<cmd>q<CR>", s)
 
 -- tabs
 keymap("n", "<Leader>te", "<cmd>tabnew<CR>", s)
+keymap("n", "<Leader>tn", "<cmd>tabn<CR>", s)
+keymap("n", "<Leader>tp", "<cmd>tabp<CR>", s)
 
 --- split windows
 keymap("n", "<Leader>_", "<cmd>vsplit<CR>", s)
