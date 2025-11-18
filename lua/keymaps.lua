@@ -39,6 +39,8 @@ keymap("n", "<leader>dn", "<cmd>lua vim.diagnostic.jump({count = 1})<CR>", ns)
 keymap("n", "<leader>dp", "<cmd>lua vim.diagnostic.jump({count = -1})<CR>", ns)
 
 keymap("n", "<leader>ex", "<cmd>Ex %:p:h<CR>")
+keymap("n", "<leader>of", "<cmd>Oil<CR>")
+keymap("n", "<leader>oc", function() require("oil").open(vim.fn.getcwd()) end)
 keymap("n", "<leader>ps", "<cmd>lua vim.pack.update()<CR>")
 keymap("n", "<leader>gs", "<cmd>Git<CR>", ns)
 keymap("n", "<leader>gp", "<cmd>Git push<CR>", ns)

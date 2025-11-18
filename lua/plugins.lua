@@ -13,8 +13,14 @@ vim.pack.add({
     -- { src = "https://github.com/ThePrimeagen/harpoon",        version = "harpoon2" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
-    { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("^1") },
-    { src = local_dev .. "/personal/command.nvim", version = "feat/virtual-text" },
+    {
+        src = "https://github.com/saghen/blink.cmp",
+        version = vim.version.range("^1"),
+    },
+    {
+        src = local_dev .. "/personal/command.nvim",
+        version = "feat/virtual-text",
+    },
     -- { src = "https://github.com/vieitesss/command.nvim" },
     { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/github/copilot.vim" },
@@ -22,13 +28,14 @@ vim.pack.add({
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/ravitemer/mcphub.nvim" },
     { src = "https://github.com/lervag/vimtex" },
+    { src = "https://github.com/stevearc/oil.nvim" },
 })
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
-require('command').setup({})
-require('miniharp').setup({ show_on_autoload = true })
-require('mason').setup({})
+require("command").setup({})
+require("miniharp").setup({ show_on_autoload = true })
+require("mason").setup({})
 -- require('techbase').setup({})
 -- require('gruber-darker').setup({
 --     bold = false,
@@ -36,9 +43,9 @@ require('mason').setup({})
 --         strings = false,
 --     },
 -- })
-require('gitsigns').setup({ signcolumn = false })
-require('blink.cmp').setup({
-    fuzzy = { implementation = 'prefer_rust_with_warning' },
+require("gitsigns").setup({ signcolumn = false })
+require("blink.cmp").setup({
+    fuzzy = { implementation = "prefer_rust_with_warning" },
     signature = { enabled = true },
     keymap = {
         preset = "default",
@@ -66,28 +73,28 @@ require('blink.cmp').setup({
         documentation = {
             auto_show = true,
             auto_show_delay_ms = 200,
-        }
+        },
     },
 
     cmdline = {
         keymap = {
-            preset = 'inherit',
-            ['<CR>'] = { 'accept_and_enter', 'fallback' },
+            preset = "inherit",
+            ["<CR>"] = { "accept_and_enter", "fallback" },
         },
     },
 
-    sources = { default = { "lsp" } }
+    sources = { default = { "lsp" } },
 })
 
-local actions = require('fzf-lua.actions')
-require('fzf-lua').setup({
+local actions = require("fzf-lua.actions")
+require("fzf-lua").setup({
     winopts = {
         height = 1,
         width = 1,
         backdrop = 85,
         preview = {
             horizontal = "right:70%",
-        }
+        },
     },
     keymap = {
         builtin = {
@@ -101,36 +108,72 @@ require('fzf-lua').setup({
             ["ctrl-g"] = "last",
             ["ctrl-d"] = "half-page-down",
             ["ctrl-u"] = "half-page-up",
-        }
+        },
     },
     actions = {
         files = {
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["ctrl-n"] = actions.toggle_ignore,
             ["ctrl-h"] = actions.toggle_hidden,
-            ["enter"]  = actions.file_edit_or_qf,
-        }
-    }
+            ["enter"] = actions.file_edit_or_qf,
+        },
+    },
 })
 
-require('codecompanion').setup({
+require("oil").setup({
+    default_file_explorer = true,
+    columns = {
+        "permissions",
+        "size",
+    },
+    constrain_cursor = "name",
+    watch_for_changes = true,
+    keymaps = {
+        ["g?"] = { "actions.show_help", mode = "n" },
+        ["<CR>"] = "actions.select",
+        ["<C-s>"] = { "actions.select", opts = { vertical = true } },
+        ["<C-v>"] = { "actions.select", opts = { horizontal = true } },
+        ["<C-t>"] = { "actions.select", opts = { tab = true } },
+        ["<C-p>"] = "actions.preview",
+        ["<C-c>"] = { "actions.close", mode = "n" },
+        ["<C-l>"] = "actions.refresh",
+        ["-"] = { "actions.parent", mode = "n" },
+        ["_"] = { "actions.open_cwd", mode = "n" },
+        ["`"] = { "actions.cd", mode = "n" },
+        ["~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
+        ["gs"] = { "actions.change_sort", mode = "n" },
+        ["gx"] = "actions.open_external",
+        ["g."] = { "actions.toggle_hidden", mode = "n" },
+        ["g\\"] = { "actions.toggle_trash", mode = "n" },
+    },
+    view_options = {
+        show_hidden = true,
+    },
+})
+
+require("codecompanion").setup({
     extensions = {
         mcphub = {
             callback = "mcphub.extensions.codecompanion",
             opts = {
                 make_vars = true,
                 make_slash_commands = true,
-                show_result_in_chat = true
-            }
-        }
+                show_result_in_chat = true,
+            },
+        },
     },
 })
 
 vim.g.vimtex_imaps_enabled = 0
 vim.g.vimtex_view_method = "skim"
 vim.g.latex_view_general_viewer = "skim"
-vim.g.latex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
+vim.g.latex_view_general_options =
+    "-reuse-instance -forward-search @tex @line @pdf"
 vim.g.vimtex_compiler_method = "latexmk"
 vim.g.vimtex_quickfix_open_on_warning = 0
-vim.g.vimtex_quickfix_ignore_filters = { "Underfull", "Overfull", "LaTeX Warning: .\\+ float specifier changed to",
-    "Package hyperref Warning: Token not allowed in a PDF string" }
+vim.g.vimtex_quickfix_ignore_filters = {
+    "Underfull",
+    "Overfull",
+    "LaTeX Warning: .\\+ float specifier changed to",
+    "Package hyperref Warning: Token not allowed in a PDF string",
+}
