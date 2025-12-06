@@ -24,9 +24,6 @@ vim.pack.add({
     -- { src = "https://github.com/vieitesss/command.nvim" },
     { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/github/copilot.vim" },
-    { src = "https://github.com/olimorris/codecompanion.nvim" },
-    { src = "https://github.com/nvim-lua/plenary.nvim" },
-    { src = "https://github.com/ravitemer/mcphub.nvim" },
     { src = "https://github.com/lervag/vimtex" },
     { src = "https://github.com/stevearc/oil.nvim" },
 })
@@ -131,8 +128,8 @@ require("oil").setup({
     keymaps = {
         ["g?"] = { "actions.show_help", mode = "n" },
         ["<CR>"] = "actions.select",
-        ["<C-s>"] = { "actions.select", opts = { vertical = true } },
-        ["<C-v>"] = { "actions.select", opts = { horizontal = true } },
+        ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+        ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
         ["<C-t>"] = { "actions.select", opts = { tab = true } },
         ["<C-p>"] = "actions.preview",
         ["<C-c>"] = { "actions.close", mode = "n" },
@@ -148,19 +145,6 @@ require("oil").setup({
     },
     view_options = {
         show_hidden = true,
-    },
-})
-
-require("codecompanion").setup({
-    extensions = {
-        mcphub = {
-            callback = "mcphub.extensions.codecompanion",
-            opts = {
-                make_vars = true,
-                make_slash_commands = true,
-                show_result_in_chat = true,
-            },
-        },
     },
 })
 
