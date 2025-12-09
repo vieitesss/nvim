@@ -110,6 +110,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   desc = "Activate statusline on focus",
   callback = function()
     vim.opt_local.statusline = "%!v:lua.Statusline.active()"
+    vim.cmd("redrawstatus")
   end,
 })
 
