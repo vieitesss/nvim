@@ -17,10 +17,7 @@ vim.pack.add({
         src = "https://github.com/saghen/blink.cmp",
         version = vim.version.range("^1"),
     },
-    {
-        src = local_dev .. "/personal/command.nvim",
-        version = "feat/virtual-text",
-    },
+    { src = "https://github.com/vieitesss/command.nvim" },
     -- { src = "https://github.com/vieitesss/command.nvim" },
     { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/github/copilot.vim" },
