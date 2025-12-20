@@ -46,17 +46,17 @@ local o = {
 }
 local function maybe(bg) return o.transparent and "NONE" or bg end
 
--- palette (lack-ish neutrals + 3 accents)
+-- palette (gruvbox-ish high contrast + 3 accents)
 local black                             = "#000000"
-local gray1, gray2, gray3, gray4, gray5 = "#111319", "#191c23", "#22262f", "#2b303b", "#353b47"
-local gray6, gray7, gray8, gray9        = "#495263", "#6a7383", "#9aa3af", "#cfd6df"
-local luster                            = "#e5ecef"
+local gray1, gray2, gray3, gray4, gray5 = "#141617", "#1d2021", "#282828", "#3c3836", "#504945"
+local gray6, gray7, gray8, gray9        = "#7c6f64", "#928374", "#a89984", "#d5c4a1"
+local luster                            = "#fbf1c7"
 
 local bg0, bg1, bg2, bg3, bg_dim        = gray2, gray3, gray4, gray5, gray1
-local fg0, fg1, fg2, fg3                = "#c0c9d6", "#a7afbb", "#858e9c", "#6f7682"
-local lack                              = "#7c8aa3" -- cool neutral “hint”
+local fg0, fg1, fg2, fg3                = "#fbf1c7", "#ebdbb2", "#a89984", "#928374"
+local lack                              = "#83a598" -- cool neutral “hint”
 
-local yellow, green, red                = "#c9a45f", "#8eab6a", "#c3555f"
+local yellow, green, red                = "#fabd2f", "#b8bb26", "#fb4934"
 
 -- derived
 local sel                               = blend(lack, bg0, 0.18)
@@ -147,7 +147,7 @@ local function apply()
     set_hl("DiffAdd", { fg = "NONE", bg = maybe(blend(green, bg0, 0.16)) })
     set_hl("DiffChange", { fg = "NONE", bg = maybe(blend(lack, bg0, 0.12)) })
     set_hl("DiffDelete", { fg = "NONE", bg = maybe(blend(red, bg0, 0.15)) })
-    set_hl("DiffText", { fg = "NONE", bg = maybe(blend(yellow, bg0, 0.18)) })
+    set_hl("DiffText", { fg = "NONE", bg = maybe(blend(yellow, bg0, 0.30)) })
 
     set_hl("SpellBad", { sp = red, undercurl = true })
     set_hl("SpellCap", { sp = lack, undercurl = true })
@@ -179,24 +179,60 @@ local function apply()
     link("luaNumber", "Number")
     link("luaString", "String")
 
-    local legacy = {
-        TSString = "String",
-        TSCharacter = "Character",
-        TSNumber = "Number",
-        TSFloat = "Float",
-        TSBoolean = "Boolean",
-        TSConstant = "Constant",
-        TSFunction = "Function",
-        TSMethod = "Function",
-        TSConstructor = "Constructor",
-        TSKeyword = "Keyword",
-        TSConditional = "Conditional",
-        TSRepeat = "Repeat",
-        TSOperator = "Operator",
-        TSType = "Type",
-        TSTypeBuiltin = "Type",
-    }
-    for from, to in pairs(legacy) do link(from, to) end
+    -- Treesitter Standard Captures
+    link("@comment", "Comment")
+    link("@string", "String")
+    link("@string.regex", "String")
+    link("@string.escape", "Special")
+    link("@character", "Character")
+    link("@character.special", "Special")
+    link("@number", "Number")
+    link("@boolean", "Boolean")
+    link("@float", "Float")
+    link("@function", "Function")
+    link("@function.builtin", "Special")
+    link("@function.call", "Function")
+    link("@function.macro", "Macro")
+    link("@method", "Function")
+    link("@method.call", "Function")
+    link("@constructor", "Constructor")
+    link("@parameter", "Identifier")
+    link("@keyword", "Keyword")
+    link("@keyword.function", "Keyword")
+    link("@keyword.operator", "Operator")
+    link("@keyword.return", "Keyword")
+    link("@conditional", "Conditional")
+    link("@repeat", "Repeat")
+    link("@debug", "Debug")
+    link("@label", "Label")
+    link("@include", "Include")
+    link("@exception", "Exception")
+    link("@type", "Type")
+    link("@type.builtin", "Type")
+    link("@type.definition", "Typedef")
+    link("@type.qualifier", "Type")
+    link("@storageclass", "StorageClass")
+    link("@attribute", "PreProc")
+    link("@field", "Identifier")
+    link("@property", "Identifier")
+    link("@variable", "Identifier")
+    link("@variable.builtin", "Special")
+    link("@constant", "Constant")
+    link("@constant.builtin", "Special")
+    link("@constant.macro", "Define")
+    link("@namespace", "Include")
+    link("@symbol", "Identifier")
+    link("@text", "Normal")
+    link("@text.strong", "Bold")
+    link("@text.emphasis", "Italic")
+    link("@text.underline", "Underlined")
+    link("@text.strike", "Strikethrough")
+    link("@text.title", "Title")
+    link("@text.literal", "String")
+    link("@text.uri", "Underlined")
+    link("@tag", "Tag")
+    link("@tag.attribute", "Identifier")
+    link("@tag.delimiter", "Delimiter")
 
     -- LaTeX
     set_hl("texCmd", { fg = yellow })
