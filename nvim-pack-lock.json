@@ -1,12 +1,16 @@
 {
   "plugins": {
+    "atlas.vim": {
+      "rev": "f254465adbcae565d9cf8c987f5a797c1f9cf922",
+      "src": "https://github.com/huyvohcmc/atlas.vim"
+    },
     "blink.cmp": {
       "rev": "b19413d214068f316c78978b08264ed1c41830ec",
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
     "codecompanion.nvim": {
-      "rev": "57232d7aedcc0675933fe5596d3167029d9057a8",
+      "rev": "a226ca071ebc1d8b5ae1f70800fa9cf4a06a2101",
       "src": "https://github.com/olimorris/codecompanion.nvim"
     },
     "colorbuddy.nvim": {
@@ -14,12 +18,17 @@
       "src": "https://github.com/tjdevries/colorbuddy.nvim"
     },
     "command.nvim": {
-      "rev": "e16febe79f9d31dc38d1e91e8c89ae12bc1c2b06",
-      "src": "https://github.com/vieitesss/command.nvim"
+      "rev": "a34508c0ffd20f4b725750f0530f1467e97cb3e7",
+      "src": "https://github.com/vieitesss/command.nvim",
+      "version": "'main'"
     },
     "copilot.vim": {
       "rev": "f89e977c87180519ba3b942200e3d05b17b1e2fc",
       "src": "https://github.com/github/copilot.vim"
+    },
+    "fogbell.vim": {
+      "rev": "274cc13184f6a7d0589650c0763c94cef431b319",
+      "src": "https://github.com/jaredgorski/fogbell.vim"
     },
     "fyler.nvim": {
       "rev": "b8ddeb8fb978f782affa22d993b2b6baef4bc0a5",
@@ -40,6 +49,10 @@
     "gruber-darker.nvim": {
       "rev": "98a2e141981cbd5a194a97eae024bf55af854579",
       "src": "https://github.com/blazkowolf/gruber-darker.nvim"
+    },
+    "gruvbox-material": {
+      "rev": "cc47341018320a2c82262958a1af889e5eeacd6e",
+      "src": "https://github.com/sainnhe/gruvbox-material"
     },
     "harpoon": {
       "rev": "1bc17e3e42ea3c46b33c0bbad6a880792692a1b3",
@@ -78,8 +91,12 @@
       "src": "https://github.com/tpope/vim-fugitive"
     },
     "vimtex": {
-      "rev": "aed184681f177ae6071e56cd7a2b9441261fca52",
+      "rev": "c6e2162066db4ceb44774f9bfb79fe97a4c25e71",
       "src": "https://github.com/lervag/vimtex"
+    },
+    "xeno.nvim": {
+      "rev": "f70c22447c7d954973f35c10dd9e9942cd7fb2eb",
+      "src": "https://github.com/kyza0d/xeno.nvim"
     },
     "zen-mode.nvim": {
       "rev": "8564ce6d29ec7554eb9df578efa882d33b3c23a7",
