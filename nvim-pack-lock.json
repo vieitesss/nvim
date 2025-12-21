@@ -10,7 +10,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "codecompanion.nvim": {
-      "rev": "a226ca071ebc1d8b5ae1f70800fa9cf4a06a2101",
+      "rev": "859bc37a4689e793d38a8086737dacd9167d3991",
       "src": "https://github.com/olimorris/codecompanion.nvim"
     },
     "colorbuddy.nvim": {
@@ -18,7 +18,7 @@
       "src": "https://github.com/tjdevries/colorbuddy.nvim"
     },
     "command.nvim": {
-      "rev": "a34508c0ffd20f4b725750f0530f1467e97cb3e7",
+      "rev": "a1fbac145bfccb16e756dfca4a64985a47b94037",
       "src": "https://github.com/vieitesss/command.nvim",
       "version": "'main'"
     },
@@ -31,7 +31,7 @@
       "src": "https://github.com/jaredgorski/fogbell.vim"
     },
     "fyler.nvim": {
-      "rev": "b8ddeb8fb978f782affa22d993b2b6baef4bc0a5",
+      "rev": "292a0d02fa06dd57fa110bbd5640a9190d3e2c33",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/vieitesss/miniharp.nvim"
     },
     "oil.nvim": {
-      "rev": "cbcb3f997f6f261c577b943ec94e4ef55108dd95",
+      "rev": "3b249b71957ee35d5adbfb21f77992809a4c4683",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
@@ -91,7 +91,7 @@
       "src": "https://github.com/tpope/vim-fugitive"
     },
     "vimtex": {
-      "rev": "c6e2162066db4ceb44774f9bfb79fe97a4c25e71",
+      "rev": "f5c37462c690da9a0d05cd12a7b9595b10b56200",
       "src": "https://github.com/lervag/vimtex"
     },
     "xeno.nvim": {
