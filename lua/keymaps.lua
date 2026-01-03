@@ -56,7 +56,7 @@ keymap("n", "<leader>mc", require("miniharp").clear)
 keymap("n", "<leader>l", require("miniharp").show_list)
 keymap("n", "<C-n>", require("miniharp").next)
 keymap("n", "<C-p>", require("miniharp").prev)
-keymap({ "n", "x" }, "<leader>gy", require("gh-permalink").yank)
+-- keymap({ "n", "x" }, "<leader>gy", require("gh-permalink").yank)
 keymap("n", "<leader>so", function()
     require("fzf-lua").files({
         actions = {

@@ -8,7 +8,7 @@ vim.pack.add({
     -- { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
     -- { src = local_dev .. "/personal/techbase.nvim", version = "fix/core-hl-groups" },
     { src = "https://github.com/vieitesss/miniharp.nvim" },
-    { src = "https://github.com/vieitesss/gh-permalink.nvim" },
+    -- { src = "https://github.com/vieitesss/gh-permalink.nvim" },
     -- { src = local_dev .. "/personal/miniharp.nvim", version = "fix/do-not-save-index" },
     -- { src = "https://github.com/ThePrimeagen/harpoon",        version = "harpoon2" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
