@@ -1,29 +1,29 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "4b18c32adef2898f95cdef6192cbd5796c1a332d",
+      "rev": "451168851e8e2466bc97ee3e026c3dcb9141ce07",
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
     "command.nvim": {
-      "rev": "8f0f9594d219f84a25c942e2b6ee152199033020",
+      "rev": "fe80df22c837d587d078842ace2e64656928789f",
       "src": "https://github.com/vieitesss/command.nvim",
-      "version": "'main'"
+      "version": "'feat/nix-error-parser'"
     },
     "copilot.vim": {
       "rev": "a12fd5672110c8aa7e3c8419e28c96943ca179be",
       "src": "https://github.com/github/copilot.vim"
     },
     "fyler.nvim": {
-      "rev": "560c627769faf51bb37ed9414e6a0e869f83dafd",
+      "rev": "15fabd5d8cf6ba8afb0a404878106ba5300843b1",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
-      "rev": "cfc085749d9232373fc6d8cf3a964c5601a7816e",
+      "rev": "c9e7b7bfbd01f949164988ee1684035468e1995c",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
+      "rev": "e1b90b60fb7aa9c0ada8e983b460764b35a05e2e",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "mason.nvim": {
@@ -43,7 +43,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "vim-fugitive": {
-      "rev": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4",
+      "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
       "src": "https://github.com/tpope/vim-fugitive"
     }
   }

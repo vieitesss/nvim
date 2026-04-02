@@ -1,8 +1,10 @@
 -- colors/umbraline.lua
--- Umbraline: 3 main code accents (Yellow = funcs/types/consts,
--- Green = strings, Red = errors). Inspired by the "lack" aesthetic.
+-- Umbraline: contrast-forward theme presets with warm syntax accents and
+-- cool UI chrome. Inspired by the "lack" aesthetic.
 --
 -- Options (set BEFORE :colorscheme):
+--   vim.g.umbraline = { theme = "default" } -- or "cursor"
+--   vim.g.umbraline_theme = "default"       -- legacy alias
 --   vim.g.umbraline_transparent = false
 --   vim.g.umbraline_dim_inactive = true
 --   vim.g.umbraline_italic_comments = true
@@ -36,36 +38,143 @@ local function set_hl(g, s) vim.api.nvim_set_hl(0, g, s) end
 local function link(f, t) vim.api.nvim_set_hl(0, f, { link = t, default = false }) end
 
 -- options
+local settings = type(vim.g.umbraline) == "table" and vim.g.umbraline or {}
+
+local function get_opt(name, legacy, default)
+    local value = settings[name]
+    if value ~= nil then return value end
+    value = vim.g[legacy]
+    if value ~= nil then return value end
+    return default
+end
+
 local o = {
-    transparent     = vim.g.umbraline_transparent or false,
-    dim_inactive    = vim.g.umbraline_dim_inactive ~= false,
-    italic_comments = vim.g.umbraline_italic_comments ~= false,
-    italic_keywords = vim.g.umbraline_italic_keywords ~= false,
-    bold            = vim.g.umbraline_bold ~= false,
-    high_contrast   = vim.g.umbraline_high_contrast or false,
+    theme           = get_opt("theme", "umbraline_theme", "default"),
+    transparent     = get_opt("transparent", "umbraline_transparent", false),
+    dim_inactive    = get_opt("dim_inactive", "umbraline_dim_inactive", true),
+    italic_comments = get_opt("italic_comments", "umbraline_italic_comments", true),
+    italic_keywords = get_opt("italic_keywords", "umbraline_italic_keywords", true),
+    bold            = get_opt("bold", "umbraline_bold", true),
+    high_contrast   = get_opt("high_contrast", "umbraline_high_contrast", false),
 }
 local function maybe(bg) return o.transparent and "NONE" or bg end
 
--- palette (gruvbox-ish high contrast + 3 accents)
-local black                             = "#000000"
-local gray1, gray2, gray3, gray4, gray5 = "#141617", "#1d2021", "#282828", "#3c3836", "#504945"
-local gray6, gray7, gray8, gray9        = "#7c6f64", "#928374", "#a89984", "#d5c4a1"
-local luster                            = "#fbf1c7"
+local presets = {
+    default = {
+        black = "#000000",
+        bg_dim = "#141617",
+        bg0 = "#1d2021",
+        bg1 = "#282828",
+        bg2 = "#3c3836",
+        bg3 = "#504945",
+        fg0 = "#fbf1c7",
+        fg1 = "#ebdbb2",
+        fg2 = "#a89984",
+        fg3 = "#928374",
+        luster = "#fbf1c7",
+        lack = "#83a598",
+        yellow = "#fabd2f",
+        green = "#b8bb26",
+        red = "#fb4934",
+        string = "#b8bb26",
+        special = "#fabd2f",
+        terminal = {
+            [0] = "#504945",
+            [1] = "#fb4934",
+            [2] = "#b8bb26",
+            [3] = "#fabd2f",
+            [4] = "#83a598",
+            [5] = "#83a598",
+            [6] = "#83a598",
+            [7] = "#fbf1c7",
+            [8] = "#928374",
+            [9] = "#d98a93",
+            [10] = "#c7d5c0",
+            [11] = "#dbd3bd",
+            [12] = "#c0cad4",
+            [13] = "#c0cad4",
+            [14] = "#c0cad4",
+            [15] = "#fbf1c7",
+        },
+    },
+    cursor = {
+        black = "#111111",
+        bg_dim = "#121212",
+        bg0 = "#171717",
+        bg1 = "#1d1d1d",
+        bg2 = "#232323",
+        bg3 = "#2b2b2b",
+        fg0 = "#f0e9df",
+        fg1 = "#e2d8ca",
+        fg2 = "#ada393",
+        fg3 = "#7e7568",
+        luster = "#f7efe4",
+        lack = "#87a3b1",
+        yellow = "#d9a15b",
+        green = "#8f9e6f",
+        red = "#d56b6b",
+        string = "#cc7ab7",
+        special = "#cc7ab7",
+        terminal = {
+            [0] = "#2b2b2b",
+            [1] = "#d56b6b",
+            [2] = "#8f9e6f",
+            [3] = "#d9a15b",
+            [4] = "#87a3b1",
+            [5] = "#cc7ab7",
+            [6] = "#87a3b1",
+            [7] = "#f0e9df",
+            [8] = "#7e7568",
+            [9] = "#e08e95",
+            [10] = "#a7b78a",
+            [11] = "#e4bc7d",
+            [12] = "#b0c5cf",
+            [13] = "#dfa3d1",
+            [14] = "#b0c5cf",
+            [15] = "#f7efe4",
+        },
+    },
+}
 
-local bg0, bg1, bg2, bg3, bg_dim        = gray2, gray3, gray4, gray5, gray1
-local fg0, fg1, fg2, fg3                = "#fbf1c7", "#ebdbb2", "#a89984", "#928374"
-local lack                              = "#83a598" -- cool neutral “hint”
+local function resolve_preset(name)
+    if type(name) == "string" and name ~= "" then
+        local key = name:lower()
+        if presets[key] then return presets[key] end
+    end
+    return presets.default
+end
 
-local yellow, green, red                = "#fabd2f", "#b8bb26", "#fb4934"
+local function build_theme(name)
+    local t = vim.tbl_extend("force", {}, resolve_preset(name))
+    t.string = t.string or t.green
+    t.special = t.special or t.yellow
+    t.sel = blend(t.lack, t.bg0, 0.18)
+    t.cursorln = blend(t.lack, t.bg0, 0.07)
+    t.pmenu = t.bg2
+    t.pmenu_sel = blend(t.lack, t.bg2, 0.22)
+    t.border = blend(t.lack, t.bg2, 0.45)
+    t.floatbg = t.bg2
+    if o.high_contrast then t.border = blend(t.lack, t.bg2, 0.65) end
+    return t
+end
+
+-- palette
+local t = build_theme(o.theme)
+local black = t.black
+local bg0, bg1, bg2, bg3, bg_dim = t.bg0, t.bg1, t.bg2, t.bg3, t.bg_dim
+local fg0, fg1, fg2, fg3 = t.fg0, t.fg1, t.fg2, t.fg3
+local luster = t.luster
+local lack = t.lack
+local yellow, green, red = t.yellow, t.green, t.red
+local string_accent, special = t.string, t.special
 
 -- derived
-local sel                               = blend(lack, bg0, 0.18)
-local cursorln                          = blend(lack, bg0, 0.07)
-local pmenu                             = bg2
-local pmenu_sel                         = blend(lack, bg2, 0.22)
-local border                            = blend(lack, bg2, 0.45)
-local floatbg                           = bg2
-if o.high_contrast then border = blend(lack, bg2, 0.65) end
+local sel = t.sel
+local cursorln = t.cursorln
+local pmenu = t.pmenu
+local pmenu_sel = t.pmenu_sel
+local border = t.border
+local floatbg = t.floatbg
 
 -- apply
 local function apply()
@@ -76,22 +185,9 @@ local function apply()
     vim.o.background        = "dark"
 
     -- terminal ANSI (fold non-triad hues into lack/neutral)
-    vim.g.terminal_color_0  = bg3
-    vim.g.terminal_color_8  = fg3
-    vim.g.terminal_color_1  = red
-    vim.g.terminal_color_9  = "#d98a93"
-    vim.g.terminal_color_2  = green
-    vim.g.terminal_color_10 = "#c7d5c0"
-    vim.g.terminal_color_3  = yellow
-    vim.g.terminal_color_11 = "#dbd3bd"
-    vim.g.terminal_color_4  = lack
-    vim.g.terminal_color_12 = "#c0cad4"
-    vim.g.terminal_color_5  = lack
-    vim.g.terminal_color_13 = "#c0cad4"
-    vim.g.terminal_color_6  = lack
-    vim.g.terminal_color_14 = "#c0cad4"
-    vim.g.terminal_color_7  = fg0
-    vim.g.terminal_color_15 = luster
+    for i = 0, 15 do
+        vim.g["terminal_color_" .. i] = t.terminal[i]
+    end
 
     -- Core UI
     set_hl("Normal", { fg = fg0, bg = maybe(bg0) })
@@ -164,8 +260,8 @@ local function apply()
     set_hl("Repeat", { fg = fg1 })
     set_hl("Operator", { fg = fg1 })
     set_hl("Constant", { fg = yellow })
-    set_hl("String", { fg = green })
-    set_hl("Character", { fg = green })
+    set_hl("String", { fg = string_accent })
+    set_hl("Character", { fg = string_accent })
     set_hl("Number", { fg = yellow })
     set_hl("Boolean", { fg = yellow })
     set_hl("Float", { fg = yellow })
@@ -174,7 +270,7 @@ local function apply()
     set_hl("Structure", { fg = yellow })
     set_hl("Typedef", { fg = yellow })
     set_hl("PreProc", { fg = fg1 })
-    set_hl("Special", { fg = yellow })
+    set_hl("Special", { fg = special })
     set_hl("Todo", { fg = black, bg = maybe(yellow), bold = o.bold })
     link("luaNumber", "Number")
     link("luaString", "String")

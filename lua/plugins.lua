@@ -25,6 +25,8 @@ vim.pack.add({
     { src = "https://github.com/stevearc/oil.nvim" },
 })
 
+vim.g.umbraline = { theme = "cursor" }
+
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 require("command").setup({})
