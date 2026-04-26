@@ -1,13 +1,12 @@
 vim.g.mapleader = " "
 
-local HOME = vim.fn.expand("~")
-local local_dev = "file://" .. HOME
 vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
     -- { src = "https://github.com/mcauley-penney/techbase.nvim" },
     -- { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
     -- { src = local_dev .. "/personal/techbase.nvim", version = "fix/core-hl-groups" },
-    { src = "https://github.com/vieitesss/miniharp.nvim" },
+    { src = "https://github.com/vieitesss/miniharp.nvim", version = "nightly" },
+    { src = vim.env.HOME .. "/personal/minifugit.nvim" },
     -- { src = "https://github.com/vieitesss/gh-permalink.nvim" },
     -- { src = local_dev .. "/personal/miniharp.nvim", version = "fix/do-not-save-index" },
     -- { src = "https://github.com/ThePrimeagen/harpoon",        version = "harpoon2" },
@@ -17,9 +16,12 @@ vim.pack.add({
         src = "https://github.com/saghen/blink.cmp",
         version = vim.version.range("^1"),
     },
-    { src = "https://github.com/vieitesss/command.nvim", version = "main" },
+    {
+        src = "https://github.com/vieitesss/command.nvim",
+        version = vim.version.range("*"),
+    },
     -- { src = "https://github.com/vieitesss/command.nvim" },
-    { src = "https://github.com/tpope/vim-fugitive" },
+    -- { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/github/copilot.vim" },
     -- { src = "https://github.com/lervag/vimtex" },
     { src = "https://github.com/stevearc/oil.nvim" },
@@ -30,7 +32,14 @@ vim.g.umbraline = { theme = "cursor" }
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 require("command").setup({})
-require("miniharp").setup({ show_on_autoload = true })
+require("miniharp").setup({
+    show_on_autoload = true,
+    ui = {
+        position = "top-right",
+        show_hints = false,
+        enter = false,
+    },
+})
 require("mason").setup({})
 -- require('techbase').setup({})
 -- require('gruber-darker').setup({

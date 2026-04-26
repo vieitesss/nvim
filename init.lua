@@ -1,4 +1,5 @@
 require 'plugins'
+require("packui").setup()
 require 'configs'
 require 'lsp'
 require 'keymaps'
