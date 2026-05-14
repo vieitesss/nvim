@@ -1,4 +1,4 @@
-# Neovim v0.12 configuration
+# Neovim v0.13 configuration
 
 ## Plugins
 
