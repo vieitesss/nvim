@@ -33,13 +33,12 @@ vim.g.copilot_no_tab_map = true
 vim.g.netrw_liststyle = 1
 vim.g.netrw_sort_by = "size"
 
+-- floating cmd output
 local ok_ui2, ui2 = pcall(require, "vim._core.ui2")
-if ok_ui2 and type(ui2.enable) == "function" then
+if ok_ui2 then
     ui2.enable({
-        enable = true,
         msg = {
             targets = "cmd",
-            timeout = 4000,
         },
     })
 end
