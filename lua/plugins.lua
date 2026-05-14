@@ -10,7 +10,7 @@ vim.pack.add({
     -- { src = "https://github.com/vieitesss/gh-permalink.nvim" },
     -- { src = local_dev .. "/personal/miniharp.nvim", version = "fix/do-not-save-index" },
     -- { src = "https://github.com/ThePrimeagen/harpoon",        version = "harpoon2" },
-    { src = "https://github.com/ibhagwan/fzf-lua" },
+    { src = 'https://github.com/dmtrKovalenko/fff.nvim' },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     {
         src = "https://github.com/saghen/blink.cmp",
@@ -22,14 +22,35 @@ vim.pack.add({
     },
     -- { src = "https://github.com/vieitesss/command.nvim" },
     -- { src = "https://github.com/tpope/vim-fugitive" },
-    { src = "https://github.com/github/copilot.vim" },
+    -- { src = "https://github.com/github/copilot.vim" },
     -- { src = "https://github.com/lervag/vimtex" },
     { src = "https://github.com/stevearc/oil.nvim" },
 })
 
-vim.g.umbraline = { theme = "cursor" }
+vim.g.umbraline = {
+    theme = "cursor",
+    dim_inactive = false,
+}
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+
+vim.g.fff = {
+  lazy_sync = true,
+  debug = { enabled = true, show_scores = true },
+  preview = { enabled = false },
+}
+
+require('minifugit').setup({
+    preview = {
+        wrap = false,
+        show_line_numbers = true,
+        show_metadata = false,
+    },
+    status = {
+        width = 0.4,
+        min_width = 20,
+    },
+})
 
 require("command").setup({})
 require("miniharp").setup({
@@ -89,40 +110,6 @@ require("blink.cmp").setup({
     },
 
     sources = { default = { "lsp" } },
-})
-
-local actions = require("fzf-lua.actions")
-require("fzf-lua").setup({
-    winopts = {
-        height = 1,
-        width = 1,
-        backdrop = 85,
-        preview = {
-            horizontal = "right:70%",
-        },
-    },
-    keymap = {
-        builtin = {
-            ["<C-f>"] = "preview-page-down",
-            ["<C-b>"] = "preview-page-up",
-            ["<C-p>"] = "toggle-preview",
-        },
-        fzf = {
-            ["ctrl-a"] = "toggle-all",
-            ["ctrl-t"] = "first",
-            ["ctrl-g"] = "last",
-            ["ctrl-d"] = "half-page-down",
-            ["ctrl-u"] = "half-page-up",
-        },
-    },
-    actions = {
-        files = {
-            ["ctrl-q"] = actions.file_sel_to_qf,
-            ["ctrl-n"] = actions.toggle_ignore,
-            ["ctrl-h"] = actions.toggle_hidden,
-            ["enter"] = actions.file_edit_or_qf,
-        },
-    },
 })
 
 require("oil").setup({

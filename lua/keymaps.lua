@@ -51,10 +51,29 @@ local log = require("minifugit.log")
 keymap("n", "<leader>gs", mf.status)
 keymap("n", "<leader>l", log.open)
 
-keymap("n", "<leader>ff", "<cmd>FzfLua files<CR>")
-keymap("n", "<leader>fg", "<cmd>FzfLua grep_project<CR>")
-keymap("n", "<leader>fl", "<cmd>FzfLua grep_last<CR>")
-keymap("n", "<leader>fh", "<cmd>FzfLua help_tags<CR>")
+local function visual_selection()
+    local mode = vim.fn.mode()
+    local start_pos, end_pos, region_type
+
+    if mode:match("^[vV\22]") then
+        start_pos, end_pos, region_type = vim.fn.getpos("v"), vim.fn.getpos("."), mode
+    else
+        start_pos, end_pos, region_type = vim.fn.getpos("'<"), vim.fn.getpos("'>"), vim.fn.visualmode()
+    end
+
+    local ok, lines = pcall(vim.fn.getregion, start_pos, end_pos, { type = region_type })
+    if not ok or not lines then return "" end
+    return vim.trim(table.concat(lines, " "))
+end
+
+keymap("n", "<leader>ff", function() require("fff").find_files() end)
+keymap("n", "<leader>fg", function() require("fff").live_grep() end)
+keymap("x", "<leader>fg", function()
+    local query = visual_selection()
+    if query ~= "" then
+        require("fff").live_grep({ query = query })
+    end
+end)
 keymap("n", "<leader>ce", "<cmd>CommandExecute<CR>")
 keymap("n", "<leader>cl", "<cmd>CommandExecuteLast<CR>")
 keymap("n", "<leader>cr", "<cmd>CommandReopenTerminal<CR>")
@@ -76,20 +95,3 @@ keymap("n", "<C-l>", function()
     require("miniharp").go_to(3)
 end)
 -- keymap({ "n", "x" }, "<leader>gy", require("gh-permalink").yank)
-keymap("n", "<leader>so", function()
-    require("fzf-lua").files({
-        actions = {
-            ["default"] = function(selected)
-                local file = selected[1]
-                local rel_path = vim.fn.fnamemodify(file, ":.")
-
-                rel_path = rel_path:gsub(" ", "\\ ")
-                if not rel_path:match("^%.?/") then
-                    rel_path = "./" .. rel_path
-                end
-
-                vim.api.nvim_put({ rel_path }, "l", true, false)
-            end,
-        },
-    })
-end)
