@@ -26,9 +26,6 @@ keymap("n", "<Leader>-", "<cmd>split<CR>", s)
 keymap("v", "<Leader>p", '"_dP')
 keymap("x", "y", [["+y]], s)
 
--- terminal
-keymap("t", "<Esc>", "<C-\\><C-N>")
-
 -- cd current dir
 keymap("n", "<leader>cd", '<cmd>lua vim.fn.chdir(vim.fn.expand("%:p:h"))<CR>')
 
