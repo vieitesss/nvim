@@ -3,6 +3,12 @@ local M = {}
 local sessions_dir = vim.fn.stdpath("data") .. "/sessions/"
 vim.fn.mkdir(sessions_dir, "p")
 
+local config = {
+    -- Save normal/listed buffers. Terminal process state is intentionally not
+    -- saved; use tmux/zellij if terminal persistence is needed.
+    sessionoptions = "buffers,curdir,tabpages,winsize",
+}
+
 -- URL-style encoding so any absolute path is a valid filename:
 --   % -> %25   (must come first)
 --   / -> %2F
@@ -24,12 +30,19 @@ local function cwd_name()
     return vim.fn.getcwd()
 end
 
+local function normalize_sessionoptions(options)
+    if type(options) == "table" then
+        return table.concat(options, ",")
+    end
+    return options or config.sessionoptions
+end
+
 local function save(name, opts)
     opts = opts or {}
     name = name or cwd_name()
 
     local old = vim.o.sessionoptions
-    vim.o.sessionoptions = "buffers,curdir,tabpages,winsize"
+    vim.o.sessionoptions = normalize_sessionoptions(config.sessionoptions)
     vim.cmd("mksession! " .. vim.fn.fnameescape(session_path(name)))
     vim.o.sessionoptions = old
 
@@ -64,7 +77,7 @@ local function load(name, opts)
     if vim.fn.filereadable(path) == 0 then
         return false
     end
-    -- Wipe all buffers before restoring so we start clean.
+    -- Wipe buffers before restoring so we start clean.
     vim.cmd("silent! %bdelete!")
     local ok, err = pcall(function()
         vim.cmd("source " .. vim.fn.fnameescape(path))
@@ -271,7 +284,12 @@ local function pick_session(title, on_choice)
     end
 end
 
-function M.setup()
+function M.setup(opts)
+    opts = opts or {}
+    if opts.sessionoptions ~= nil then
+        config.sessionoptions = opts.sessionoptions
+    end
+
     -- Auto-save when leaving Neovim.
     vim.api.nvim_create_autocmd("VimLeavePre", {
         callback = function()
