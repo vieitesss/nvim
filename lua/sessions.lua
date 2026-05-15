@@ -58,9 +58,11 @@ local function refresh_highlighting()
     vim.cmd("silent! syntax enable")
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(buf)
+        if
+            vim.api.nvim_buf_is_loaded(buf)
             and vim.bo[buf].buflisted
-            and vim.bo[buf].buftype == "" then
+            and vim.bo[buf].buftype == ""
+        then
             vim.api.nvim_buf_call(buf, function()
                 vim.cmd("silent! filetype detect")
                 if vim.bo.filetype ~= "" and vim.bo.syntax == "" then
@@ -107,7 +109,10 @@ local function remove(name)
     if ok then
         vim.notify("Session deleted: " .. vim.fn.fnamemodify(name, ":~"))
     else
-        vim.notify("Could not delete session: " .. vim.fn.fnamemodify(name, ":~"), vim.log.levels.WARN)
+        vim.notify(
+            "Could not delete session: " .. vim.fn.fnamemodify(name, ":~"),
+            vim.log.levels.WARN
+        )
     end
     return ok
 end
@@ -115,12 +120,16 @@ end
 local session_renderer = {}
 
 local function relative_path_to_session_name(path)
-    if not path or path == "" then return nil end
+    if not path or path == "" then
+        return nil
+    end
     return decode(vim.fn.fnamemodify(path, ":t:r"))
 end
 
 local function item_to_session_name(item)
-    if not item then return nil end
+    if not item then
+        return nil
+    end
     return relative_path_to_session_name(item.relative_path or item.name)
 end
 
@@ -129,9 +138,19 @@ function session_renderer.render_line(item)
     return { name and vim.fn.fnamemodify(name, ":~") or "" }
 end
 
-function session_renderer.apply_highlights(item, ctx, item_idx, buf, ns_id, line_idx, line_content)
-    local selected = ctx.selected_files and ctx.selected_files[item.relative_path]
-    local line_hl = item_idx == ctx.cursor and "Visual" or (selected and (ctx.config.hl.selected or "FFFSelected"))
+function session_renderer.apply_highlights(
+    item,
+    ctx,
+    item_idx,
+    buf,
+    ns_id,
+    line_idx,
+    line_content
+)
+    local selected = ctx.selected_files
+        and ctx.selected_files[item.relative_path]
+    local line_hl = item_idx == ctx.cursor and "Visual"
+        or (selected and (ctx.config.hl.selected or "FFFSelected"))
 
     if line_hl then
         vim.api.nvim_buf_set_extmark(buf, ns_id, line_idx - 1, 0, {
@@ -143,7 +162,8 @@ function session_renderer.apply_highlights(item, ctx, item_idx, buf, ns_id, line
     if selected then
         vim.api.nvim_buf_set_extmark(buf, ns_id, line_idx - 1, 0, {
             sign_text = "▊",
-            sign_hl_group = item_idx == ctx.cursor and (ctx.config.hl.selected_active or "FFFSelectedActive")
+            sign_hl_group = item_idx == ctx.cursor
+                    and (ctx.config.hl.selected_active or "FFFSelectedActive")
                 or (ctx.config.hl.selected or "FFFSelected"),
             priority = 1001,
         })
@@ -161,14 +181,18 @@ local function pick_session(title, on_choice)
         vim.notify("Could not load fff session picker", vim.log.levels.WARN)
         return
     end
-    if picker.state.active then return end
+    if picker.state.active then
+        return
+    end
 
     local original_select = picker.select
     local original_close = picker.close
     local restored = false
 
     local function restore()
-        if restored then return end
+        if restored then
+            return
+        end
         restored = true
         picker.select = original_select
         picker.close = original_close
@@ -186,7 +210,9 @@ local function pick_session(title, on_choice)
 
     picker.select = function()
         local choice = selected_session()
-        if not choice then return end
+        if not choice then
+            return
+        end
         restore()
         original_close()
         on_choice(choice)
@@ -202,7 +228,10 @@ local function pick_session(title, on_choice)
     })
     if not opened or not picker.state.active then
         restore()
-        vim.notify("Could not open fff session picker: " .. tostring(err), vim.log.levels.WARN)
+        vim.notify(
+            "Could not open fff session picker: " .. tostring(err),
+            vim.log.levels.WARN
+        )
         return
     end
 
@@ -210,13 +239,17 @@ local function pick_session(title, on_choice)
         local choices = {}
         for relative_path in pairs(picker.state.selected_files or {}) do
             local name = relative_path_to_session_name(relative_path)
-            if name then table.insert(choices, name) end
+            if name then
+                table.insert(choices, name)
+            end
         end
         table.sort(choices)
 
         if #choices == 0 then
             local choice = selected_session()
-            if choice then table.insert(choices, choice) end
+            if choice then
+                table.insert(choices, choice)
+            end
         end
 
         return choices
@@ -224,7 +257,9 @@ local function pick_session(title, on_choice)
 
     local function delete_selected()
         local choices = selected_sessions()
-        if #choices == 0 then return end
+        if #choices == 0 then
+            return
+        end
 
         local deleted = {}
         local deleted_count = 0
@@ -234,7 +269,9 @@ local function pick_session(title, on_choice)
                 deleted_count = deleted_count + 1
             end
         end
-        if deleted_count == 0 then return end
+        if deleted_count == 0 then
+            return
+        end
 
         picker.state.selected_files = {}
         picker.state.selected_items = {}
@@ -251,11 +288,18 @@ local function pick_session(title, on_choice)
         end
 
         picker.state.items = filter_deleted(picker.state.items)
-        picker.state.filtered_items = filter_deleted(picker.state.filtered_items)
-        picker.state.cursor = math.min(picker.state.cursor, #picker.state.filtered_items)
-        if picker.state.cursor < 1 then picker.state.cursor = 1 end
+        picker.state.filtered_items =
+            filter_deleted(picker.state.filtered_items)
+        picker.state.cursor =
+            math.min(picker.state.cursor, #picker.state.filtered_items)
+        if picker.state.cursor < 1 then
+            picker.state.cursor = 1
+        end
         if picker.state.pagination then
-            picker.state.pagination.total_matched = math.max(0, (picker.state.pagination.total_matched or 0) - deleted_count)
+            picker.state.pagination.total_matched = math.max(
+                0,
+                (picker.state.pagination.total_matched or 0) - deleted_count
+            )
         end
         picker.state.last_status_info = nil
 
