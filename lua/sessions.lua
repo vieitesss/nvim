@@ -30,6 +30,21 @@ local function cwd_name()
     return vim.fn.getcwd()
 end
 
+local function close_special_buffers()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].buftype ~= "" then
+            pcall(vim.api.nvim_win_close, win, true)
+        end
+    end
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype ~= "" then
+            pcall(vim.api.nvim_buf_delete, buf, { force = true })
+        end
+    end
+end
+
 local function normalize_sessionoptions(options)
     if type(options) == "table" then
         return table.concat(options, ",")
@@ -40,6 +55,8 @@ end
 local function save(name, opts)
     opts = opts or {}
     name = name or cwd_name()
+
+    close_special_buffers()
 
     local old = vim.o.sessionoptions
     vim.o.sessionoptions = normalize_sessionoptions(config.sessionoptions)
@@ -80,11 +97,13 @@ local function load(name, opts)
         return false
     end
     -- Wipe buffers before restoring so we start clean.
+    close_special_buffers()
     vim.cmd("silent! %bdelete!")
     local ok, err = pcall(function()
         vim.cmd("source " .. vim.fn.fnameescape(path))
     end)
     if ok then
+        close_special_buffers()
         vim.schedule(refresh_highlighting)
     elseif not opts.silent then
         vim.notify("Session load error: " .. tostring(err), vim.log.levels.WARN)
