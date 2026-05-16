@@ -40,7 +40,7 @@ end
 ---@return string
 local function decode(name)
     -- order matters: decode %2F first, then %25
-    local sub, _ =  name:gsub("%%2F", "/"):gsub("%%25", "%%")
+    local sub, _ = name:gsub("%%2F", "/"):gsub("%%25", "%%")
     return sub
 end
 
@@ -207,6 +207,12 @@ end
 ---@param path string
 local function change_to(path)
     vim.cmd("cd " .. vim.fn.fnameescape(path))
+
+    -- Show a fresh empty buffer after changing cwd, so the user visually
+    -- lands in the selected directory without depending on any file explorer.
+    local buf = vim.api.nvim_create_buf(true, false)
+    vim.api.nvim_set_current_buf(buf)
+
     vim.notify("Cwd: " .. vim.fn.fnamemodify(path, ":~"))
 end
 

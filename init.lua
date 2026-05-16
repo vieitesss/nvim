@@ -14,6 +14,7 @@ require("cwd").setup({
         "~/pre-vieitesss",
         "~/firestartr-pre",
         "~/firestartr-pro",
+        "~/.config",
     },
 })
 require("term").setup()
