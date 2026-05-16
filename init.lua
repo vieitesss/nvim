@@ -7,4 +7,13 @@ require("statusline")
 require("autocmds")
 require("umbraline")
 require("sessions").setup()
+require("cwd").setup({
+    paths = {
+        "~/personal",
+        "~/prefapp",
+        "~/pre-vieitesss",
+        "~/firestartr-pre",
+        "~/firestartr-pro",
+    },
+})
 require("term").setup()
