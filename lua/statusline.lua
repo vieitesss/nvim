@@ -1,15 +1,15 @@
 local api = vim.api
-local state = { path = true, branch = true, diag = {} }
+local state = { path = true, branch = true, diag = {}, git = {} }
 local active, inactive = "%!v:lua.Statusline.active()", " %t%{&modified?'*':''}"
 
 api.nvim_set_hl(0, "StatusLineDim", { link = "Comment" })
 
-local function bufnr()
+local function buf()
     local win = vim.g.statusline_winid
-    if type(win) == "number" and api.nvim_win_is_valid(win) then
-        return api.nvim_win_get_buf(win)
-    end
-    return api.nvim_get_current_buf()
+    return type(win) == "number"
+            and api.nvim_win_is_valid(win)
+            and api.nvim_win_get_buf(win)
+        or api.nvim_get_current_buf()
 end
 
 local function dim(s)
@@ -26,61 +26,72 @@ local function redraw()
     end
 end
 
-local function path(buf)
-    local dir = vim.fn.fnamemodify(api.nvim_buf_get_name(buf), ":~:.:h")
-    if dir == "" or dir == "." then
-        return ""
-    end
-    return state.path and ("%<" .. dir .. "/") or dim("/")
+local function count(n, sign)
+    n = tonumber(n) or 0
+    return n > 0 and (" " .. sign .. n) or ""
 end
 
-local function n(count, mark)
-    count = tonumber(count) or 0
-    return count > 0 and (" " .. mark .. count) or ""
+local function path(b)
+    local dir = vim.fn.fnamemodify(api.nvim_buf_get_name(b), ":~:.:h")
+    return (dir == "" or dir == ".") and ""
+        or (state.path and ("%<" .. dir .. "/") or dim("/"))
 end
 
-local function git(buf)
-    local g = vim.b[buf].gitsigns_status_dict
-    if not g or not g.head or g.head == "" then
-        return ""
+local function refresh_git(b)
+    local ok, git = pcall(require, "minifugit.git")
+    if not ok then
+        return
     end
-    return ("[ %s%s%s%s]"):format(
-        state.branch and g.head or dim(""),
-        n(g.added, "+"),
-        n(g.changed, "~"),
-        n(g.removed, "-")
+    local branch_ok, head = pcall(git.branch)
+    local counts_ok, c, err =
+        pcall(git.file_change_counts, api.nvim_buf_get_name(b))
+    if not branch_ok or head == "" or not counts_ok or err then
+        state.git[b] = ""
+        return
+    end
+
+    state.git[b] = ("[ %s%s%s%s]"):format(
+        state.branch and head or dim(""),
+        count(c.added, "+"),
+        count(c.modified, "~"),
+        count(c.deleted, "-")
     )
 end
 
-local function diagnostics(buf)
-    local ok, s = pcall(vim.diagnostic.status, buf)
+local function refresh_diag(b)
+    local ok, s = pcall(vim.diagnostic.status, b)
     s = ok and s or ""
-    state.diag[buf] = s ~= "" and ("[" .. s .. "]") or ""
+    state.diag[b] = s ~= "" and ("[" .. s .. "]") or ""
 end
 
 Statusline = {}
+
 function Statusline.active()
-    local buf = bufnr()
+    local b = buf()
     return table.concat({
         "[",
-        path(buf),
+        path(b),
         "%t]%{&modified?'[+] ':' '}",
-        git(buf),
+        state.git[b] or "",
         " ",
-        state.diag[buf] or "",
+        state.diag[b] or "",
         "%=",
         "%y [%P %l:%c]",
     })
 end
+
 function Statusline.inactive()
     return inactive
 end
+
 function Statusline.toggle_path()
     state.path = not state.path
     redraw()
 end
+
 function Statusline.toggle_branch()
     state.branch = not state.branch
+    refresh_git(api.nvim_get_current_buf())
     redraw()
 end
 
@@ -90,6 +101,7 @@ vim.keymap.set(
     Statusline.toggle_path,
     { desc = "Toggle statusline path" }
 )
+
 vim.keymap.set(
     "n",
     "<leader>sb",
@@ -98,23 +110,28 @@ vim.keymap.set(
 )
 
 local group = api.nvim_create_augroup("Statusline", { clear = true })
+api.nvim_create_autocmd(
+    { "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" },
+    {
+        group = group,
+        callback = function(a)
+            if not insert() then
+                refresh_git(a.buf)
+                redraw()
+            end
+        end,
+    }
+)
+
 api.nvim_create_autocmd({ "BufEnter", "DiagnosticChanged", "InsertLeave" }, {
     group = group,
-    callback = function(args)
-        if insert() then
-            return
-        end
-        diagnostics(args.buf)
-        if args.buf == api.nvim_get_current_buf() then
+    callback = function(a)
+        if not insert() then
+            refresh_diag(a.buf)
             redraw()
         end
     end,
 })
-
-api.nvim_create_autocmd(
-    "User",
-    { group = group, pattern = "GitSignsUpdate", callback = redraw }
-)
 
 api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = group,
