@@ -6,7 +6,6 @@ require("keymaps")
 require("statusline")
 require("autocmds")
 require("umbraline")
-require("sessions").setup()
 require("cwd").setup({
     paths = {
         "~/personal",
