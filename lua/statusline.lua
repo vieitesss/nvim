@@ -1,135 +1,141 @@
--- internal state for toggles
-local state = {
-    show_path = true,
-    show_branch = true,
-}
+local api = vim.api
+local state = { path = true, branch = true, diag = {} }
+local active, inactive = "%!v:lua.Statusline.active()", " %t%{&modified?'*':''}"
 
--- config for placeholders + highlighting
-local config = {
-    icons = {
-        path = "",
-        branch_hidden = "",
-    },
-    placeholder_hl = "StatusLineDim", -- a dim highlight group we define below
-}
+api.nvim_set_hl(0, "StatusLineDim", { link = "Comment" })
 
--- helper to wrap text in a statusline highlight group
-local function hl(group, text)
-    return string.format("%%#%s#%s%%*", group, text)
+local function bufnr()
+    local win = vim.g.statusline_winid
+    if type(win) == "number" and api.nvim_win_is_valid(win) then
+        return api.nvim_win_get_buf(win)
+    end
+    return api.nvim_get_current_buf()
 end
 
--- set (or link) the dim highlight once
-vim.api.nvim_set_hl(0, config.placeholder_hl, {}) -- create if missing
--- Link to Comment to keep it dim; adjust as you like
-vim.api.nvim_set_hl(0, config.placeholder_hl, { link = "Comment" })
-
-local function filepath()
-    local fpath = vim.fn.fnamemodify(vim.fn.expand "%", ":~:.:h")
-
-    if fpath == "" or fpath == "." then
-        return ""
-    end
-
-    if state.show_path then
-        return string.format("%%<%s/", fpath)
-    end
-
-    return hl(config.placeholder_hl, config.icons.path .. "/")
+local function dim(s)
+    return "%#StatusLineDim#" .. s .. "%*"
 end
 
-local function git()
-    local git_info = vim.b.gitsigns_status_dict
-    if not git_info or git_info.head == "" then
-        return ""
-    end
-
-    local head    = git_info.head
-    local added   = git_info.added and (" +" .. git_info.added) or ""
-    local changed = git_info.changed and (" ~" .. git_info.changed) or ""
-    local removed = git_info.removed and (" -" .. git_info.removed) or ""
-    if git_info.added == 0 then added = "" end
-    if git_info.changed == 0 then changed = "" end
-    if git_info.removed == 0 then removed = "" end
-
-    if not state.show_branch then
-        head = hl(config.placeholder_hl, config.icons.branch_hidden)
-    end
-
-    return table.concat({
-        "[ ",
-        head,
-        added, changed, removed,
-        "]",
-    })
+local function insert()
+    return api.nvim_get_mode().mode:match("^[iR]") ~= nil
 end
 
-local function diagnostics()
-    local status = vim.diagnostic.status()
+local function redraw()
+    if not insert() then
+        vim.cmd.redrawstatus()
+    end
+end
 
-    if not status or status == "" then
+local function path(buf)
+    local dir = vim.fn.fnamemodify(api.nvim_buf_get_name(buf), ":~:.:h")
+    if dir == "" or dir == "." then
         return ""
     end
+    return state.path and ("%<" .. dir .. "/") or dim("/")
+end
 
-    return "[" .. status .. "]"
+local function n(count, mark)
+    count = tonumber(count) or 0
+    return count > 0 and (" " .. mark .. count) or ""
+end
+
+local function git(buf)
+    local g = vim.b[buf].gitsigns_status_dict
+    if not g or not g.head or g.head == "" then
+        return ""
+    end
+    return ("[ %s%s%s%s]"):format(
+        state.branch and g.head or dim(""),
+        n(g.added, "+"),
+        n(g.changed, "~"),
+        n(g.removed, "-")
+    )
+end
+
+local function diagnostics(buf)
+    local ok, s = pcall(vim.diagnostic.status, buf)
+    s = ok and s or ""
+    state.diag[buf] = s ~= "" and ("[" .. s .. "]") or ""
 end
 
 Statusline = {}
-
 function Statusline.active()
-    return table.concat {
-        "[", filepath(), "%t] ",
-        git(),
+    local buf = bufnr()
+    return table.concat({
+        "[",
+        path(buf),
+        "%t]%{&modified?'[+] ':' '}",
+        git(buf),
         " ",
-        diagnostics(),
+        state.diag[buf] or "",
         "%=",
-        "%y [%P %l:%c]"
-    }
+        "%y [%P %l:%c]",
+    })
 end
-
 function Statusline.inactive()
-    return " %t"
+    return inactive
 end
-
 function Statusline.toggle_path()
-    state.show_path = not state.show_path
-    vim.cmd("redrawstatus")
+    state.path = not state.path
+    redraw()
 end
-
 function Statusline.toggle_branch()
-    state.show_branch = not state.show_branch
-    vim.cmd("redrawstatus")
+    state.branch = not state.branch
+    redraw()
 end
 
-vim.keymap.set("n", "<leader>sp", function() Statusline.toggle_path() end, { desc = "Toggle statusline path" })
-vim.keymap.set("n", "<leader>sb", function() Statusline.toggle_branch() end, { desc = "Toggle statusline git branch" })
+vim.keymap.set(
+    "n",
+    "<leader>sp",
+    Statusline.toggle_path,
+    { desc = "Toggle statusline path" }
+)
+vim.keymap.set(
+    "n",
+    "<leader>sb",
+    Statusline.toggle_branch,
+    { desc = "Toggle statusline git branch" }
+)
 
-local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
-
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-  group = group,
-  desc = "Activate statusline on focus",
-  callback = function()
-    if vim.bo.buftype ~= "" then
-        return
-    end
-    if vim.api.nvim_win_get_config(0).relative ~= "" then
-        return
-    end
-    vim.opt_local.statusline = "%!v:lua.Statusline.active()"
-    vim.cmd("redrawstatus")
-  end,
+local group = api.nvim_create_augroup("Statusline", { clear = true })
+api.nvim_create_autocmd({ "BufEnter", "DiagnosticChanged", "InsertLeave" }, {
+    group = group,
+    callback = function(args)
+        if insert() then
+            return
+        end
+        diagnostics(args.buf)
+        if args.buf == api.nvim_get_current_buf() then
+            redraw()
+        end
+    end,
 })
 
-vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-  group = group,
-  desc = "Deactivate statusline when unfocused",
-  callback = function()
-    if vim.bo.buftype ~= "" then
-        return
-    end
-    if vim.api.nvim_win_get_config(0).relative ~= "" then
-        return
-    end
-    vim.opt_local.statusline = "%!v:lua.Statusline.inactive()"
-  end,
+api.nvim_create_autocmd(
+    "User",
+    { group = group, pattern = "GitSignsUpdate", callback = redraw }
+)
+
+api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    group = group,
+    callback = function()
+        if
+            vim.bo.buftype == ""
+            and api.nvim_win_get_config(0).relative == ""
+        then
+            vim.wo.statusline = active
+        end
+    end,
+})
+
+api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+    group = group,
+    callback = function()
+        if
+            vim.bo.buftype == ""
+            and api.nvim_win_get_config(0).relative == ""
+        then
+            vim.wo.statusline = inactive
+        end
+    end,
 })
