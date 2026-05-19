@@ -1,12 +1,12 @@
 require("plugins")
-require("packui").setup()
+require("features.packui").setup()
 require("configs")
 require("lsp")
 require("keymaps")
-require("statusline")
+require("features.statusline")
 require("autocmds")
-require("umbraline")
-require("cwd").setup({
+require("features.umbraline")
+require("features.cwd").setup({
     paths = {
         "~/personal",
         "~/prefapp",
@@ -16,4 +16,4 @@ require("cwd").setup({
         "~/.config",
     },
 })
-require("term").setup()
+require("features.term").setup()

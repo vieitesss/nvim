@@ -3,8 +3,10 @@ vim.g.mapleader = " "
 vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/vieitesss/miniharp.nvim", version = "nightly" },
-    { src = vim.env.HOME .. "/personal/minifugit.nvim", version = "feat/file-change-counts" },
-    { src = 'https://github.com/dmtrKovalenko/fff.nvim' },
+    {
+        src = vim.env.HOME .. "/personal/minifugit.nvim",
+    },
+    { src = "https://github.com/dmtrKovalenko/fff.nvim" },
     {
         src = "https://github.com/saghen/blink.cmp",
         version = vim.version.range("^1"),
@@ -24,16 +26,18 @@ vim.g.umbraline = {
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 vim.g.fff = {
-  lazy_sync = true,
-  debug = { enabled = true, show_scores = true },
-  preview = { enabled = false },
+    lazy_sync = true,
+    debug = { enabled = true, show_scores = true },
+    preview = { enabled = false },
+    frecency = { enabled = true },
 }
 
-require('minifugit').setup({
+require("minifugit").setup({
     preview = {
         wrap = false,
         show_line_numbers = true,
         show_metadata = false,
+        diff_layout = 'auto'
     },
     status = {
         width = 0.4,
@@ -51,13 +55,6 @@ require("miniharp").setup({
     },
 })
 require("mason").setup({})
--- require('techbase').setup({})
--- require('gruber-darker').setup({
---     bold = false,
---     italic = {
---         strings = false,
---     },
--- })
 require("blink.cmp").setup({
     fuzzy = { implementation = "prefer_rust_with_warning" },
     signature = { enabled = true },

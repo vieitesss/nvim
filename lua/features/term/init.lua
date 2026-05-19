@@ -1,7 +1,7 @@
 local M = {}
 
----@alias Buffer { buf: number }
----@alias TerminalsMap table<number, Buffer>
+---@alias Buffer { buf: number, name: string, cwd: string? }
+---@alias TerminalsMap table<string, Buffer>
 
 ---@type TerminalsMap
 local terms = {}
@@ -11,8 +11,8 @@ local current_win = nil
 
 local map = vim.keymap.set
 
----@param id number
-local function float_config(id)
+---@param title string
+local function float_config(title)
     local width = math.floor(vim.o.columns * 0.9)
     local height = math.floor(vim.o.lines * 0.85)
     return {
@@ -23,9 +23,24 @@ local function float_config(id)
         col = math.floor((vim.o.columns - width) / 2),
         style = "minimal",
         border = "rounded",
-        title = " Term " .. id .. " ",
+        title = " " .. title .. " ",
         title_pos = "center",
     }
+end
+
+---@param cwd string
+---@return string
+local function cwd_name(cwd)
+    local name = vim.fn.fnamemodify(cwd, ":t")
+    if name == "" then
+        return cwd
+    end
+    return name
+end
+
+---@return string
+local function current_cwd()
+    return vim.fn.getcwd()
 end
 
 ---@param win number?
@@ -48,7 +63,7 @@ local function close_terminal_window(win)
 end
 
 function M.resize_open_terminals()
-    for id, t in pairs(terms) do
+    for _, t in pairs(terms) do
         if vim.api.nvim_buf_is_valid(t.buf) then
             for _, win in ipairs(vim.api.nvim_list_wins()) do
                 if
@@ -56,7 +71,11 @@ function M.resize_open_terminals()
                     and vim.api.nvim_win_get_buf(win) == t.buf
                     and vim.api.nvim_win_get_config(win).relative ~= ""
                 then
-                    pcall(vim.api.nvim_win_set_config, win, float_config(id))
+                    pcall(
+                        vim.api.nvim_win_set_config,
+                        win,
+                        float_config(t.name)
+                    )
                 end
             end
         end
@@ -73,10 +92,11 @@ local function apply_terminal_keymaps(buf)
     end, o)
 end
 
----@param id number?
-function M.toggle(id)
-    id = id or 1
-    local t = terms[id]
+---@param key string
+---@param name string
+---@param cwd string?
+local function toggle_terminal(key, name, cwd)
+    local t = terms[key]
 
     if t and vim.api.nvim_buf_is_valid(t.buf) then
         -- Check whether the buffer is currently shown in any window
@@ -91,7 +111,7 @@ function M.toggle(id)
 
         -- Not visible
         close_terminal_window(current_win)
-        current_win = vim.api.nvim_open_win(t.buf, true, float_config(id))
+        current_win = vim.api.nvim_open_win(t.buf, true, float_config(t.name))
         vim.schedule(function()
             vim.cmd("startinsert")
         end)
@@ -102,11 +122,12 @@ function M.toggle(id)
     -- First open
     close_terminal_window(current_win)
     local buf = vim.api.nvim_create_buf(false, true)
-    current_win = vim.api.nvim_open_win(buf, true, float_config(id))
+    current_win = vim.api.nvim_open_win(buf, true, float_config(name))
     vim.fn.jobstart(vim.o.shell, {
         term = true,
+        cwd = cwd,
         on_exit = function()
-            terms[id] = nil
+            terms[key] = nil
             vim.schedule(function()
                 if vim.api.nvim_buf_is_valid(buf) then
                     vim.api.nvim_buf_delete(buf, { force = true })
@@ -116,7 +137,7 @@ function M.toggle(id)
     })
 
     apply_terminal_keymaps(buf)
-    terms[id] = { buf = buf }
+    terms[key] = { buf = buf, name = name, cwd = cwd }
 
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
@@ -127,15 +148,30 @@ function M.toggle(id)
     end)
 end
 
-function M.setup()
-    map("n", "<C-t>", function()
-        M.toggle(1)
-    end, { desc = "Toggle primary terminal", silent = true })
+function M.toggle_default()
+    local cwd = current_cwd()
+    toggle_terminal("cwd:" .. cwd, cwd_name(cwd), cwd)
+end
 
-    for i = 1, 5 do
+---@param id number|string
+function M.toggle_scratch(id)
+    toggle_terminal("scratch:" .. id, "Scratch " .. id, nil)
+end
+
+function M.setup()
+    map(
+        "n",
+        "<C-t>",
+        function()
+            M.toggle_default()
+        end,
+        { desc = "Toggle terminal for current working directory", silent = true }
+    )
+
+    for i = 1, 9 do
         map("n", "<leader>" .. i, function()
-            M.toggle(i)
-        end, { desc = "Terminal " .. i, silent = true })
+            M.toggle_scratch(i)
+        end, { desc = "Scratch terminal " .. i, silent = true })
     end
 
     local group =

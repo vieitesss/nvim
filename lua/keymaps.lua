@@ -40,7 +40,7 @@ keymap("n", "<leader>of", "<cmd>Oil<CR>")
 keymap("n", "<leader>oc", function()
     require("oil").open(vim.fn.getcwd())
 end)
-keymap("n", "<leader>ps", require("packui").open)
+keymap("n", "<leader>ps", require("features.packui").open)
 
 local mf = require("minifugit")
 local log = require("minifugit.log")
