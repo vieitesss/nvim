@@ -37,7 +37,7 @@ require("minifugit").setup({
         wrap = false,
         show_line_numbers = true,
         show_metadata = false,
-        diff_layout = 'auto'
+        diff_layout = 'stacked'
     },
     status = {
         width = 0.4,
