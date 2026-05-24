@@ -57,6 +57,26 @@ local function is_git_repo(path)
 end
 
 ---@param path string
+---@return string?
+local function git_root(path)
+    path = M.normalize(path)
+
+    while path ~= "" do
+        if is_git_repo(path) then
+            return path
+        end
+
+        local parent = M.normalize(path .. "/..")
+        if parent == path then
+            break
+        end
+        path = parent
+    end
+
+    return nil
+end
+
+---@param path string
 ---@return string[]
 local function first_level_directories(path)
     local dirs = {}
@@ -81,7 +101,7 @@ local function add_unique(paths, seen, candidate)
         return
     end
 
-    candidate = M.normalize(candidate)
+    candidate = git_root(candidate) or M.normalize(candidate)
     if seen[candidate] then
         return
     end
