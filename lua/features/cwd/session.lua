@@ -346,17 +346,10 @@ local function restore_layout_node(node, win, opened)
     end
 end
 
----@param dir string
-local function open_oil(dir)
+local function open_empty_fallback_buffer()
     local win = ensure_anchor_window()
     vim.api.nvim_set_current_win(win)
-
-    local ok, oil = pcall(require, "oil")
-    if ok and type(oil.open) == "function" then
-        oil.open(dir)
-    else
-        vim.cmd("edit " .. vim.fn.fnameescape(dir))
-    end
+    vim.cmd("enew")
 
     pcall(
         vim.api.nvim_buf_set_var,
@@ -371,7 +364,7 @@ function M.restore(dir)
     local session = load(dir)
     local buffers = session and session.buffers
     if type(buffers) ~= "table" or #buffers == 0 then
-        open_oil(dir)
+        open_empty_fallback_buffer()
         return
     end
 
