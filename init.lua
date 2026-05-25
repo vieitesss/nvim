@@ -5,7 +5,7 @@ require("lsp")
 require("keymaps")
 require("features.statusline")
 require("autocmds")
-require("features.umbraline")
+-- require("features.umbraline")
 require("features.cwd").setup({
     paths = {
         "~/personal",

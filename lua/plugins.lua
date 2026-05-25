@@ -16,10 +16,43 @@ vim.pack.add({
         version = vim.version.range("*"),
     },
     { src = "https://github.com/stevearc/oil.nvim" },
+    { src = "https://github.com/vague-theme/vague.nvim" },
 })
 
+require("vague").setup({
+    colors = {
+        bg = "#141415",
+        inactiveBg = "#1c1c24",
+        fg = "#cdcdcd",
+        floatBorder = "#878787",
+        line = "#252530",
+        comment = "#606079",
+        visual = "#333738",
+        search = "#405065",
+
+        builtin = "#cdcdcd",
+        func = "#c48282",
+        string = "#e8b589",
+        number = "#e8b589",
+        property = "#cdcdcd",
+        constant = "#cdcdcd",
+        parameter = "#cdcdcd",
+        operator = "#606079",
+        keyword = "#cdcdcd",
+        type = "#cdcdcd",
+        hint = "#606079",
+
+        error = "#d8647e",
+        warning = "#e8b589",
+        plus = "#7fa563",
+        delta = "#e8b589",
+    },
+})
+
+vim.cmd.colorscheme("vague")
+
 vim.g.umbraline = {
-    theme = "cursor",
+    theme = "default",
     dim_inactive = false,
 }
 
