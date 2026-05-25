@@ -12,7 +12,7 @@ local function rpc()
 
     if channel < 1 then
         vim.notify(
-            "an error ocurred starting the test-rpc job",
+            "an error occurred starting the test-rpc job",
             vim.log.levels.ERROR
         )
         return nil
