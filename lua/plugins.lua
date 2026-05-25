@@ -19,6 +19,20 @@ vim.pack.add({
     { src = "https://github.com/vague-theme/vague.nvim" },
 })
 
+vim.g.umbraline = {
+    theme = "default",
+    dim_inactive = false,
+}
+
+vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+
+vim.g.fff = {
+    lazy_sync = true,
+    debug = { enabled = true, show_scores = true },
+    preview = { enabled = false },
+    frecency = { enabled = true },
+}
+
 require("vague").setup({
     colors = {
         bg = "#141415",
@@ -38,7 +52,7 @@ require("vague").setup({
         constant = "#cdcdcd",
         parameter = "#cdcdcd",
         operator = "#606079",
-        keyword = "#cdcdcd",
+        keyword = "#6e94b2",
         type = "#cdcdcd",
         hint = "#606079",
 
@@ -48,22 +62,6 @@ require("vague").setup({
         delta = "#e8b589",
     },
 })
-
-vim.cmd.colorscheme("vague")
-
-vim.g.umbraline = {
-    theme = "default",
-    dim_inactive = false,
-}
-
-vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
-
-vim.g.fff = {
-    lazy_sync = true,
-    debug = { enabled = true, show_scores = true },
-    preview = { enabled = false },
-    frecency = { enabled = true },
-}
 
 require("minifugit").setup({
     preview = {
