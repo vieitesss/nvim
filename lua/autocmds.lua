@@ -14,6 +14,16 @@ autocmd("TextYankPost", {
     group = highlight_group,
 })
 
+-- Open the quickfix window after :grep if there are results.
+-- Neovim does not have a plain option for this; QuickFixCmdPost is the
+-- built-in hook for commands that populate quickfix/location lists.
+local quickfix_group = augroup("QuickfixOpen", { clear = true })
+autocmd("QuickFixCmdPost", {
+    pattern = "grep",
+    command = "cwindow",
+    group = quickfix_group,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "netrw",
     callback = function()
