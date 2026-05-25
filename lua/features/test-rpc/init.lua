@@ -13,7 +13,7 @@ local function rpc()
 end
 
 M.run = function()
-    local result = vim.rpcrequest(rpc(), "multiply", { "2", "3" })
+    local result = vim.rpcrequest(rpc(), "multiply", { "2", "a" })
     vim.print("Result: " ..  result)
 end
 

@@ -15,7 +15,7 @@ type Test struct{}
 
 func parseArgs(args []string) (int, int, error) {
 	if len(args) != 2 {
-		return 0, 0, fmt.Errorf("There should be exactly two integers. There are %d.", len(args))
+		return 0, 0, fmt.Errorf("expected exactly two integers, got %d.", len(args))
 	}
 
 	a, err := strconv.Atoi(args[0])
@@ -31,12 +31,12 @@ func parseArgs(args []string) (int, int, error) {
 	return a, b, nil
 }
 
-func Multiply(v *nvim.Nvim, args []string) error {
+func Multiply(v *nvim.Nvim, args []string) (int, error) {
 	a, b, err := parseArgs(args)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	m := a * b
 
-	return v.WriteOut(fmt.Sprintf("%d\n", m))
+	return m, nil
 }
