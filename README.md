@@ -10,3 +10,4 @@
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
 - [blink.cmp](https://github.com/saghen/blink.cmp)
 - [mason.nvim](https://github.com/mason-org/mason.nvim)
+- [vague.nvim](https://github.com/vague-theme/vague.nvim)
