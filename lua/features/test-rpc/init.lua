@@ -11,7 +11,10 @@ local function rpc()
     end
 
     if channel < 1 then
-        vim.log.error("an error ocurred starting the test-rpc job")
+        vim.notify(
+            "an error ocurred starting the test-rpc job",
+            vim.log.levels.ERROR
+        )
         return nil
     end
 
@@ -20,10 +23,12 @@ end
 
 M.run = function()
     local c = rpc()
-    if not c then return end
+    if not c then
+        return
+    end
 
     local result = vim.rpcrequest(c, "multiply", { "2", "a" })
-    vim.print("Result: " ..  result)
+    vim.print("Result: " .. result)
 end
 
 return M
