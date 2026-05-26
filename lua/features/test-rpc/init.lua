@@ -53,7 +53,7 @@ local function start_job()
     })
     if j == 0 then
         vim.notify(
-            "invalid arguments to jobstart({" .. binary .. "," .. pid .. "})",
+            "invalid arguments to jobstart({" .. binary .. "," .. socket .. "})",
             vim.log.levels.ERROR
         )
     end
