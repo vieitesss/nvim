@@ -87,6 +87,10 @@ local function rpc(on_ready)
             "an error occurred connecting to the socket " .. socket,
             vim.log.levels.ERROR
         )
+        if job and job > 0 then
+            vim.fn.jobstop(job)
+            job = nil
+        end
         return
     end
 
