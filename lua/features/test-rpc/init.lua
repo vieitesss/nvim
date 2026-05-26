@@ -120,6 +120,7 @@ local function ensure_autocmd()
     vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
         pattern = { "*" },
         group = ag,
+        once = true,
         callback = function(_)
             if job and job > 0 then
                 vim.fn.jobstop(job)
