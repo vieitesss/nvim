@@ -6,16 +6,14 @@ local socket = "/tmp/test-rpc.sock"
 local job
 local channel
 local id = 0
-local timeout = 50 -- ms
 
 -- Returns the channel id or nil
 ---@return number?
 local function try_connect_socket()
-    local times = 50
-    local ok, chan
+    local attempts, timeout = 10, 20
 
-    while times > 0 do
-        ok, chan = pcall(vim.fn.sockconnect, "pipe", socket, {
+    local function try_connect()
+        local ok, chan = pcall(vim.fn.sockconnect, "pipe", socket, {
             on_data = function(_, data, _)
                 vim.print(data)
                 local info = vim.json.decode(data[1])
@@ -23,11 +21,17 @@ local function try_connect_socket()
             end,
         })
         if ok and chan > 0 then
-            return chan
+            channel = chan
+            vim.print(attempts)
+            return true
         end
 
-        times = times - 1
-        vim.uv.sleep(timeout)
+        return false
+    end
+
+    local connected = vim.wait(attempts * timeout, try_connect, timeout)
+    if connected then
+        return channel
     end
 
     return nil
@@ -72,11 +76,12 @@ local function rpc(on_ready)
     if not channel or channel == 0 then
         channel = try_connect_socket()
     end
-    if channel == 0 then
+    if not channel or channel == 0 then
         vim.notify(
             "an error occurred connecting to the socket " .. socket,
             vim.log.levels.ERROR
         )
+        return
     end
 
     on_ready()
