@@ -2,7 +2,7 @@ local M = {}
 
 local binary = vim.fn.stdpath("config") .. "/bin/nvim-features"
 local pid = tostring(vim.uv.os_getpid())
-local socket = "/tmp/nvim-features-" .. pid .. ".sock"
+local socket = vim.uv.os_tmpdir() .. "/nvim-features-" .. pid .. ".sock"
 
 local job
 local channel
