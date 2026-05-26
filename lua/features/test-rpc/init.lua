@@ -39,7 +39,12 @@ local function rpc()
         return channel
     end
 
-    local job = vim.fn.jobstart(binary)
+    local job = vim.fn.jobstart(binary, {
+        on_exit = function()
+            channel = nil
+            id = 0
+        end
+    })
     if job == 0 then
         vim.notify(
             "invalid arguments to jobstart(): `" .. binary .. "` and `nil`",
