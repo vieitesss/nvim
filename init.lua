@@ -13,6 +13,7 @@ require("features.cwd").setup({
         "~/pre-vieitesss",
         "~/firestartr-pre",
         "~/firestartr-pro",
+        "~/firestartr-demo",
         "~/.config",
     },
 })
