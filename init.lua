@@ -18,4 +18,3 @@ require("features.cwd").setup({
     },
 })
 require("features.term").setup()
-require("features.test-rpc").multiply()

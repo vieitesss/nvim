@@ -5,9 +5,32 @@ local socket = "/tmp/test-rpc.sock"
 
 local channel
 local id = 0
+local timeout = 50 -- ms
 
-local function on_data(data)
-    vim.print("type: " .. type(data) .. "; data: " .. data)
+local function on_data(_, data, _)
+    vim.print(data)
+    local info = vim.json.decode(data[1])
+    vim.print("result: " .. info.result)
+end
+
+---@return number?
+local function try_connect()
+    local times = 50
+    local ok, chan
+
+    while times > 0 do
+        ok, chan =
+            pcall(vim.fn.sockconnect, "pipe", socket, { on_data = on_data })
+        if ok and chan > 0 then
+            vim.print(50 - times)
+            return chan
+        end
+
+        times = times - 1
+        vim.uv.sleep(timeout)
+    end
+
+    return nil
 end
 
 ---@return number?
@@ -33,9 +56,9 @@ local function rpc()
     end
 
     if not channel then
-        channel = vim.fn.sockconnect("pipe", socket, { on_data = on_data })
+        channel = try_connect()
     end
-    if channel == 0 then
+    if not channel then
         vim.notify(
             "an error occurred connecting to the socket " .. socket,
             vim.log.levels.ERROR
@@ -58,8 +81,7 @@ local function build_data(method, params)
         params = params,
     }
 
-    local body = vim.json.encode(msg)
-    local data = "Content-Length: " .. #body .. "\r\n\r\n" .. body
+    local data = vim.json.encode(msg) .. "\n"
 
     return data
 end
