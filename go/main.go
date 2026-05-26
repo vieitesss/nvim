@@ -13,7 +13,7 @@ import (
 	"nvim-features/features/cwd"
 )
 
-func build_sock() string {
+func buildSock() string {
 	if len(os.Args) != 2 {
 		return ""
 	}
@@ -23,14 +23,16 @@ func build_sock() string {
 		return ""
 	}
 
-	return "/tmp/nvim-features-" + id + ".sock"
+	return os.TempDir() + "/nvim-features-" + id + ".sock"
 }
 
 func main() {
-	sock := build_sock()
+	sock := buildSock()
 	if sock == "" {
 		return
 	}
+
+	os.Remove(sock)
 
 	lst, err := net.Listen(jrpc2.Network(sock))
 	if err != nil {

@@ -23,7 +23,6 @@ local function try_connect_socket()
         })
         if ok and chan > 0 then
             channel = chan
-            vim.print(attempts)
             return true
         end
 
@@ -48,7 +47,7 @@ local function start_job()
     })
     if j == 0 then
         vim.notify(
-            "invalid arguments to jobstart(): `" .. binary .. "` and `nil`",
+            "invalid arguments to jobstart({" .. binary .. "," .. pid .. "})",
             vim.log.levels.ERROR
         )
     end
@@ -105,7 +104,7 @@ local function build_data(method, params)
     return data
 end
 
-local ag = vim.api.nvim_create_augroup("NeovimFeatures", {})
+local ag = vim.api.nvim_create_augroup("NeovimFeatures", { clear = true})
 
 local function ensure_autocmd()
     vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
