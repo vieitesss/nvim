@@ -1,7 +1,8 @@
 local M = {}
 
-local binary = vim.fn.stdpath("config") .. "/bin/test-rpc"
-local socket = "/tmp/test-rpc.sock"
+local binary = vim.fn.stdpath("config") .. "/bin/nvim-features"
+local pid = tostring(vim.uv.os_getpid())
+local socket = "/tmp/nvim-features-" .. pid .. ".sock"
 
 local job
 local channel
@@ -39,7 +40,7 @@ end
 
 ---@return number
 local function start_job()
-    local j = vim.fn.jobstart(binary, {
+    local j = vim.fn.jobstart({ binary, pid }, {
         on_exit = function()
             channel = nil
             id = 0
@@ -104,9 +105,12 @@ local function build_data(method, params)
     return data
 end
 
+local ag = vim.api.nvim_create_augroup("NeovimFeatures", {})
+
 local function ensure_autocmd()
     vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
         pattern = { "*" },
+        group = ag,
         callback = function(_)
             if job and job > 0 then
                 vim.fn.jobstop(job)
