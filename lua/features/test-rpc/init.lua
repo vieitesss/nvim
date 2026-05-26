@@ -45,7 +45,7 @@ end
 
 ---@return number
 local function start_job()
-    local j = vim.fn.jobstart({ binary, pid }, {
+    local j = vim.fn.jobstart({ binary, socket }, {
         on_exit = function()
             channel = nil
             id = 0

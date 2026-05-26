@@ -13,21 +13,12 @@ import (
 	"nvim-features/features/cwd"
 )
 
-func buildSock() string {
-	if len(os.Args) != 2 {
-		return ""
-	}
-
-	id := os.Args[1]
-	if id == "" {
-		return ""
-	}
-
-	return os.TempDir() + "/nvim-features-" + id + ".sock"
-}
-
 func main() {
-	sock := buildSock()
+	if len(os.Args) != 2 {
+		return
+	}
+
+	sock := os.Args[1]
 	if sock == "" {
 		return
 	}
