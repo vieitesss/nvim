@@ -1,10 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strconv"
-
-	"github.com/neovim/go-client/nvim"
 )
 
 func parseArgs(args []string) (int, int, error) {
@@ -25,7 +24,7 @@ func parseArgs(args []string) (int, int, error) {
 	return a, b, nil
 }
 
-func Multiply(v *nvim.Nvim, args []string) (int, error) {
+func Multiply(ctx context.Context, args []string) (int, error) {
 	a, b, err := parseArgs(args)
 	if err != nil {
 		return 0, err

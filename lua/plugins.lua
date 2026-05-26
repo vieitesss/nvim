@@ -79,6 +79,7 @@ require("minifugit").setup({
 require("command").setup({})
 require("miniharp").setup({
     show_on_autoload = true,
+    notifications = false,
     ui = {
         position = "top-right",
         show_hints = false,

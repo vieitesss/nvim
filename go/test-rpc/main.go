@@ -1,31 +1,31 @@
 package main
 
 import (
+	"context"
 	"log"
+	"net"
 	"os"
 
-	"github.com/neovim/go-client/nvim"
+	"github.com/creachadair/jrpc2"
+	"github.com/creachadair/jrpc2/channel"
+	"github.com/creachadair/jrpc2/handler"
+	"github.com/creachadair/jrpc2/server"
 )
 
+const serviceAddr = "/tmp/test-rpc.sock"
+
 func main() {
-	// Turn off timestamps in output.
-	log.SetFlags(0)
+	os.Remove(serviceAddr)
 
-	// Direct writes by the application to stdout garble the RPC stream.
-	// Redirect the application's direct use of stdout to stderr.
-	stdout := os.Stdout
-	os.Stdout = os.Stderr
-
-	// Create a client connected to stdio. Configure the client to use the
-	// standard log package for logging.
-	v, err := nvim.New(os.Stdin, stdout, stdout, log.Printf)
+	lst, err := net.Listen(jrpc2.Network(serviceAddr))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Listen %q: %v", serviceAddr, err)
 	}
+	defer lst.Close()
 
-	v.RegisterHandler("multiply", Multiply)
-
-	if err := v.Serve(); err != nil {
-		log.Fatal(err)
-	}
+	svc := server.Static(handler.Map{
+		"Multiply": handler.New(Multiply),
+	})
+	ctx := context.Background()
+	server.Loop(ctx, server.NetAccepter(lst, channel.Line), svc, nil)
 }

@@ -1,2 +1,6 @@
-github.com/neovim/go-client v1.2.1 h1:kl3PgYgbnBfvaIoGYi3ojyXH0ouY6dJY/rYUCssZKqI=
-github.com/neovim/go-client v1.2.1/go.mod h1:EeqCP3z1vJd70JTaH/KXz9RMZ/nIgEFveX83hYnh/7c=
+github.com/creachadair/jrpc2 v1.3.5 h1:onJko+1u6xoiRph3xwWmfNISR91teCRhbJwSyS9Svzo=
+github.com/creachadair/jrpc2 v1.3.5/go.mod h1:YXDmS53AavsiytbAwskrczJPcVHvKC9GoyWzwfSQXoE=
+github.com/creachadair/mds v0.26.1 h1:CQG8f4cueHX/c20q5Sy/Ubk8Bvy+aRzVgbpxVieMBAs=
+github.com/creachadair/mds v0.26.1/go.mod h1:dMBTCSy3iS3dwh4Rb1zxeZz2d7K8+N24GCTsayWtQRI=
+golang.org/x/sync v0.19.0 h1:vV+1eWNmZ5geRlYjzm2adRgW2/mcpevXNg50YZtPCE4=
+golang.org/x/sync v0.19.0/go.mod h1:9KTHXmSnoGruLpwFjVSX0lNNA75CykiMECbovNTZqGI=

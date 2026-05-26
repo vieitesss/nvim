@@ -13,8 +13,9 @@ require("features.cwd").setup({
         "~/pre-vieitesss",
         "~/firestartr-pre",
         "~/firestartr-pro",
+        "~/firestartr-demo",
         "~/.config",
     },
 })
 require("features.term").setup()
-require("features.test-rpc").run()
+require("features.test-rpc").multiply()
