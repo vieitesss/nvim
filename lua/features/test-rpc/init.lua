@@ -8,19 +8,25 @@ local job
 local channel
 local id = 0
 
+local function on_data(_, data, _)
+    for _, line in ipairs(data) do
+        if line and line ~= "" then
+            local decoded, info = pcall(vim.json.decode, line)
+            if decoded and type(info) == "table" and info.result ~= nil then
+                vim.print("result: " .. info.result)
+            end
+        end
+    end
+end
+
 -- Returns the channel id or nil
 ---@return number?
 local function try_connect_socket()
     local attempts, timeout = 10, 20
 
     local function try_connect()
-        local ok, chan = pcall(vim.fn.sockconnect, "pipe", socket, {
-            on_data = function(_, data, _)
-                vim.print(data)
-                local info = vim.json.decode(data[1])
-                vim.print("result: " .. info.result)
-            end,
-        })
+        local ok, chan =
+            pcall(vim.fn.sockconnect, "pipe", socket, { on_data = on_data })
         if ok and chan > 0 then
             channel = chan
             return true
@@ -104,7 +110,7 @@ local function build_data(method, params)
     return data
 end
 
-local ag = vim.api.nvim_create_augroup("NeovimFeatures", { clear = true})
+local ag = vim.api.nvim_create_augroup("NeovimFeatures", { clear = true })
 
 local function ensure_autocmd()
     vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
