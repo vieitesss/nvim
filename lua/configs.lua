@@ -33,11 +33,14 @@ vim.g.netrw_liststyle = 1
 vim.g.netrw_sort_by = "size"
 
 -- floating cmd output
--- local ok_ui2, ui2 = pcall(require, "vim._core.ui2")
--- if ok_ui2 then
---     ui2.enable({
---         msg = {
---             targets = "cmd",
---         },
---     })
--- end
+local ok_ui2, ui2 = pcall(require, "vim._core.ui2")
+if ok_ui2 then
+    ui2.enable({
+        msg = {
+            targets = "msg",
+            cmd = {
+                height = 0.3
+            }
+        },
+    })
+end
