@@ -15,7 +15,17 @@ local config = {
 
 ---@return string[]
 local function list()
-    return core.list(config)
+    local dirs = {}
+    require("features.rpc").rpc("List", config, function(result, err)
+        if err then
+            vim.print(err)
+            return
+        end
+
+        dirs = result
+    end)
+
+    return dirs
 end
 
 ---@param target_path string

@@ -10,8 +10,8 @@ import (
 )
 
 type Cwd struct {
-	Paths               []string
-	IncludeHomeGitRepos bool
+	Paths               []string `json:"paths"`
+	IncludeHomeGitRepos bool     `json:"include_home_git_repos"`
 }
 
 func normalize(path string) (string, error) {
@@ -85,8 +85,8 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 		}
 	}
 
-	var	(
-		home string
+	var (
+		home     string
 		homeDirs []string
 	)
 
@@ -99,7 +99,7 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 		return nil, err
 	}
 	homeDirs, err = firstLevelDirectories(home)
-	for _, d := range(homeDirs) {
+	for _, d := range homeDirs {
 		if isGitRepo(d) {
 			dirs = append(dirs, d)
 		}
