@@ -17,8 +17,6 @@ local function on_data(_, data, _)
     for _, line in ipairs(data) do
         if line and line ~= "" then
             local decoded, info = pcall(vim.json.decode, line)
-            vim.print("info:")
-            vim.print(info)
             if
                 decoded
                 and type(info) == "table"

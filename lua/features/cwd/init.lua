@@ -13,8 +13,9 @@ local config = {
     include_home_git_repos = true,
 }
 
+---@param cb fun(result: any)
 ---@return string[]
-local function list()
+local function list(cb)
     local dirs = {}
     require("features.rpc").rpc("List", config, function(result, err)
         if err then
@@ -22,7 +23,7 @@ local function list()
             return
         end
 
-        dirs = result
+        cb(result)
     end)
 
     return dirs
@@ -67,15 +68,7 @@ local function change_to(target_path)
     return true
 end
 
----@return nil
-function M.pick()
-    local dirs = list()
-    if #dirs == 0 then
-        vim.notify("No cwd directories found")
-        return
-    end
-    core.refresh_index(dirs)
-
+local function open_picker()
     local ok, picker = pcall(require, "fff.picker_ui")
     if not ok then
         vim.notify("Could not load fff cwd picker", vim.log.levels.WARN)
@@ -137,6 +130,21 @@ function M.pick()
             vim.log.levels.WARN
         )
     end
+end
+
+---@return nil
+function M.pick()
+    list(function(result)
+        local dirs = result
+        if #dirs == 0 then
+            vim.notify("No cwd directories found")
+            return
+        end
+
+        core.refresh_index(dirs)
+        open_picker()
+    end)
+
 end
 
 ---@param opts CwdSetupOptions?
