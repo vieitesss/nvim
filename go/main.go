@@ -32,7 +32,7 @@ func main() {
 	defer lst.Close()
 
 	svc := server.Static(handler.Map{
-		"Multiply": handler.New(cwd.Multiply),
+		"List": handler.New(cwd.List),
 	})
 	ctx := context.Background()
 	server.Loop(ctx, server.NetAccepter(lst, channel.Line), svc, nil)

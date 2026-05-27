@@ -4,3 +4,5 @@ _default:
 build:
 	go build -o "../bin/nvim-features" .
 
+test:
+	go test ./... -v
