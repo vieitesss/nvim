@@ -7,20 +7,17 @@ local function find_elements(elements, callback)
     local output = vim.fn.tempname()
     vim.fn.writefile(elements, input)
 
-    local script = "fzf --multi < "
+    local cmd = "fzf --multi < "
         .. vim.fn.shellescape(input)
         .. " > "
         .. vim.fn.shellescape(output)
-        .. "; fzf_status=$?; "
-        .. "case $fzf_status in 0|1|130) exit 0;; "
-        .. "*) exit $fzf_status;; esac"
 
     vim.cmd("botright 15new")
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_get_current_buf()
     vim.bo[buf].bufhidden = "wipe"
 
-    local job = vim.fn.jobstart({ vim.o.shell, vim.o.shellcmdflag, script }, {
+    local job = vim.fn.jobstart({ vim.o.shell, vim.o.shellcmdflag, cmd }, {
         term = true,
         on_exit = function(_, code)
             vim.schedule(function()
@@ -34,6 +31,8 @@ local function find_elements(elements, callback)
                 local err = nil
                 if code == 0 then
                     result = vim.fn.readfile(output)
+                elseif code == 1 or code == 130 then
+                    result = {}
                 else
                     err = "fzf failed with exit code " .. code
                 end
