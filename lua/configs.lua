@@ -29,10 +29,6 @@ opt.hlsearch = false
 vim.cmd.filetype("plugin indent on")
 vim.cmd.colorscheme("vague")
 
-vim.g.copilot_no_tab_map = true
-vim.g.netrw_liststyle = 1
-vim.g.netrw_sort_by = "size"
-
 -- floating cmd output
 local ok_ui2, ui2 = pcall(require, "vim._core.ui2")
 if ok_ui2 then
