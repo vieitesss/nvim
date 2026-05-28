@@ -5,12 +5,6 @@ local M = {}
 M.dir = vim.fn.stdpath("data") .. "/cwd-sessions/"
 vim.fn.mkdir(M.dir, "p")
 
----@param f function
----@return boolean, any
-local function safe(f)
-    return pcall(f)
-end
-
 ---@param cwd string
 ---@return string
 local function session_path(cwd)
@@ -21,7 +15,7 @@ end
 ---@param opt string
 ---@return any
 local function buf_option(buf, opt)
-    local ok, value = safe(function()
+    local ok, value = pcall(function()
         return vim.api.nvim_get_option_value(opt, { buf = buf })
     end)
     return ok and value or nil
@@ -130,7 +124,7 @@ function M.save(cwd)
         table.insert(paths, item.path)
     end
 
-    local ok, encoded = safe(function()
+    local ok, encoded = pcall(function()
         return vim.json.encode({
             cwd = path.normalize(cwd),
             buffers = paths,
@@ -143,7 +137,7 @@ function M.save(cwd)
         return
     end
 
-    local write_ok, err = safe(function()
+    local write_ok, err = pcall(function()
         vim.fn.writefile({ encoded }, session_path(cwd))
     end)
     if not write_ok then
@@ -187,7 +181,7 @@ local function close_real_file_buffers(buffers)
     end
 
     for _, item in ipairs(buffers) do
-        local ok, err = safe(function()
+        local ok, err = pcall(function()
             if vim.api.nvim_buf_is_valid(item.buf) then
                 vim.api.nvim_buf_delete(item.buf, { force = false })
             end
@@ -223,7 +217,7 @@ local function load_listed_buffer(file_path)
         return
     end
     pcall(vim.fn.bufload, buf)
-    safe(function()
+    pcall(function()
         vim.api.nvim_set_option_value("buflisted", true, { buf = buf })
     end)
 end
@@ -255,7 +249,7 @@ local function close_cwd_fallback_buffers()
     end
 
     for _, buf in ipairs(buffers) do
-        safe(function()
+        pcall(function()
             if vim.api.nvim_buf_is_valid(buf) then
                 vim.api.nvim_buf_delete(buf, { force = true })
             end
@@ -287,7 +281,7 @@ local function edit_file_in_window(win, file_path)
     end
 
     vim.api.nvim_set_current_win(win)
-    local ok, err = safe(function()
+    local ok, err = pcall(function()
         vim.cmd("silent keepalt edit " .. vim.fn.fnameescape(file_path))
     end)
     if ok then
@@ -322,7 +316,7 @@ local function restore_layout_node(node, win, opened)
                 vim.fn.winrestview(node.view)
             end)
         elseif type(node.cursor) == "table" and node.cursor.line then
-            safe(function()
+            pcall(function()
                 vim.api.nvim_win_set_cursor(
                     win,
                     { node.cursor.line, node.cursor.col or 0 }
@@ -397,7 +391,7 @@ function M.restore(dir)
     then
         vim.api.nvim_set_current_win(opened[current])
     end
-    safe(function()
+    pcall(function()
         vim.cmd("wincmd =")
     end)
 end
