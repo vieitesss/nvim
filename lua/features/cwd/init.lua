@@ -68,20 +68,29 @@ local function change_to(target_path)
 end
 
 ---@param dirs string[]
----@return string?
-local function pick_dir(dirs)
-    local ok, selected = pcall(function()
-        return require("features.fzf").fzf(dirs)
+---@param cb fun(dir: string?)
+local function pick_dir(dirs, cb)
+    local ok, err = pcall(function()
+        require("features.fzf").fzf(dirs, function(selected, fzf_err)
+            if fzf_err then
+                vim.notify(
+                    "Could not open fzf cwd picker: " .. tostring(fzf_err),
+                    vim.log.levels.WARN
+                )
+                cb(nil)
+                return
+            end
+
+            cb(selected and selected[1] or nil)
+        end)
     end)
     if not ok then
         vim.notify(
-            "Could not open fzf cwd picker: " .. tostring(selected),
+            "Could not open fzf cwd picker: " .. tostring(err),
             vim.log.levels.WARN
         )
-        return nil
+        cb(nil)
     end
-
-    return selected and selected[1] or nil
 end
 
 ---@return nil
@@ -93,10 +102,11 @@ function M.pick()
             return
         end
 
-        local dir = pick_dir(dirs)
-        if dir then
-            change_to(dir)
-        end
+        pick_dir(dirs, function(dir)
+            if dir then
+                change_to(dir)
+            end
+        end)
     end)
 end
 
