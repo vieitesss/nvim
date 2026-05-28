@@ -13,12 +13,20 @@ function M.encode(path)
     return sub
 end
 
----@param name string
+---@param cwd string
 ---@return string
-function M.decode(name)
-    -- order matters: decode %2F first, then %25
-    local sub, _ = name:gsub("%%2F", "/"):gsub("%%25", "%%")
-    return sub
+function M.entry_path(cwd)
+    return M.index_dir .. M.encode(cwd) .. ".cwd"
+end
+
+---@param dirs string[]
+function M.refresh_index(dirs)
+    vim.fn.delete(M.index_dir, "rf")
+    vim.fn.mkdir(M.index_dir, "p")
+
+    for _, dir in ipairs(dirs) do
+        vim.fn.writefile({ dir }, M.entry_path(dir))
+    end
 end
 
 ---@param path string
@@ -43,32 +51,20 @@ function M.is_directory(path)
     return vim.fn.isdirectory(path) == 1
 end
 
----@class CwdConfig
----@field paths string[] Directories whose first-level children can be selected.
----@field include_home_git_repos boolean Include Git repositories directly under $HOME.
-
----@param cwd string
----@return string
-function M.entry_path(cwd)
-    return M.index_dir .. M.encode(cwd) .. ".cwd"
-end
-
----@param dirs string[]
-function M.refresh_index(dirs)
-    vim.fn.delete(M.index_dir, "rf")
-    vim.fn.mkdir(M.index_dir, "p")
-
-    for _, dir in ipairs(dirs) do
-        vim.fn.writefile({ dir }, M.entry_path(dir))
-    end
-end
-
 ---@param dir string
 function M.track_access(dir)
     local ok, file_picker = pcall(require, "fff.file_picker")
     if ok and type(file_picker.track_access) == "function" then
         pcall(file_picker.track_access, M.entry_path(dir))
     end
+end
+
+---@param name string
+---@return string
+function M.decode(name)
+    -- order matters: decode %2F first, then %25
+    local sub, _ = name:gsub("%%2F", "/"):gsub("%%25", "%%")
+    return sub
 end
 
 ---@class CwdPickerItem

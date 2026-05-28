@@ -3,9 +3,9 @@ local session = require("features.cwd.session")
 
 local M = {}
 
----@class CwdSetupOptions
----@field paths string[]? Directories whose first-level children can be selected.
----@field include_home_git_repos boolean? Include Git repositories directly under $HOME.
+---@class CwdConfig
+---@field paths string[] Directories whose first-level children can be selected.
+---@field include_home_git_repos boolean Include Git repositories directly under $HOME.
 
 ---@type CwdConfig
 local config = {
@@ -15,11 +15,11 @@ local config = {
 
 ---@param cb fun(result: any)
 ---@return string[]
-local function list(cb)
+M.list = function(cb)
     local dirs = {}
     require("features.rpc").rpc("List", config, function(result, err)
         if err then
-            vim.print(err)
+            vim.notify(err, vim.log.levels.WARN)
             return
         end
 
@@ -62,92 +62,45 @@ local function change_to(target_path)
 
     vim.cmd("cd " .. vim.fn.fnameescape(target_path))
     session.restore(target_path)
-    core.track_access(target_path)
 
     vim.notify("Cwd: " .. vim.fn.fnamemodify(target_path, ":~"))
     return true
 end
 
-local function open_picker()
-    local ok, picker = pcall(require, "fff.picker_ui")
-    if not ok then
-        vim.notify("Could not load fff cwd picker", vim.log.levels.WARN)
-        return
-    end
-    if picker.state.active then
-        return
-    end
-
-    local original_select = picker.select
-    local original_close = picker.close
-    local restored = false
-
-    ---@return nil
-    local function restore()
-        if restored then
-            return
-        end
-        restored = true
-        picker.select = original_select
-        picker.close = original_close
-    end
-
-    ---@return string?
-    local function selected_dir()
-        local item = picker.state.filtered_items[picker.state.cursor]
-        return core.item_to_dir(item)
-    end
-
-    picker.close = function(...)
-        restore()
-        return original_close(...)
-    end
-
-    picker.select = function()
-        local dir = selected_dir()
-        if not dir then
-            return
-        end
-        restore()
-        original_close()
-        change_to(dir)
-    end
-
-    local opened, err = pcall(function()
-        picker.open({
-            cwd = core.index_dir,
-            title = "Change cwd",
-            prompt = "Cwd > ",
-            renderer = core,
-            preview = { enabled = false },
-            layout = { height = 0.35, width = 0.55 },
-        })
+---@param dirs string[]
+---@return string?
+local function pick_dir(dirs)
+    local ok, selected = pcall(function()
+        return require("features.fzf").fzf(dirs)
     end)
-    if not opened or not picker.state.active then
-        restore()
+    if not ok then
         vim.notify(
-            "Could not open fff cwd picker: " .. tostring(err),
+            "Could not open fzf cwd picker: " .. tostring(selected),
             vim.log.levels.WARN
         )
+        return nil
     end
+
+    return selected and selected[1] or nil
 end
 
 ---@return nil
 function M.pick()
-    list(function(result)
+    M.list(function(result)
         local dirs = result
         if #dirs == 0 then
             vim.notify("No cwd directories found")
             return
         end
 
-        core.refresh_index(dirs)
-        open_picker()
+        local dir = pick_dir(dirs)
+        if dir then
+            change_to(dir)
+        end
     end)
-
 end
 
----@param opts CwdSetupOptions?
+---@param opts CwdConfig?
 ---@return nil
 function M.setup(opts)
     opts = opts or {}
@@ -166,7 +119,6 @@ function M.setup(opts)
     )
 end
 
-M.list = list
 M.change_to = change_to
 
 return M
