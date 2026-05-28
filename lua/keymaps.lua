@@ -51,7 +51,7 @@ keymap("n", "<leader>l", log.open)
 -- keymap("n", "<leader>ff", function() require("fff").find_files() end)
 vim.keymap.set("n", "<leader>ff", "<cmd>Files<cr>", {
     silent = true,
-    desc = "Open files with fzf into quickfix",
+    desc = "Open files with fzf",
 })
 
 -- keymap("n", "<leader>fg", function()
