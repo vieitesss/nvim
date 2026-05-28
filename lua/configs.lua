@@ -1,4 +1,5 @@
 local opt = vim.opt
+
 opt.guicursor = "i:block"
 opt.colorcolumn = "80"
 opt.signcolumn = "yes:1"
@@ -20,7 +21,7 @@ opt.wrap = false
 opt.cursorline = true
 opt.scrolloff = 8
 opt.inccommand = "nosplit"
-opt.undodir = os.getenv('HOME') .. '/.vim/undodir'
+opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 opt.undofile = true
 opt.winborder = "rounded"
 opt.hlsearch = false
@@ -37,10 +38,10 @@ local ok_ui2, ui2 = pcall(require, "vim._core.ui2")
 if ok_ui2 then
     ui2.enable({
         msg = {
-            targets = "msg",
+            targets = "cmd",
             cmd = {
-                height = 0.3
-            }
+                height = 0.3,
+            },
         },
     })
 end

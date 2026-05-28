@@ -16,5 +16,6 @@ require("features.cwd").setup({
         "~/firestartr-demo",
         "~/.config",
     },
+    include_home_git_repos = true
 })
 require("features.term").setup()
