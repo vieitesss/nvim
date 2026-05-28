@@ -26,10 +26,6 @@ The plugin-like modules MUST:
 - Be ALWAYS treated as independent modules. None of them should know anything about the others.
 - Be written with production-ready Lua code. Look for simplicity. Do NOT abstract too much. ALWAYS use annotations (e.g. @param, @return, ...)
 
-## sessions.lua
-
-This module uses the built-in Neovim sessions and lets the user have a tmux-like experience, allowing them to switch between sessions based on the working directory. The user can list, create, save, delete and switch sessions using its API. The UI for selecting the session or deleting them are based on any picker the user has installed. In this case, the current picker installed is fff.nvim.
-
 ## term.lua
 
 This module allows the user to create terminal buffers, with the possibility to create up to 5 different terminal buffers that will be handled by the module. The processes running on each buffer keep running even when hiding the terminals.
