@@ -89,7 +89,6 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 		}
 	}
 
-
 	var (
 		home     string
 		homeDirs []string

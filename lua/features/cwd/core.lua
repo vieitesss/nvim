@@ -3,32 +3,6 @@ local M = {}
 M.index_dir = vim.fn.stdpath("data") .. "/cwd/"
 vim.fn.mkdir(M.index_dir, "p")
 
--- URL-style encoding so any absolute path is a valid filename:
---   % -> %25   (must come first)
---   / -> %2F
----@param path string
----@return string
-function M.encode(path)
-    local sub, _ = path:gsub("%%", "%%25"):gsub("/", "%%2F")
-    return sub
-end
-
----@param cwd string
----@return string
-function M.entry_path(cwd)
-    return M.index_dir .. M.encode(cwd) .. ".cwd"
-end
-
----@param dirs string[]
-function M.refresh_index(dirs)
-    vim.fn.delete(M.index_dir, "rf")
-    vim.fn.mkdir(M.index_dir, "p")
-
-    for _, dir in ipairs(dirs) do
-        vim.fn.writefile({ dir }, M.entry_path(dir))
-    end
-end
-
 ---@param path string
 ---@return string
 function M.normalize(path)
