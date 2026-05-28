@@ -51,14 +51,6 @@ function M.is_directory(path)
     return vim.fn.isdirectory(path) == 1
 end
 
----@param dir string
-function M.track_access(dir)
-    local ok, file_picker = pcall(require, "fff.file_picker")
-    if ok and type(file_picker.track_access) == "function" then
-        pcall(file_picker.track_access, M.entry_path(dir))
-    end
-end
-
 ---@param name string
 ---@return string
 function M.decode(name)

@@ -26,16 +26,12 @@ keymap("n", "<Leader>-", "<cmd>split<CR>", s)
 keymap("v", "<Leader>p", '"_dP')
 keymap("x", "y", [["+y]], s)
 
--- cd current dir
-keymap("n", "<leader>cd", '<cmd>lua vim.fn.chdir(vim.fn.expand("%:p:h"))<CR>')
-
 local ns = { noremap = true, silent = true }
 local er = { expr = true, replace_keycodes = false }
 keymap("n", "grd", "<cmd>lua vim.lsp.buf.definition()<CR>", ns)
 keymap("n", "<leader>dn", "<cmd>lua vim.diagnostic.jump({count = 1})<CR>", ns)
 keymap("n", "<leader>dp", "<cmd>lua vim.diagnostic.jump({count = -1})<CR>", ns)
 
-keymap("n", "<leader>ex", "<cmd>Ex %:p:h<CR>")
 keymap("n", "<leader>of", "<cmd>Oil<CR>")
 keymap("n", "<leader>oc", function()
     require("oil").open(vim.fn.getcwd())
@@ -47,21 +43,14 @@ local log = require("minifugit.log")
 
 keymap("n", "<leader>gs", mf.status)
 keymap("n", "<leader>l", log.open)
-
--- keymap("n", "<leader>ff", function() require("fff").find_files() end)
 vim.keymap.set("n", "<leader>ff", "<cmd>Files<cr>", {
     silent = true,
     desc = "Open files with fzf",
 })
-
--- keymap("n", "<leader>fg", function()
---     require("fff").live_grep()
--- end)
 keymap("n", "<leader>ce", "<cmd>CommandExecute<CR>")
 keymap("n", "<leader>cl", "<cmd>CommandExecuteLast<CR>")
 keymap("n", "<leader>cr", "<cmd>CommandReopenTerminal<CR>")
 keymap({ "x", "v" }, "<leader>ce", "<cmd>CommandExecuteSelection<CR>")
-keymap("i", "<S-Tab>", 'copilot#Accept("\\<Tab>")', er)
 keymap("n", "<leader>ma", require("miniharp").toggle_file)
 keymap("n", "<leader>mc", require("miniharp").clear)
 keymap("n", "<leader>l", require("miniharp").show_list)
