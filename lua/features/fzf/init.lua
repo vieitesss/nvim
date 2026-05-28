@@ -1,75 +1,147 @@
 local M = {}
 
-local function find_elements(elements, tempname)
+local show_terminal_cursor
+
+local function find_elements(elements, callback)
     local input = vim.fn.tempname()
+    local output = vim.fn.tempname()
     vim.fn.writefile(elements, input)
 
     local script = "fzf --multi < "
         .. vim.fn.shellescape(input)
         .. " > "
-        .. vim.fn.shellescape(tempname)
+        .. vim.fn.shellescape(output)
         .. "; fzf_status=$?; "
         .. "case $fzf_status in 0|1|130) exit 0;; "
         .. "*) exit $fzf_status;; esac"
-    local cmd = "sh -c " .. vim.fn.shellescape(script)
 
-    local shell_error = 0
-    local ok, err = pcall(function()
-        vim.cmd("!" .. cmd)
-        shell_error = vim.v.shell_error
-        vim.cmd("redraw!")
-    end)
-    if ok and shell_error ~= 0 then
-        ok = false
-        err = "fzf failed with exit code " .. shell_error
+    vim.cmd("botright 15new")
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
+    vim.bo[buf].bufhidden = "wipe"
+
+    local job = vim.fn.jobstart({ vim.o.shell, vim.o.shellcmdflag, script }, {
+        term = true,
+        on_exit = function(_, code)
+            vim.schedule(function()
+                if vim.api.nvim_win_is_valid(win) then
+                    vim.api.nvim_win_close(win, true)
+                end
+
+                show_terminal_cursor()
+
+                local result = nil
+                local err = nil
+                if code == 0 then
+                    result = vim.fn.readfile(output)
+                else
+                    err = "fzf failed with exit code " .. code
+                end
+
+                vim.fn.delete(input)
+                vim.fn.delete(output)
+                vim.cmd("redraw!")
+                callback(result, err)
+            end)
+        end,
+    })
+
+    if job <= 0 then
+        if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, true)
+        end
+        vim.fn.delete(input)
+        vim.fn.delete(output)
+        error("failed to start fzf")
     end
 
-    local result = ok and vim.fn.readfile(tempname) or nil
-    vim.fn.delete(input)
-    vim.fn.delete(tempname)
+    vim.cmd("startinsert")
+end
 
-    if not ok then
-        error(err)
+local function default_files_command()
+    if vim.fn.executable("fd") == 1 then
+        return "fd --type f --hidden --follow --exclude .git"
     end
 
-    return result
+    return "find . -type f -not -path '*/.git/*' | sed 's#^\\./##'"
+end
+
+show_terminal_cursor = function()
+    pcall(vim.api.nvim_chan_send, vim.v.stderr, "\027[?25h")
+end
+
+local function open_files(source_cmd)
+    local tempname = vim.fn.tempname()
+    local outfile = vim.fn.shellescape(tempname)
+    local header = vim.fn.shellescape("$ " .. source_cmd)
+    local cmd = source_cmd
+        .. " | fzf --multi --header "
+        .. header
+        .. " > "
+        .. outfile
+
+    vim.cmd("botright 15new")
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
+    vim.bo[buf].bufhidden = "wipe"
+
+    local job = vim.fn.jobstart({ vim.o.shell, vim.o.shellcmdflag, cmd }, {
+        term = true,
+        on_exit = function(_, code)
+            vim.schedule(function()
+                if vim.api.nvim_win_is_valid(win) then
+                    vim.api.nvim_win_close(win, true)
+                end
+
+                show_terminal_cursor()
+
+                if code == 0 and vim.fn.getfsize(tempname) > 0 then
+                    for _, file in ipairs(vim.fn.readfile(tempname)) do
+                        vim.cmd("edit " .. vim.fn.fnameescape(file))
+                    end
+                end
+
+                vim.fn.delete(tempname)
+                vim.cmd("redraw!")
+            end)
+        end,
+    })
+
+    if job <= 0 then
+        if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, true)
+        end
+        vim.fn.delete(tempname)
+        error("failed to start fzf")
+    end
+
+    vim.cmd("startinsert")
 end
 
 ---@param elements string[]?
----@return string[]?
-M.fzf = function(elements)
+---@param callback fun(result: string[]?, err: string?)?
+M.fzf = function(elements, callback)
     if vim.fn.executable("fzf") ~= 1 then
         error("fzf executable not found")
     end
 
-    local tempname = vim.fn.tempname()
-
     if elements ~= nil then
-        return find_elements(elements, tempname)
+        if callback == nil then
+            error("fzf element picker requires a callback")
+        end
+        return find_elements(elements, callback)
     end
 
-    local awk = vim.fn.shellescape('{ print $1":1:0" }')
-    local outfile = vim.fn.shellescape(tempname)
-
-    local cmd = "fzf --multi | awk " .. awk .. " > " .. outfile
-
-    local ok, err = pcall(function()
-        vim.cmd("!" .. cmd)
-        vim.cmd("cfile " .. vim.fn.fnameescape(tempname))
-        vim.cmd("redraw!")
-    end)
-
-    vim.fn.delete(tempname)
-
-    if not ok then
-        error(err)
-    end
+    open_files(default_files_command())
 end
 
-vim.api.nvim_create_user_command("Files", function()
-    M.fzf()
-end, {
-    nargs = "*",
-})
+M.setup = function()
+    vim.api.nvim_create_user_command("Files", function(opts)
+        open_files(opts.args ~= "" and opts.args or default_files_command())
+    end, {
+        nargs = "*",
+        complete = "shellcmd",
+    })
+end
 
 return M
