@@ -19,3 +19,4 @@ require("features.cwd").setup({
     include_home_git_repos = true
 })
 require("features.term").setup()
+require("features.fzf").setup()
