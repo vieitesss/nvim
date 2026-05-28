@@ -79,11 +79,16 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 			return nil, fmt.Errorf("could not normalize: %v", err)
 		}
 
-		dirs, err = firstLevelDirectories(p)
+		fld, err := firstLevelDirectories(p)
 		if err != nil {
 			return nil, fmt.Errorf("error getting first level dirs: %v", err)
 		}
+
+		for _, d := range fld {
+			dirs = append(dirs, d)
+		}
 	}
+
 
 	var (
 		home     string
