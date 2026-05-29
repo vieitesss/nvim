@@ -1,4 +1,4 @@
-local path = require("features.cwd.core")
+local core = require("features.cwd.core")
 
 local M = {}
 
@@ -8,7 +8,7 @@ vim.fn.mkdir(M.dir, "p")
 ---@param cwd string
 ---@return string
 local function session_path(cwd)
-    return M.dir .. path.encode(path.normalize(cwd)) .. ".json"
+    return M.dir .. core.encode(core.normalize(cwd)) .. ".json"
 end
 
 ---@param buf number
@@ -48,8 +48,8 @@ local function real_file_path(buf)
         return nil
     end
 
-    local file_path = path.normalize(name)
-    return path.is_directory(file_path) and nil or file_path
+    local file_path = core.normalize(name)
+    return core.is_directory(file_path) and nil or file_path
 end
 
 ---@return { buf: number, path: string }[]
@@ -63,17 +63,6 @@ local function real_file_buffers()
         end
     end
     return buffers
-end
-
----@return { buf: number, path: string }[]
-local function modified_real_file_buffers()
-    local modified = {}
-    for _, item in ipairs(real_file_buffers()) do
-        if buf_option(item.buf, "modified") == true then
-            table.insert(modified, item)
-        end
-    end
-    return modified
 end
 
 ---@param win number
@@ -126,7 +115,7 @@ function M.save(cwd)
 
     local ok, encoded = pcall(function()
         return vim.json.encode({
-            cwd = path.normalize(cwd),
+            cwd = core.normalize(cwd),
             buffers = paths,
             current = real_file_path(vim.api.nvim_get_current_buf()),
             layout = capture_layout_node(vim.fn.winlayout()),
@@ -180,6 +169,16 @@ local function close_real_file_buffers(buffers)
         end
     end
 
+    local placeholder = #file_wins > 0 and vim.api.nvim_create_buf(false, false)
+        or nil
+    if placeholder then
+        for _, win in ipairs(file_wins) do
+            if vim.api.nvim_win_is_valid(win) then
+                pcall(vim.api.nvim_win_set_buf, win, placeholder)
+            end
+        end
+    end
+
     for _, item in ipairs(buffers) do
         local ok, err = pcall(function()
             if vim.api.nvim_buf_is_valid(item.buf) then
@@ -197,12 +196,28 @@ local function close_real_file_buffers(buffers)
         end
     end
 
+    local keep_win = nil
+    local current = vim.api.nvim_get_current_win()
+    for _, win in ipairs(file_wins) do
+        if
+            vim.api.nvim_win_is_valid(win)
+            and is_empty_buffer(vim.api.nvim_win_get_buf(win))
+        then
+            if win == current then
+                keep_win = win
+                break
+            end
+            keep_win = keep_win or win
+        end
+    end
+
     for _, win in ipairs(file_wins) do
         if #vim.api.nvim_tabpage_list_wins(0) <= 1 then
             return
         end
         if
-            vim.api.nvim_win_is_valid(win)
+            win ~= keep_win
+            and vim.api.nvim_win_is_valid(win)
             and is_empty_buffer(vim.api.nvim_win_get_buf(win))
         then
             pcall(vim.api.nvim_win_close, win, false)
@@ -211,15 +226,17 @@ local function close_real_file_buffers(buffers)
 end
 
 ---@param file_path string
+---@return number?
 local function load_listed_buffer(file_path)
     local buf = vim.fn.bufadd(file_path)
     if buf <= 0 then
-        return
+        return nil
     end
     pcall(vim.fn.bufload, buf)
     pcall(function()
         vim.api.nvim_set_option_value("buflisted", true, { buf = buf })
     end)
+    return buf
 end
 
 ---@param buf number
@@ -230,7 +247,7 @@ local function is_cwd_fallback_buffer(buf)
 end
 
 local function close_cwd_fallback_buffers()
-    local buffers, seen = {}, {}
+    local buffers, seen, fallback_wins = {}, {}, {}
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_is_valid(win)
             and vim.api.nvim_win_get_buf(win)
@@ -239,12 +256,34 @@ local function close_cwd_fallback_buffers()
                 seen[buf] = true
                 table.insert(buffers, buf)
             end
-            if #vim.api.nvim_tabpage_list_wins(0) > 1 then
-                pcall(vim.api.nvim_win_close, win, false)
-            else
-                vim.api.nvim_set_current_win(win)
-                vim.cmd("enew")
+            table.insert(fallback_wins, win)
+        end
+    end
+
+    local keep_win = nil
+    local current = vim.api.nvim_get_current_win()
+    for _, win in ipairs(fallback_wins) do
+        if vim.api.nvim_win_is_valid(win) then
+            if win == current then
+                keep_win = win
+                break
             end
+            keep_win = keep_win or win
+        end
+    end
+
+    if keep_win and vim.api.nvim_win_is_valid(keep_win) then
+        local placeholder = vim.api.nvim_create_buf(false, false)
+        pcall(vim.api.nvim_win_set_buf, keep_win, placeholder)
+    end
+
+    for _, win in ipairs(fallback_wins) do
+        if
+            win ~= keep_win
+            and #vim.api.nvim_tabpage_list_wins(0) > 1
+            and vim.api.nvim_win_is_valid(win)
+        then
+            pcall(vim.api.nvim_win_close, win, false)
         end
     end
 
@@ -264,11 +303,10 @@ local function ensure_anchor_window()
             vim.api.nvim_win_is_valid(win)
             and is_empty_buffer(vim.api.nvim_win_get_buf(win))
         then
-            vim.api.nvim_set_current_win(win)
             return win
         end
     end
-    vim.cmd("botright new")
+    vim.cmd("silent botright new")
     return vim.api.nvim_get_current_win()
 end
 
@@ -280,22 +318,42 @@ local function edit_file_in_window(win, file_path)
         return false
     end
 
-    vim.api.nvim_set_current_win(win)
-    local ok, err = pcall(function()
-        vim.cmd("silent keepalt edit " .. vim.fn.fnameescape(file_path))
-    end)
-    if ok then
+    local buf = load_listed_buffer(file_path)
+    if buf and pcall(vim.api.nvim_win_set_buf, win, buf) then
         return true
     end
 
     vim.notify(
-        "Cwd: could not open "
-            .. vim.fn.fnamemodify(file_path, ":~")
-            .. ": "
-            .. tostring(err),
+        "Cwd: could not open " .. vim.fn.fnamemodify(file_path, ":~"),
         vim.log.levels.WARN
     )
     return false
+end
+
+---@param win number
+---@param layout_type string
+---@return number?
+local function split_window(win, layout_type)
+    if not vim.api.nvim_win_is_valid(win) then
+        return nil
+    end
+
+    local buf = vim.api.nvim_win_get_buf(win)
+    local ok, split = pcall(vim.api.nvim_open_win, buf, false, {
+        win = win,
+        split = layout_type == "row" and "right" or "below",
+    })
+    if ok then
+        return split
+    end
+
+    return vim.api.nvim_win_call(win, function()
+        vim.cmd(
+            layout_type == "row" and "silent rightbelow vsplit"
+                or "silent rightbelow split"
+        )
+        return vim.api.nvim_get_current_win()
+    end)
 end
 
 ---@param node table
@@ -329,28 +387,23 @@ local function restore_layout_node(node, win, opened)
     local children = type(node.children) == "table" and node.children or {}
     local wins = { win }
     for i = 2, #children do
-        vim.api.nvim_set_current_win(wins[i - 1])
-        vim.cmd(
-            node.type == "row" and "rightbelow vsplit" or "rightbelow split"
-        )
-        wins[i] = vim.api.nvim_get_current_win()
+        wins[i] = split_window(wins[i - 1], node.type)
     end
     for i, child in ipairs(children) do
-        restore_layout_node(child, wins[i], opened)
+        if wins[i] then
+            restore_layout_node(child, wins[i], opened)
+        end
     end
 end
 
 local function open_empty_fallback_buffer()
     local win = ensure_anchor_window()
-    vim.api.nvim_set_current_win(win)
-    vim.cmd("enew")
-
-    pcall(
-        vim.api.nvim_buf_set_var,
-        vim.api.nvim_get_current_buf(),
-        "cwd_fallback",
-        true
-    )
+    local buf = vim.api.nvim_create_buf(false, false)
+    pcall(vim.api.nvim_buf_set_var, buf, "cwd_fallback", true)
+    if vim.api.nvim_win_is_valid(win) then
+        pcall(vim.api.nvim_win_set_buf, win, buf)
+        vim.api.nvim_set_current_win(win)
+    end
 end
 
 ---@param dir string
@@ -369,11 +422,9 @@ function M.restore(dir)
     else
         local first = type(session.current) == "string" and session.current
             or buffers[1]
-        if
-            type(first) == "string"
-            and edit_file_in_window(ensure_anchor_window(), first)
-        then
-            opened[first] = vim.api.nvim_get_current_win()
+        local anchor = ensure_anchor_window()
+        if type(first) == "string" and edit_file_in_window(anchor, first) then
+            opened[first] = anchor
         end
     end
 
@@ -392,18 +443,44 @@ function M.restore(dir)
         vim.api.nvim_set_current_win(opened[current])
     end
     pcall(function()
-        vim.cmd("wincmd =")
+        vim.cmd("silent wincmd =")
     end)
+end
+
+---@return string[]
+function M.modified_buffers()
+    local shown = {}
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if
+            vim.api.nvim_buf_is_valid(buf)
+            and buf_option(buf, "buflisted") == true
+            and buf_option(buf, "modified") == true
+            and buf_option(buf, "buftype") == ""
+        then
+            local name = vim.api.nvim_buf_get_name(buf)
+            local file_path = name ~= "" and core.normalize(name) or nil
+            if
+                file_path
+                and not name:match("^%a[%w+.-]*://")
+                and not core.is_directory(file_path)
+            then
+                table.insert(
+                    shown,
+                    #shown >= 8 and "…" or vim.fn.fnamemodify(file_path, ":~")
+                )
+                if #shown > 8 then
+                    break
+                end
+            end
+        end
+    end
+
+    return shown
 end
 
 ---@return { buf: number, path: string }[]
 function M.real_file_buffers()
     return real_file_buffers()
-end
-
----@return { buf: number, path: string }[]
-function M.modified_real_file_buffers()
-    return modified_real_file_buffers()
 end
 
 ---@param buffers { buf: number, path: string }[]

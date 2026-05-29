@@ -13,58 +13,19 @@ local config = {
     include_home_git_repos = true,
 }
 
----@param cb fun(result: any)
----@return string[]
-M.list = function(cb)
-    local dirs = {}
-    require("features.rpc").rpc("List", config, function(result, err)
-        if err then
-            vim.notify(err, vim.log.levels.WARN)
-            return
-        end
-
-        cb(result)
-    end)
-
-    return dirs
-end
-
----@param target_path string
----@return boolean
-local function change_to(target_path)
-    target_path = core.normalize(target_path)
-
-    local dirty = session.modified_real_file_buffers()
-    if #dirty > 0 then
-        local shown = {}
-        for i, item in ipairs(dirty) do
-            table.insert(
-                shown,
-                i > 8 and "…" or vim.fn.fnamemodify(item.path, ":~")
-            )
-            if i > 8 then
-                break
-            end
-        end
-        vim.notify(
-            "Cwd: unsaved file buffers. Write or discard them before changing cwd:\n"
-                .. table.concat(shown, "\n"),
-            vim.log.levels.WARN
-        )
-        return false
+---@generic T
+---@param fn fun(): T
+---@return T
+local function with_deferred_redraw(fn)
+    local lazyredraw = vim.o.lazyredraw
+    vim.o.lazyredraw = true
+    local ok, result = pcall(fn)
+    vim.o.lazyredraw = lazyredraw
+    pcall(vim.cmd, "redraw")
+    if not ok then
+        error(result, 0)
     end
-
-    local old_cwd = core.normalize(vim.fn.getcwd())
-    local buffers = session.real_file_buffers()
-    session.save(old_cwd)
-    session.close_real_file_buffers(buffers)
-    session.close_cwd_fallback_buffers()
-
-    vim.cmd("cd " .. vim.fn.fnameescape(target_path))
-    session.restore(target_path)
-
-    vim.notify("Cwd: " .. vim.fn.fnamemodify(target_path, ":~"))
-    return true
+    return result
 end
 
 ---@param dirs string[]
@@ -93,6 +54,51 @@ local function pick_dir(dirs, cb)
     end
 end
 
+---@param cb fun(result: any)
+---@return string[]
+M.list = function(cb)
+    local dirs = {}
+    require("features.rpc").rpc("List", config, function(result, err)
+        if err then
+            vim.notify(err, vim.log.levels.WARN)
+            return
+        end
+
+        cb(result)
+    end)
+
+    return dirs
+end
+
+---@param target_path string
+---@return boolean
+M.change_to = function(target_path)
+    target_path = core.normalize(target_path)
+
+    local shown = session.modified_buffers()
+    if #shown > 0 then
+        vim.notify(
+            "Cwd: unsaved file buffers:" .. table.concat(shown, ", ") .. "\n",
+            vim.log.levels.WARN
+        )
+        return false
+    end
+
+    local old_cwd = core.normalize(vim.fn.getcwd())
+    local buffers = session.real_file_buffers()
+    with_deferred_redraw(function()
+        session.save(old_cwd)
+        session.close_real_file_buffers(buffers)
+        session.close_cwd_fallback_buffers()
+
+        vim.cmd("cd " .. vim.fn.fnameescape(target_path))
+        session.restore(target_path)
+    end)
+
+    vim.notify("Cwd: " .. vim.fn.fnamemodify(target_path, ":~"))
+    return true
+end
+
 ---@return nil
 function M.pick()
     M.list(function(result)
@@ -104,7 +110,7 @@ function M.pick()
 
         pick_dir(dirs, function(dir)
             if dir then
-                change_to(dir)
+                M.change_to(dir)
             end
         end)
     end)
@@ -128,7 +134,5 @@ function M.setup(opts)
         { desc = "Cwd: change", silent = true }
     )
 end
-
-M.change_to = change_to
 
 return M
