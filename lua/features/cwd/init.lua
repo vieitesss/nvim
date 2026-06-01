@@ -89,7 +89,6 @@ M.change_to = function(target_path)
     with_deferred_redraw(function()
         session.save(old_cwd)
         session.close_real_file_buffers(buffers)
-        session.close_cwd_fallback_buffers()
 
         vim.cmd("cd " .. vim.fn.fnameescape(target_path))
         session.restore(target_path)
