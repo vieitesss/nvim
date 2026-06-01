@@ -13,29 +13,40 @@ local socket = vim.uv.os_tmpdir() .. "/nvim-features-" .. pid .. ".sock"
 local channel
 local id = 0
 
+---@param msg string
+local function log_error(msg)
+    vim.notify(msg, vim.log.levels.ERROR)
+end
+
 local function on_data(_, data, _)
     for _, line in ipairs(data) do
         if line and line ~= "" then
             local decoded, info = pcall(vim.json.decode, line)
+            if not decoded then
+                log_error(string.format("could not decode line = %s", line))
+                return
+            end
             if
-                decoded
-                and type(info) == "table"
+                type(info) == "table"
                 and info.id ~= nil
-                and info.result ~= nil
+                and (info.result or info.error)
             then
                 local cb = M.pending[info.id]
+                local r = info.result or ""
+                local e = info.error or ""
                 if cb then
-                    cb(info.result, info.error)
+                    cb(r, e)
+                else
+                    log_error(
+                        string.format(
+                            "could not call the callback function from id: %d",
+                            info.id
+                        )
+                    )
                 end
-            else
-                vim.notify(
-                    string.format(
-                        "could not call the callback function from id: %d",
-                        info.id
-                    ),
-                    vim.log.levels.ERROR
-                )
+                return
             end
+            log_error("`info` is not a table or info.id is nil")
         end
     end
 end
