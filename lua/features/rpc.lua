@@ -32,6 +32,7 @@ local function on_data(_, data, _)
                 and (info.result or info.error)
             then
                 local cb = M.pending[info.id]
+                M.pending[info.id] = nil
                 local r = info.result or ""
                 local e = info.error or ""
                 if cb then
