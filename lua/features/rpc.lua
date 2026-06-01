@@ -1,4 +1,4 @@
----@alias callback_function fun(result: any, error: string)
+---@alias callback_function fun(result: any, error: string?)
 
 local M = {
     _job = nil,
@@ -18,6 +18,16 @@ local function log_error(msg)
     vim.notify(msg, vim.log.levels.ERROR)
 end
 
+local function error_message(err)
+    if err == nil or err == "" then
+        return nil
+    end
+    if type(err) == "table" then
+        return tostring(err.message or vim.inspect(err))
+    end
+    return tostring(err)
+end
+
 local function on_data(_, data, _)
     for _, line in ipairs(data) do
         if line and line ~= "" then
@@ -26,17 +36,11 @@ local function on_data(_, data, _)
                 log_error(string.format("could not decode line = %s", line))
                 return
             end
-            if
-                type(info) == "table"
-                and info.id ~= nil
-                and (info.result or info.error)
-            then
+            if type(info) == "table" and info.id ~= nil then
                 local cb = M.pending[info.id]
                 M.pending[info.id] = nil
-                local r = info.result or ""
-                local e = info.error or ""
                 if cb then
-                    cb(r, e)
+                    cb(info.result, error_message(info.error))
                 else
                     log_error(
                         string.format(
@@ -55,7 +59,7 @@ end
 -- Returns the channel id or nil
 ---@return number?
 local function try_connect_socket()
-    local attempts, timeout = 10, 20
+    local attempts, timeout = 100, 20
 
     local function try_connect()
         local ok, chan =
@@ -100,18 +104,8 @@ local function start_job()
     return j
 end
 
---@param a number
---@param b number
--- M.multiply = function(a, b)
---     ensure_autocmd()
---     rpc(function()
---         local data = build_data("Multiply", { tostring(a), tostring(b) })
---         vim.api.nvim_chan_send(channel, data)
---     end)
--- end
-
 ---@param method string The server method
----@param params string[]? The method parameters
+---@param params any The method parameters
 local function build_msg(method, params)
     params = params or {}
 
@@ -127,14 +121,14 @@ local function build_msg(method, params)
     return data
 end
 ---@param method string Method to execute
----@param params string[] Parameters for the method
+---@param params any Parameters for the method
 local function on_ready(method, params)
     local msg = build_msg(method, params)
     vim.api.nvim_chan_send(channel, msg)
 end
 
 ---@param method string Method to execute
----@param params string[] Parameters for the method
+---@param params any Parameters for the method
 ---@param cb callback_function
 M.rpc = function(method, params, cb)
     id = id + 1
@@ -147,6 +141,9 @@ M.rpc = function(method, params, cb)
 
     M._job = start_job()
     if M._job < 1 then
+        local msg = "could not start RPC server"
+        M.pending[id] = nil
+        cb(nil, msg)
         return
     end
 
@@ -154,10 +151,9 @@ M.rpc = function(method, params, cb)
         channel = try_connect_socket()
     end
     if not channel or channel == 0 then
-        vim.notify(
-            "an error occurred connecting to the socket " .. socket,
-            vim.log.levels.ERROR
-        )
+        local msg = "an error occurred connecting to the socket " .. socket
+        M.pending[id] = nil
+        cb(nil, msg)
         if M._job and M._job > 0 then
             vim.fn.jobstop(M._job)
             M._job = nil

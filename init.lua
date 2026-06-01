@@ -6,7 +6,7 @@ require("keymaps")
 require("features.statusline")
 require("autocmds")
 -- require("features.umbraline")
-require("features.cwd").setup({
+require("features").cwd().setup({
     paths = {
         "~/personal",
         "~/prefapp",

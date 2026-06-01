@@ -42,17 +42,16 @@ func normalize(path string) (string, error) {
 }
 
 func firstLevelDirectories(root string) ([]string, error) {
-	var dirs []string
-
 	entries, err := os.ReadDir(root)
+	if err != nil {
+		return nil, err
+	}
+
+	dirs := make([]string, 0, len(entries))
 	for _, e := range entries {
 		if e.IsDir() {
 			dirs = append(dirs, filepath.Join(root, e.Name()))
 		}
-	}
-
-	if err != nil {
-		return nil, err
 	}
 
 	return dirs, nil
@@ -69,7 +68,7 @@ func isGitRepo(path string) bool {
 
 func List(ctx context.Context, config Cwd) ([]string, error) {
 	var (
-		dirs []string
+		dirs = make([]string, 0)
 		err  error
 	)
 
@@ -103,6 +102,9 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 		return nil, err
 	}
 	homeDirs, err = firstLevelDirectories(home)
+	if err != nil {
+		return nil, fmt.Errorf("error getting home dirs: %v", err)
+	}
 	for _, d := range homeDirs {
 		if isGitRepo(d) {
 			dirs = append(dirs, d)

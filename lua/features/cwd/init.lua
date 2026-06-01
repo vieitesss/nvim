@@ -54,20 +54,16 @@ local function pick_dir(dirs, cb)
     end
 end
 
----@param cb fun(result: any)
----@return string[]
+---@param cb fun(result: string[])
 M.list = function(cb)
-    local dirs = {}
     require("features.rpc").rpc("List", config, function(result, err)
         if err then
-            vim.notify(err, vim.log.levels.WARN)
+            vim.notify(tostring(err), vim.log.levels.WARN)
             return
         end
 
-        cb(result)
+        cb(type(result) == "table" and result or {})
     end)
-
-    return dirs
 end
 
 ---@param target_path string

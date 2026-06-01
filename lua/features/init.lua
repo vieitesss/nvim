@@ -8,7 +8,7 @@ local function ensure_autocmd()
         group = ag,
         once = true,
         callback = function(_)
-            local job = require("rpc")._job
+            local job = require("features.rpc")._job
             if job and job > 0 then
                 vim.fn.jobstop(job)
             end
