@@ -88,30 +88,22 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 		}
 	}
 
-	var (
-		home     string
-		homeDirs []string
-	)
-
-	if !config.IncludeHomeGitRepos {
-		goto pass
-	}
-
-	home, err = os.UserHomeDir()
-	if err != nil {
-		return nil, err
-	}
-	homeDirs, err = firstLevelDirectories(home)
-	if err != nil {
-		return nil, fmt.Errorf("error getting home dirs: %v", err)
-	}
-	for _, d := range homeDirs {
-		if isGitRepo(d) {
-			dirs = append(dirs, d)
+	if config.IncludeHomeGitRepos {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return nil, err
+		}
+		homeDirs, err := firstLevelDirectories(home)
+		if err != nil {
+			return nil, fmt.Errorf("error getting home dirs: %v", err)
+		}
+		for _, d := range homeDirs {
+			if isGitRepo(d) {
+				dirs = append(dirs, d)
+			}
 		}
 	}
 
-pass:
 	sort.Strings(dirs)
 
 	return dirs, nil
