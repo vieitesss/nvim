@@ -127,10 +127,27 @@ local function on_ready(method, params)
     vim.api.nvim_chan_send(channel, msg)
 end
 
+local ag = vim.api.nvim_create_augroup("NeovimFeatures", { clear = true })
+
+local function ensure_autocmd()
+    vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
+        pattern = { "*" },
+        group = ag,
+        once = true,
+        callback = function(_)
+            local job = require("features.rpc")._job
+            if job and job > 0 then
+                vim.fn.jobstop(job)
+            end
+        end,
+    })
+end
+
 ---@param method string Method to execute
 ---@param params any Parameters for the method
 ---@param cb callback_function
 M.rpc = function(method, params, cb)
+    ensure_autocmd()
     id = id + 1
     M.pending[id] = cb
 
