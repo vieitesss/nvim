@@ -31,12 +31,10 @@ end
 local function on_data(_, data, _)
     for _, line in ipairs(data) do
         if line and line ~= "" then
-            local decoded, info = pcall(vim.json.decode, line)
-            if not decoded then
+            local ok, info = pcall(vim.json.decode, line)
+            if not ok then
                 log_error(string.format("could not decode line = %s", line))
-                return
-            end
-            if type(info) == "table" and info.id ~= nil then
+            elseif type(info) == "table" and info.id ~= nil then
                 local cb = M.pending[info.id]
                 M.pending[info.id] = nil
                 if cb then
@@ -49,9 +47,9 @@ local function on_data(_, data, _)
                         )
                     )
                 end
-                return
+            else
+                log_error("`info` is not a table or info.id is nil")
             end
-            log_error("`info` is not a table or info.id is nil")
         end
     end
 end
