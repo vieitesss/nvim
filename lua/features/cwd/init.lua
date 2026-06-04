@@ -14,14 +14,14 @@ local config = {
 }
 
 ---@generic T
----@param fn fun(): T
+---@param fn fun()
 ---@return T
 local function with_deferred_redraw(fn)
     local lazyredraw = vim.o.lazyredraw
     vim.o.lazyredraw = true
     local ok, result = pcall(fn)
     vim.o.lazyredraw = lazyredraw
-    pcall(vim.cmd, "redraw")
+    pcall(function(c) vim.cmd(c) end, "redraw")
     if not ok then
         error(result, 0)
     end
