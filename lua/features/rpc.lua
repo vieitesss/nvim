@@ -84,6 +84,8 @@ local function start_job()
         on_exit = function()
             channel = nil
             id = 0
+            M.pending = {}
+            M._job = nil
         end,
     })
     if j == 0 then
