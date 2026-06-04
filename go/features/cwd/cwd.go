@@ -106,5 +106,12 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 
 	sort.Strings(dirs)
 
-	return dirs, nil
+	uniq := dirs[:0]
+	for i, d := range(dirs) {
+		if i != 0 || dirs[i-1] != d {
+			uniq = append(uniq, d)
+		}
+	}
+
+	return uniq, nil
 }
