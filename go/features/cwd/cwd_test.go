@@ -150,7 +150,6 @@ func TestListWithoutGitRepos(t *testing.T) {
 }
 
 func TestAnotherListWithoutGitRepos(t *testing.T) {
-	t.Skip()
 	root := mockStructure(t)
 
 	config := Cwd{
@@ -164,7 +163,7 @@ func TestAnotherListWithoutGitRepos(t *testing.T) {
 	}
 
 	want := []string{
-		filepath.Join(root, "nested"),
+		filepath.Join(root, "alpha/nested"),
 	}
 
 	if !reflect.DeepEqual(got, want) {
@@ -175,7 +174,6 @@ func TestAnotherListWithoutGitRepos(t *testing.T) {
 }
 
 func TestListWithHomeGitRepos(t *testing.T) {
-	t.Skip()
 	root := mockStructure(t)
 
 	config := Cwd{
@@ -193,8 +191,6 @@ func TestListWithHomeGitRepos(t *testing.T) {
 		filepath.Join(root, "beta"),
 		filepath.Join(root, "gamma"),
 		filepath.Join(root, "not-git"),
-		filepath.Join(root, "repo"),
-		filepath.Join(root, "worktree"),
 		filepath.Join(root, "repo"),
 		filepath.Join(root, "worktree"),
 	}

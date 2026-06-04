@@ -6,24 +6,20 @@
       "version": "1.0.0 - 2.0.0"
     },
     "command.nvim": {
-      "rev": "e3d2c3923b37980deaf36221044219d9f78348b4",
+      "rev": "beb948e61c1d434b61b261d6768c26249e0a88fe",
       "src": "https://github.com/vieitesss/command.nvim",
       "version": ">=0.0.0"
     },
-    "fff.nvim": {
-      "rev": "030a583b37802416ce9108295b209d2e6b9d0079",
-      "src": "https://github.com/dmtrKovalenko/fff.nvim"
-    },
-    "kanagawa.nvim": {
-      "rev": "bb85e4bfc8d89b0e62c8fa53ccdd13d12e2f77b3",
-      "src": "https://github.com/rebelot/kanagawa.nvim"
+    "fzf-lua": {
+      "rev": "988416cc782dfe28bff3f0da9b8c943b236cd86a",
+      "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "mason.nvim": {
-      "rev": "bb639d4bf385a4d89f478b83af4d770be05ab7eb",
+      "rev": "16ba83bfc8a25f52bb545134f5bee082b195c460",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "minifugit.nvim": {
-      "rev": "64d45f72932f79a505cc901a82d24845bee52d79",
+      "rev": "33271978f08007d5062a562a304295b0350afc06",
       "src": "/Users/vieitesprefapp/personal/minifugit.nvim"
     },
     "miniharp.nvim": {
@@ -31,16 +27,16 @@
       "src": "https://github.com/vieitesss/miniharp.nvim",
       "version": "'nightly'"
     },
+    "neovim": {
+      "rev": "ff483051a47e27d84bdef47703538df1ed9f4a47",
+      "src": "https://github.com/rose-pine/neovim.git"
+    },
     "oil.nvim": {
-      "rev": "b91ee5a77a6a9605d9c1aaf4fda74b66082c8297",
+      "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
     },
-    "techbase.nvim": {
-      "rev": "eb233713412f334002f20cabc7f770fd7406c676",
-      "src": "https://github.com/mcauley-penney/techbase.nvim"
-    },
     "vague.nvim": {
-      "rev": "fd58046b9d64259d9785e4aeb6d6f494c6943cad",
+      "rev": "f911602f49116b1ebab95a45391e1cfe2dc62c2b",
       "src": "https://github.com/vague-theme/vague.nvim"
     }
   }
