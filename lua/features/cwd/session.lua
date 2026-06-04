@@ -135,7 +135,9 @@ local function load_listed_buffer(file_path)
 end
 
 local function open_empty_buffer()
-    pcall(vim.cmd, "enew")
+    pcall(function(c)
+        vim.cmd(c)
+    end, "enew")
 end
 
 ---@param file_path string
@@ -162,8 +164,10 @@ function M.restore(dir)
         return
     end
 
-    local current = type(session.current) == "string" and session.current
-        or buffers[1]
+    local current = buffers[1]
+    if session and type(session.current) == "string" then
+        current = session.current
+    end
     local opened = type(current) == "string" and edit_file(current)
 
     for _, file_path in ipairs(buffers) do
