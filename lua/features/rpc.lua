@@ -128,16 +128,21 @@ local function on_ready(method, params)
 end
 
 local ag = vim.api.nvim_create_augroup("NeovimFeatures", { clear = true })
+local autocmd_set = false
 
 local function ensure_autocmd()
+    if autocmd_set then
+        return
+    end
+    autocmd_set = true
+
     vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
         pattern = { "*" },
         group = ag,
         once = true,
         callback = function(_)
-            local job = require("features.rpc")._job
-            if job and job > 0 then
-                vim.fn.jobstop(job)
+            if M._job and M._job > 0 then
+                vim.fn.jobstop(M._job)
             end
         end,
     })
@@ -156,7 +161,9 @@ M.rpc = function(method, params, cb)
         return
     end
 
-    M._job = start_job()
+    if not M._job or M._job <= 0 then
+        M._job = start_job()
+    end
     if M._job < 1 then
         local msg = "could not start RPC server"
         M.pending[id] = nil
