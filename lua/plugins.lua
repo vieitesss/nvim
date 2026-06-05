@@ -6,7 +6,6 @@ vim.pack.add({
     {
         src = vim.env.HOME .. "/personal/minifugit.nvim",
     },
-    { src = "https://github.com/dmtrKovalenko/fff.nvim" },
     {
         src = "https://github.com/saghen/blink.cmp",
         version = vim.version.range("^1"),
@@ -25,13 +24,6 @@ vim.g.umbraline = {
 }
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
-
-vim.g.fff = {
-    lazy_sync = true,
-    debug = { enabled = true, show_scores = true },
-    preview = { enabled = false },
-    frecency = { enabled = true },
-}
 
 require("vague").setup({
     colors = {
@@ -73,12 +65,14 @@ require("minifugit").setup({
     status = {
         width = 0.4,
         min_width = 20,
+        open_in_tab = true,
     },
 })
 
 require("command").setup({})
 require("miniharp").setup({
     show_on_autoload = true,
+    notifications = false,
     ui = {
         position = "top-right",
         show_hints = false,

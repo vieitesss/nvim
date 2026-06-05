@@ -1,0 +1,8 @@
+_default:
+	just -l
+
+build:
+	go build -o "../bin/nvim-features" .
+
+test:
+	go test ./... -v

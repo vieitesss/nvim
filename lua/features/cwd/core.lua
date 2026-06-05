@@ -13,14 +13,6 @@ function M.encode(path)
     return sub
 end
 
----@param name string
----@return string
-function M.decode(name)
-    -- order matters: decode %2F first, then %25
-    local sub, _ = name:gsub("%%2F", "/"):gsub("%%25", "%%")
-    return sub
-end
-
 ---@param path string
 ---@return string
 function M.normalize(path)
@@ -38,128 +30,17 @@ function M.normalize(path)
 end
 
 ---@param path string
----@return string
-local function expand(path)
-    return M.normalize(vim.fn.expand(path))
-end
-
----@param path string
 ---@return boolean
 function M.is_directory(path)
     return vim.fn.isdirectory(path) == 1
 end
 
----@param path string
----@return boolean
-local function is_git_repo(path)
-    return M.is_directory(path .. "/.git")
-        or vim.fn.filereadable(path .. "/.git") == 1
-end
-
----@param path string
----@return string?
-local function git_root(path)
-    path = M.normalize(path)
-
-    while path ~= "" do
-        if is_git_repo(path) then
-            return path
-        end
-
-        local parent = M.normalize(path .. "/..")
-        if parent == path then
-            break
-        end
-        path = parent
-    end
-
-    return nil
-end
-
----@param path string
----@return string[]
-local function first_level_directories(path)
-    local dirs = {}
-    if not M.is_directory(path) then
-        return dirs
-    end
-
-    for _, child in ipairs(vim.fn.glob(path .. "/*", false, true)) do
-        if M.is_directory(child) then
-            table.insert(dirs, M.normalize(child))
-        end
-    end
-
-    return dirs
-end
-
----@param paths string[]
----@param seen table<string, boolean>
----@param candidate string?
-local function add_unique(paths, seen, candidate)
-    if not candidate or candidate == "" or not M.is_directory(candidate) then
-        return
-    end
-
-    candidate = git_root(candidate) or M.normalize(candidate)
-    if seen[candidate] then
-        return
-    end
-
-    seen[candidate] = true
-    table.insert(paths, candidate)
-end
-
----@class CwdConfig
----@field paths string[] Directories whose first-level children can be selected.
----@field include_home_git_repos boolean Include Git repositories directly under $HOME.
-
----@param config CwdConfig
----@return string[]
-function M.list(config)
-    local dirs = {}
-    local seen = {}
-
-    for _, configured_path in ipairs(config.paths) do
-        for _, dir in ipairs(first_level_directories(expand(configured_path))) do
-            add_unique(dirs, seen, dir)
-        end
-    end
-
-    if config.include_home_git_repos then
-        for _, dir in ipairs(first_level_directories(vim.fn.expand("~"))) do
-            if is_git_repo(dir) then
-                add_unique(dirs, seen, dir)
-            end
-        end
-    end
-
-    table.sort(dirs)
-    return dirs
-end
-
----@param cwd string
+---@param name string
 ---@return string
-function M.entry_path(cwd)
-    return M.index_dir .. M.encode(cwd) .. ".cwd"
-end
-
----@param dirs string[]
-function M.refresh_index(dirs)
-    vim.fn.delete(M.index_dir, "rf")
-    vim.fn.mkdir(M.index_dir, "p")
-
-    for _, dir in ipairs(dirs) do
-        vim.fn.writefile({ dir }, M.entry_path(dir))
-    end
-end
-
----@param dir string
-function M.track_access(dir)
-    local ok, file_picker = pcall(require, "fff.file_picker")
-    if ok and type(file_picker.track_access) == "function" then
-        pcall(file_picker.track_access, M.entry_path(dir))
-    end
+function M.decode(name)
+    -- order matters: decode %2F first, then %25
+    local sub, _ = name:gsub("%%2F", "/"):gsub("%%25", "%%")
+    return sub
 end
 
 ---@class CwdPickerItem

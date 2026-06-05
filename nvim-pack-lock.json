@@ -6,20 +6,16 @@
       "version": "1.0.0 - 2.0.0"
     },
     "command.nvim": {
-      "rev": "e3d2c3923b37980deaf36221044219d9f78348b4",
+      "rev": "beb948e61c1d434b61b261d6768c26249e0a88fe",
       "src": "https://github.com/vieitesss/command.nvim",
       "version": ">=0.0.0"
     },
-    "fff.nvim": {
-      "rev": "9a0deb39c3e4043b3137ecf2ed1b686d7a723462",
-      "src": "https://github.com/dmtrKovalenko/fff.nvim"
-    },
     "mason.nvim": {
-      "rev": "cbf8d285e1462dd24acf3507817be2bbcb035919",
+      "rev": "16ba83bfc8a25f52bb545134f5bee082b195c460",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "minifugit.nvim": {
-      "rev": "6d90133b4f65ebf03f53344a8d5b6e102bff3fe8",
+      "rev": "33271978f08007d5062a562a304295b0350afc06",
       "src": "/Users/vieitesprefapp/personal/minifugit.nvim"
     },
     "miniharp.nvim": {
@@ -28,8 +24,12 @@
       "version": "'nightly'"
     },
     "oil.nvim": {
-      "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
+      "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "vague.nvim": {
+      "rev": "f911602f49116b1ebab95a45391e1cfe2dc62c2b",
+      "src": "https://github.com/vague-theme/vague.nvim"
     }
   }
 }

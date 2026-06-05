@@ -13,7 +13,10 @@ require("features.cwd").setup({
         "~/pre-vieitesss",
         "~/firestartr-pre",
         "~/firestartr-pro",
+        "~/firestartr-demo",
         "~/.config",
     },
+    include_home_git_repos = true
 })
 require("features.term").setup()
+require("features.fzf").setup()
