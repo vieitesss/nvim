@@ -98,6 +98,11 @@ local function open_files(source_cmd)
                     for _, file in ipairs(vim.fn.readfile(tempname)) do
                         vim.cmd("edit " .. vim.fn.fnameescape(file))
                     end
+                elseif code ~= 0 and code ~= 1 and code ~= 130 then
+                    vim.notify(
+                        "Files: command failed with exit code " .. code,
+                        vim.log.levels.WARN
+                    )
                 end
 
                 vim.fn.delete(tempname)
