@@ -3,6 +3,7 @@ package cwd
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -71,13 +72,15 @@ func List(ctx context.Context, config Cwd) ([]string, error) {
 	for _, p := range config.Paths {
 		normalized, err := normalize(p)
 		if err != nil {
-			return nil, fmt.Errorf("could not normalize %q: %w", p, err)
+			log.Printf("skipping configured path %q (normalize): %v", p, err)
+			continue
 		}
 		p = normalized
 
 		fld, err := firstLevelDirectories(p)
 		if err != nil {
-			return nil, fmt.Errorf("error getting first level dirs: %v", err)
+			log.Printf("skipping configured path %q (readdir): %v", p, err)
+			continue
 		}
 
 		for _, d := range fld {
