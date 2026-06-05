@@ -81,11 +81,16 @@ end
 ---@return number
 local function start_job()
     local j = vim.fn.jobstart({ binary, socket }, {
-        on_exit = function()
+        on_exit = function(_, code, _)
+            local pending = M.pending
+            M.pending = {}
             channel = nil
             id = 0
-            M.pending = {}
             M._job = nil
+
+            for _, cb in ipairs(pending) do
+                pcall(cb, nil, ("RPC server exited (code %s)"):format(tostring(code)))
+            end
         end,
     })
     if j == 0 then
