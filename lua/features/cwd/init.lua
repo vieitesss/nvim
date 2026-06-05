@@ -4,8 +4,8 @@ local session = require("features.cwd.session")
 local M = {}
 
 ---@class CwdConfig
----@field paths string[] Directories whose first-level children can be selected.
----@field include_home_git_repos boolean Include Git repositories directly under $HOME.
+---@field paths? string[] Directories whose first-level children can be selected.
+---@field include_home_git_repos? boolean Include Git repositories directly under $HOME.
 
 ---@type CwdConfig
 local config = {
@@ -74,7 +74,7 @@ M.change_to = function(target_path)
     local shown = session.modified_buffers()
     if #shown > 0 then
         vim.notify(
-            "Cwd: unsaved file buffers:" .. table.concat(shown, ", ") .. "\n",
+            "Cwd: unsaved file buffers: " .. table.concat(shown, ", "),
             vim.log.levels.WARN
         )
         return false

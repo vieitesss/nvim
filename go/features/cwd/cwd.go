@@ -15,13 +15,12 @@ type Cwd struct {
 }
 
 func normalize(path string) (string, error) {
-	path, found := strings.CutPrefix(path, "~")
-	if found {
+	if strings.HasPrefix(path, "~") {
 		home, err := os.UserHomeDir()
 		if err != nil {
 			return "", err
 		}
-		path = filepath.Join(home, path)
+		path = strings.Replace(path, "~", home, 1)
 	}
 
 	abs, err := filepath.Abs(path)
@@ -67,16 +66,14 @@ func isGitRepo(path string) bool {
 }
 
 func List(ctx context.Context, config Cwd) ([]string, error) {
-	var (
-		dirs = make([]string, 0)
-		err  error
-	)
+	dirs := make([]string, 0)
 
 	for _, p := range config.Paths {
-		p, err = normalize(p)
+		normalized, err := normalize(p)
 		if err != nil {
-			return nil, fmt.Errorf("could not normalize: %v", err)
+			return nil, fmt.Errorf("could not normalize %q: %w", p, err)
 		}
+		p = normalized
 
 		fld, err := firstLevelDirectories(p)
 		if err != nil {
