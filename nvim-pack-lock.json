@@ -1,35 +1,20 @@
 {
   "plugins": {
-    "blink.cmp": {
-      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
-      "src": "https://github.com/saghen/blink.cmp",
-      "version": "1.0.0 - 2.0.0"
+    "fff": {
+      "rev": "cf171e067d99a7ee1298bd3903f14a04addd8b39",
+      "src": "https://github.com/dmtrKovalenko/fff"
     },
-    "command.nvim": {
-      "rev": "beb948e61c1d434b61b261d6768c26249e0a88fe",
-      "src": "https://github.com/vieitesss/command.nvim",
-      "version": ">=0.0.0"
-    },
-    "mason.nvim": {
-      "rev": "16ba83bfc8a25f52bb545134f5bee082b195c460",
-      "src": "https://github.com/mason-org/mason.nvim"
+    "gruber-darker.nvim": {
+      "rev": "aba065c3a79b58cc3863d5c9db319255abd1258a",
+      "src": "https://github.com/blazkowolf/gruber-darker.nvim"
     },
     "minifugit.nvim": {
-      "rev": "33271978f08007d5062a562a304295b0350afc06",
-      "src": "/Users/vieitesprefapp/personal/minifugit.nvim"
-    },
-    "miniharp.nvim": {
-      "rev": "a8fd9dadba00119f1d610936ef694515c448a47c",
-      "src": "https://github.com/vieitesss/miniharp.nvim",
-      "version": "'nightly'"
+      "rev": "ad8f38369c6a37da09c317950658595d970df330",
+      "src": "https://github.com/vieitesss/minifugit.nvim"
     },
     "oil.nvim": {
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
-    },
-    "vague.nvim": {
-      "rev": "f911602f49116b1ebab95a45391e1cfe2dc62c2b",
-      "src": "https://github.com/vague-theme/vague.nvim"
     }
   }
 }

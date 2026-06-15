@@ -1,5 +1,0 @@
-column_width = 80
-indent_type = "Spaces"
-
-[sort_requires]
-enabled = false
