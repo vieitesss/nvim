@@ -19,8 +19,6 @@ vim.opt.undodir = vim.fn.stdpath("state") .. "/undo-dir"
 vim.opt.undofile = true
 
 -- Plugins
-vim.cmd("packadd nvim.undotree")
-
 vim.pack.add({
     "https://github.com/blazkowolf/gruber-darker.nvim",
     "https://github.com/stevearc/oil.nvim",
@@ -51,7 +49,6 @@ vim.g.fff = {
       anchor = "bottom"
   }
 }
-
 
 vim.cmd.colorscheme("gruber-darker")
 
