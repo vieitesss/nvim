@@ -17,6 +17,8 @@ vim.opt.guicursor = "a:block"
 vim.opt.swapfile = false
 vim.opt.undodir = vim.fn.stdpath("state") .. "/undo-dir"
 vim.opt.undofile = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Plugins
 vim.pack.add({
