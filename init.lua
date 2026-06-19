@@ -28,8 +28,6 @@ vim.pack.add({
     "https://github.com/vieitesss/minifugit.nvim"
 })
 
-require("minifugit").setup()
-
 require("oil").setup({
     columns = {
         "permissions",
