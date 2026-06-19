@@ -9,7 +9,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.list = true
-vim.opt.listchars = "space:·,tab: ,eol:,trail:·"
+vim.opt.listchars = "space:·,tab: ,eol:,trail:·"
 vim.opt.colorcolumn = "80"
 vim.opt.scrolloff = 8
 vim.opt.hlsearch = false
@@ -19,6 +19,16 @@ vim.opt.undodir = vim.fn.stdpath("state") .. "/undo-dir"
 vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+
+require('vim._core.ui2').enable({
+    enable = true,
+    msg = {
+        targets = 'msg', -- 'cmd'|'msg'|'pager'
+        msg = {
+      height = 0.5,
+    },
+  },
+})
 
 -- Plugins
 vim.pack.add({
