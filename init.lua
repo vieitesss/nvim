@@ -44,6 +44,15 @@ vim.pack.add({
 
 require("mason").setup()
 
+vim.g.minifugit = {
+    preview = {
+        show_metadata = false,
+    },
+    status = {
+        open_in_tab = true,
+    },
+}
+
 local miniharp = require('miniharp')
 miniharp.setup({
     notifications = false,
