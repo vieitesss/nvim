@@ -97,6 +97,7 @@ vim.keymap.set("n", "<c-u>", "<c-u>zz", { silent = true })
 vim.keymap.set("v", "<leader>y", '"*y', { desc = "Paste to the clipboard" })
 vim.keymap.set("n", "<leader>fo", function() vim.lsp.buf.format() end, { desc = "_FO_rmat using LSP" })
 vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = "_G_o to _D_efinition" })
+vim.keymap.set("i", "<C-j>", function() vim.lsp.completion.get() end)
 -- -- fff
 vim.keymap.set('n', '<leader>ff', function() require('fff').find_files() end)
 vim.keymap.set('n', '<leader>fg', function() require('fff').live_grep() end)
@@ -134,6 +135,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
     callback = function() vim.hl.hl_op() end,
     desc = "Highlight yanked text"
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    pattern = { "*.rs", "*.lua" },
+    callback = function(ev)
+        vim.lsp.completion.enable(true, ev.data.client_id, 0)
+    end,
+    desc = "Enable completions for these filetypes"
 })
 
 -- User commands
