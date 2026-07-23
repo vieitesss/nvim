@@ -1,7 +1,7 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "26ec6f0a1a8101eb134f8b8568d6099be015fe70",
+      "rev": "0f54bd78892f587db4dcf100a23eaddfc2a9df7d",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "command.nvim": {
@@ -9,11 +9,11 @@
       "src": "https://github.com/vieitesss/command.nvim"
     },
     "fff": {
-      "rev": "e7b7fe2707ed2349b077846fb5da7102145ef5a0",
+      "rev": "073698c8e7dad9f6106d23ef588f5ebc7f98b326",
       "src": "https://github.com/dmtrKovalenko/fff"
     },
     "fzf-lua": {
-      "rev": "267f5db2aa2202b9f6cc7a50783f0ccd2121766c",
+      "rev": "532d463f5c83595192fe740572d8fd6902b2217a",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gruber-darker.nvim": {
@@ -25,11 +25,15 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "minifugit.nvim": {
-      "rev": "ad8f38369c6a37da09c317950658595d970df330",
+      "rev": "63d052a108e5d4bd5dfb6f04010c253b585520b3",
       "src": "https://github.com/vieitesss/minifugit.nvim"
     },
+    "minifugit.nvim.disabled": {
+      "rev": "63d052a108e5d4bd5dfb6f04010c253b585520b3",
+      "src": "/Users/vieitesprefapp/personal/minifugit.nvim"
+    },
     "miniharp.nvim": {
-      "rev": "a8fd9dadba00119f1d610936ef694515c448a47c",
+      "rev": "aa7a9a84a7568ac54bf989d909fd36c514ba43ea",
       "src": "https://github.com/vieitesss/miniharp.nvim"
     },
     "neovim": {
@@ -41,7 +45,7 @@
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "vague.nvim": {
-      "rev": "49fe06ad33d8847b931ba4279197bda222374cd1",
+      "rev": "161384e625e7b6cca118a3fa66225ba5cacdfb50",
       "src": "https://github.com/vague-theme/vague.nvim"
     }
   }
