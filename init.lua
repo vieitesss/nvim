@@ -39,6 +39,7 @@ vim.pack.add({
     -- local: gruber-lighter (see rtp below)
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/dmtrKovalenko/fff",
+    "https://github.com/vieitesss/gruber-lighter.nvim",
     "https://github.com/vieitesss/minifugit.nvim",
     "https://github.com/vieitesss/miniharp.nvim",
     "https://github.com/vieitesss/command.nvim"
@@ -92,7 +93,7 @@ vim.g.fff = {
     }
 }
 
-vim.opt.rtp:prepend(vim.fn.expand("~/personal/gruber-lighter.nvim"))
+-- vim.opt.rtp:prepend(vim.fn.expand("~/personal/gruber-lighter.nvim"))
 vim.cmd.colorscheme("gruber-lighter")
 
 -- Transparency: terminal (ghostty) owns the opacity; just stop painting backgrounds.
