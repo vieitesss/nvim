@@ -3,6 +3,7 @@ vim.opt.signcolumn = 'yes'
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest:full,full"
 vim.opt.wildoptions = "pum"
+vim.opt.winborder = "rounded"
 vim.opt.path:append("**")
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -32,6 +33,7 @@ require('vim._core.ui2').enable({
 })
 
 -- Plugins
+vim.cmd("packadd nvim.undotree");
 vim.pack.add({
     "https://github.com/mason-org/mason.nvim",
     -- local: gruber-lighter (see rtp below)
@@ -53,6 +55,10 @@ vim.g.minifugit = {
     },
 }
 
+require("command").setup({
+    ui = { terminal = { split = "right" } }
+})
+
 local miniharp = require('miniharp')
 miniharp.setup({
     notifications = false,
@@ -60,6 +66,7 @@ miniharp.setup({
         position = 'top-right',
         show_hints = false,
         enter = false,
+        auto_hide = true,
     },
 })
 
@@ -88,6 +95,21 @@ vim.g.fff = {
 vim.opt.rtp:prepend(vim.fn.expand("~/personal/gruber-lighter.nvim"))
 vim.cmd.colorscheme("gruber-lighter")
 
+-- Transparency: terminal (ghostty) owns the opacity; just stop painting backgrounds.
+local function set_transparency()
+    local transparent_groups = { 'Normal', 'NormalNC', 'NormalFloat', 'NormalSB' }
+    local function apply_transparency()
+        for _, g in ipairs(transparent_groups) do
+            vim.cmd.highlight(g .. ' guibg=NONE')
+        end
+    end
+    vim.opt.winblend = 12
+    vim.opt.pumblend = 12
+    apply_transparency()
+    vim.api.nvim_create_autocmd('ColorScheme', { callback = apply_transparency })
+end
+set_transparency()
+
 -- Mappings
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { silent = true })
@@ -112,12 +134,22 @@ vim.keymap.set('n', '<leader>l', miniharp.show_list, { desc = 'miniharp: toggle 
 vim.keymap.set('n', '<leader>L', miniharp.enter_list, { desc = 'miniharp: enter marks list' })
 vim.keymap.set('n', '<C-j>', function() miniharp.go_to(1) end, { desc = 'miniharp: go to mark 1' })
 vim.keymap.set('n', '<C-k>', function() miniharp.go_to(2) end, { desc = 'miniharp: go to mark 2' })
-vim.keymap.set('n', '<C-l>', function() miniharp.go_to(3) end, { desc = 'miniharp: go to mark 3' })
+vim.keymap.set('n', '<C-l>', function()
+    local ns = vim.api.nvim_create_namespace('nvim.multicursor')
+    if #vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, { limit = 1 }) > 0 then
+        vim.cmd('nohlsearch | diffupdate')
+        vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+        vim.cmd('normal! \x0c')
+        return
+    end
+    miniharp.go_to(3)
+end, { desc = 'clear multicursors or miniharp mark 3' })
 -- -- command
 vim.keymap.set('n', '<leader>ce', '<Plug>(CommandExecute)')
 vim.keymap.set('n', '<leader>cl', '<Plug>(CommandExecuteLast)')
 vim.keymap.set('x', '<leader>ce', '<Plug>(CommandExecuteSelection)')
 vim.keymap.set('n', '<leader>cr', '<Plug>(CommandReopenTerminal)')
+vim.keymap.set('n', '<leader>cc', '<Plug>(CommandCycleTerminalSide)')
 
 
 -- Autocmds
