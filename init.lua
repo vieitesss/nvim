@@ -39,6 +39,7 @@ vim.pack.add({
     -- local: gruber-lighter (see rtp below)
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/dmtrKovalenko/fff",
+    "https://github.com/blazkowolf/gruber-darker.nvim",
     "https://github.com/vieitesss/gruber-lighter.nvim",
     "https://github.com/vieitesss/minifugit.nvim",
     "https://github.com/vieitesss/miniharp.nvim",
@@ -94,7 +95,42 @@ vim.g.fff = {
 }
 
 -- vim.opt.rtp:prepend(vim.fn.expand("~/personal/gruber-lighter.nvim"))
-vim.cmd.colorscheme("gruber-lighter")
+local function apply_colorscheme()
+    local name = vim.o.background == "dark" and "gruber-darker" or "gruber-lighter"
+    if vim.g.colors_name ~= name then vim.cmd.colorscheme(name) end
+end
+apply_colorscheme()
+
+-- Herdr may send an OSC 11 reply with its old colour before catching up (~100 ms).
+local pending_osc11_queries = {}
+vim.api.nvim_create_autocmd("TermResponse", {
+    callback = function(ev)
+        if not ev.data.sequence:match("^\27%]11;") then return end
+        vim.schedule(apply_colorscheme)
+
+        if #pending_osc11_queries > 0 then
+            local query = table.remove(pending_osc11_queries, 1)
+            query.pending = false
+            return
+        end
+
+        vim.defer_fn(function()
+            local query = { pending = true }
+            table.insert(pending_osc11_queries, query)
+            vim.api.nvim_ui_send("\27]11;?\7")
+            vim.defer_fn(function()
+                if not query.pending then return end
+                query.pending = false
+                for i, pending_query in ipairs(pending_osc11_queries) do
+                    if pending_query == query then
+                        table.remove(pending_osc11_queries, i)
+                        break
+                    end
+                end
+            end, 1000)
+        end, 250)
+    end,
+})
 
 -- Transparency: terminal (ghostty) owns the opacity; just stop painting backgrounds.
 local function set_transparency()
