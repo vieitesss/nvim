@@ -231,8 +231,12 @@ end, {
 
 -- LSP
 local lsps = {
-    'rust-analyzer',
+    'bashls',
     'lua_ls',
+    'pyright',
+    'ruff',
+    'rust-analyzer',
+    'ts_ls',
 }
 
 for _, l in ipairs(lsps) do

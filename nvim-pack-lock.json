@@ -1,23 +1,23 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "0f54bd78892f587db4dcf100a23eaddfc2a9df7d",
+      "rev": "8219b58f1c11a2fb1644d3c7116c509fa8348ec0",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "command.nvim": {
-      "rev": "beb948e61c1d434b61b261d6768c26249e0a88fe",
+      "rev": "ff13c61fc9c3806560fca485f1f1d6cb069e489c",
       "src": "https://github.com/vieitesss/command.nvim"
     },
     "fff": {
-      "rev": "073698c8e7dad9f6106d23ef588f5ebc7f98b326",
+      "rev": "e3f694a2e4f82bb755418e8d305dcff779c59c27",
       "src": "https://github.com/dmtrKovalenko/fff"
     },
     "fzf-lua": {
-      "rev": "532d463f5c83595192fe740572d8fd6902b2217a",
+      "rev": "13bb178a299f7493dd64427a58e61904c4b58ecb",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gruber-darker.nvim": {
-      "rev": "aba065c3a79b58cc3863d5c9db319255abd1258a",
+      "rev": "50fa4e583099729fcaaadc73a5afb74f7a91a625",
       "src": "https://github.com/blazkowolf/gruber-darker.nvim"
     },
     "gruber-lighter.nvim": {
@@ -29,11 +29,11 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "minifugit.nvim": {
-      "rev": "63d052a108e5d4bd5dfb6f04010c253b585520b3",
+      "rev": "8e55f4a1ca450c7e0a727e2aaec9b0134d4e6797",
       "src": "https://github.com/vieitesss/minifugit.nvim"
     },
     "miniharp.nvim": {
-      "rev": "aa7a9a84a7568ac54bf989d909fd36c514ba43ea",
+      "rev": "c21b5bed7d7cc51c13fa00deb09197d330c8a062",
       "src": "https://github.com/vieitesss/miniharp.nvim"
     },
     "neovim": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "vague.nvim": {
-      "rev": "161384e625e7b6cca118a3fa66225ba5cacdfb50",
+      "rev": "f9060fdaf7b20f68575d6f8214da6f1cf0c72825",
       "src": "https://github.com/vague-theme/vague.nvim"
     }
   }
