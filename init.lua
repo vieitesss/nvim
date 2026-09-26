@@ -94,12 +94,24 @@ vim.g.fff = {
     }
 }
 
--- vim.opt.rtp:prepend(vim.fn.expand("~/personal/gruber-lighter.nvim"))
-local function apply_colorscheme()
+-- Remote tmux (3.3) neither answers OSC 11 nor forwards theme changes, so also
+-- follow the mode that system-appearance writes on every host it updates.
+local appearance_dir = vim.fn.expand("~/.local/state")
+local function apply_system_appearance()
+    local f = io.open(appearance_dir .. "/system-appearance")
+    local mode = f and f:read("*l")
+    if f then f:close() end
+    if mode == "dark" or mode == "light" then vim.o.background = mode end
     local name = vim.o.background == "dark" and "gruber-darker" or "gruber-lighter"
     if vim.g.colors_name ~= name then vim.cmd.colorscheme(name) end
 end
-apply_colorscheme()
+apply_system_appearance()
+
+vim.fn.mkdir(appearance_dir, "p")
+vim.uv.new_fs_event():start(appearance_dir, {}, function(err, filename)
+    if err or vim.fs.basename(filename or "") ~= "system-appearance" then return end
+    vim.schedule(apply_system_appearance)
+end)
 
 -- Herdr may send an OSC 11 reply with its old colour before catching up (~100 ms).
 local pending_osc11_queries = {}
