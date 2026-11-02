@@ -157,7 +157,7 @@ local function set_transparency()
     apply_transparency()
     vim.api.nvim_create_autocmd('ColorScheme', { callback = apply_transparency })
 end
-set_transparency()
+-- set_transparency()
 
 -- Mappings
 vim.g.mapleader = " "
@@ -244,6 +244,7 @@ end, {
 -- LSP
 local lsps = {
     'bashls',
+    'gopls',
     'lua_ls',
     'pyright',
     'ruff',
