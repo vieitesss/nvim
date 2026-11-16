@@ -118,7 +118,7 @@ local pending_osc11_queries = {}
 vim.api.nvim_create_autocmd("TermResponse", {
     callback = function(ev)
         if not ev.data.sequence:match("^\27%]11;") then return end
-        vim.schedule(apply_colorscheme)
+        vim.schedule(apply_system_appearance)
 
         if #pending_osc11_queries > 0 then
             local query = table.remove(pending_osc11_queries, 1)
