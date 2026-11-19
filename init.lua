@@ -45,8 +45,14 @@ vim.pack.add({
     "https://github.com/vieitesss/miniharp.nvim",
     "https://github.com/vieitesss/command.nvim"
 })
+-- local: tt.nvim; uses the binary built by `just build` in that checkout
+vim.opt.rtp:prepend(vim.fn.expand("~/personal/tt"))
+-- local: revisa.nvim; uses the binary built in that checkout
+vim.opt.rtp:prepend(vim.fn.expand("~/personal/revisa.nvim"))
 
 require("mason").setup()
+-- revisa: notify the agent by typing into its Rex pane; "recado" or "none" also work
+require("revisa").setup({ notify = "rex" })
 
 vim.g.minifugit = {
     preview = {
@@ -161,6 +167,8 @@ end
 
 -- Mappings
 vim.g.mapleader = " "
+vim.keymap.set("n", "<leader>,", "<cmd>tabprevious<cr>", { silent = true, desc = "Previous tab" })
+vim.keymap.set("n", "<leader>.", "<cmd>tabnext<cr>", { silent = true, desc = "Next tab" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { silent = true })
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { silent = true })
 vim.keymap.set("n", "<c-d>", "<c-d>zz", { silent = true })
@@ -199,6 +207,12 @@ vim.keymap.set('n', '<leader>cl', '<Plug>(CommandExecuteLast)')
 vim.keymap.set('x', '<leader>ce', '<Plug>(CommandExecuteSelection)')
 vim.keymap.set('n', '<leader>cr', '<Plug>(CommandReopenTerminal)')
 vim.keymap.set('n', '<leader>cc', '<Plug>(CommandCycleTerminalSide)')
+-- -- revisa
+vim.keymap.set({ 'n', 'x' }, '<leader>rc', '<Plug>(revisa-comment)', { desc = '_R_evisa _C_omment' })
+vim.keymap.set('n', '<leader>re', '<Plug>(revisa-edit)', { desc = '_R_evisa _E_dit comment' })
+vim.keymap.set('n', '<leader>rr', '<cmd>Revisa review<cr>', { desc = '_R_evisa _R_eview' })
+vim.keymap.set('n', '<leader>rs', '<cmd>Revisa send<cr>', { desc = '_R_evisa _S_end to agent' })
+vim.keymap.set('n', '<leader>rt', '<cmd>Revisa resolved<cr>', { desc = '_R_evisa _T_oggle resolved' })
 
 
 -- Autocmds
