@@ -202,6 +202,18 @@ vim.keymap.set('n', '<leader>cc', '<Plug>(CommandCycleTerminalSide)')
 
 
 -- Autocmds
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "markdown",
+    callback = function(ev)
+        vim.opt_local.textwidth = 80
+        vim.opt_local.formatoptions:append("t")
+        vim.keymap.set("n", "J", function()
+            vim.cmd("normal! " .. vim.v.count1 .. "Jgqq")
+        end, { buffer = ev.buf, desc = "Join lines and rewrap text" })
+    end,
+    desc = "Automatically wrap Markdown text at 80 columns"
+})
+
 vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(ev)
         local name, kind = ev.data.spec.name, ev.data.kind
