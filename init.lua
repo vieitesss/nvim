@@ -43,12 +43,14 @@ vim.pack.add({
     "https://github.com/vieitesss/gruber-lighter.nvim",
     "https://github.com/vieitesss/minifugit.nvim",
     "https://github.com/vieitesss/miniharp.nvim",
-    "https://github.com/vieitesss/command.nvim"
+    "https://github.com/vieitesss/command.nvim",
+    {
+        src = "https://github.com/vieitesss/revisa.nvim",
+        version = vim.version.range("*"),
+    },
 })
 -- local: tt.nvim; uses the binary built by `just build` in that checkout
 vim.opt.rtp:prepend(vim.fn.expand("~/personal/tt"))
--- local: revisa.nvim; uses the binary built in that checkout
-vim.opt.rtp:prepend(vim.fn.expand("~/personal/revisa.nvim"))
 
 require("mason").setup()
 -- revisa: notify the agent by typing into its Rex pane; "recado" or "none" also work
@@ -57,6 +59,7 @@ require("revisa").setup({ notify = "rex" })
 vim.g.minifugit = {
     preview = {
         show_metadata = false,
+        position = 'down',
     },
     status = {
         open_in_tab = true,
@@ -149,21 +152,6 @@ vim.api.nvim_create_autocmd("TermResponse", {
         end, 250)
     end,
 })
-
--- Transparency: terminal (ghostty) owns the opacity; just stop painting backgrounds.
-local function set_transparency()
-    local transparent_groups = { 'Normal', 'NormalNC', 'NormalFloat', 'NormalSB' }
-    local function apply_transparency()
-        for _, g in ipairs(transparent_groups) do
-            vim.cmd.highlight(g .. ' guibg=NONE')
-        end
-    end
-    vim.opt.winblend = 12
-    vim.opt.pumblend = 12
-    apply_transparency()
-    vim.api.nvim_create_autocmd('ColorScheme', { callback = apply_transparency })
-end
--- set_transparency()
 
 -- Mappings
 vim.g.mapleader = " "

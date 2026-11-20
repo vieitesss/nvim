@@ -9,7 +9,7 @@
       "src": "https://github.com/vieitesss/command.nvim"
     },
     "fff": {
-      "rev": "ab3002a9bfbef53874dd0b56608e34d281791b4c",
+      "rev": "9a7b1c8fc1d20236a255bf3ddb24eeb761bd6bd9",
       "src": "https://github.com/dmtrKovalenko/fff"
     },
     "fzf-lua": {
@@ -29,7 +29,7 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "minifugit.nvim": {
-      "rev": "507b9fa2a19fe08bc737e9b9a2961896980a6c31",
+      "rev": "b3b1eacbf5633c2762ffbbe21377943814ef0ad5",
       "src": "https://github.com/vieitesss/minifugit.nvim"
     },
     "miniharp.nvim": {
@@ -43,6 +43,11 @@
     "oil.nvim": {
       "rev": "d3733d933833a0e59b813ecec99341527adf0c28",
       "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "revisa.nvim": {
+      "rev": "8f385b0b286202903e1433c7abca69925b7ad65a",
+      "src": "https://github.com/vieitesss/revisa.nvim",
+      "version": ">=0.0.0"
     },
     "vague.nvim": {
       "rev": "73f8aaa866bf3d14dd0b0ab9e48c11794c1cb7ab",
